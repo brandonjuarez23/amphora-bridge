@@ -1,0 +1,5 @@
+adapter*.zip
+__pycache__/
+*.bak
+scratch*
+screened_old.json

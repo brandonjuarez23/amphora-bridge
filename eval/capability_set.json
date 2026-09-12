@@ -1,0 +1,3402 @@
+[
+  {
+    "id": "Mercury_417466",
+    "question": "Which statement best explains why photosynthesis is the foundation of most food webs?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Sunlight is the source of energy for nearly all ecosystems.",
+      "Most ecosystems are found on land instead of in water.",
+      "Carbon dioxide is more available than other gases.",
+      "The producers in all ecosystems are plants."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7037258",
+    "question": "Which best describes the structure of an atom?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a lightweight core surrounded by neutral particles",
+      "a massive core surrounded by negatively-charged particles",
+      "a network of interacting positive and negative particles",
+      "overlapping layers of neutral, positive, and negative particles"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "CSZ20679",
+    "question": "To express the distance between the Milky Way galaxy and other galaxies, the most appropriate unit of measurement is the",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "meter.",
+      "kilometer.",
+      "light-year.",
+      "astronomical unit."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MCAS_2001_5_19",
+    "question": "Plants use sunlight to make",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "soil.",
+      "minerals.",
+      "food.",
+      "water."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_SC_413631",
+    "question": "Which of these correctly identifies the way materials are transported in a plant?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Xylem carries water from the roots to the leaves.",
+      "Phloem carries minerals from the roots to the leaves.",
+      "Xylem carries sugars from the flowers to the stems.",
+      "Phloem carries water from the flowers to the stems."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7166145",
+    "question": "The circulatory system and the endocrine system work together in the human body. Which describes one way in which these systems interact?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "taking in oxygen and transporting it to cells of the body",
+      "releasing hormones and transporting them to cells of the body",
+      "absorbing nutrients from food and transporting them to cells in the body",
+      "collecting waste products from the cells and transporting it out of the body"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_405199",
+    "question": "Which of these will most likely harm a habitat?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "planting trees",
+      "water pollution",
+      "rainfall",
+      "sunlight"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "NYSEDREGENTS_2015_8_28",
+    "question": "All living and nonliving material is composed of",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "air",
+      "elements",
+      "water",
+      "soil"
+    ],
+    "answer": "2"
+  },
+  {
+    "id": "Mercury_7198188",
+    "question": "As global temperatures increase, certain organisms will be more affected than others. The changes associated with global warming may result in an increase in sea level. Which organisms will be affected most as a result of the change in sea level?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "birds that eat fish from shallow waters",
+      "fish that live in coral reefs in shallow waters",
+      "mammals that swim in cold, deep ocean waters",
+      "crustaceans at the bottom of deep sea ocean waters"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_1998_4_11",
+    "question": "A dish of sugar water was left on a window sill. One week later, there were only sugar crystals left in the dish. The water was gone. The best explanation for the appearance of sugar crystals is",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "some of the water was absorbed by the dish.",
+      "the air condensed.",
+      "the light shining on the window sill produced more sugar.",
+      "the water evaporated."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7033548",
+    "question": "When an igneous intrusion comes into contact with surrounding rock, the surrounding rock will",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "erode.",
+      "foliate.",
+      "precipitate.",
+      "recrystallize."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "NCEOGA_2013_8_36",
+    "question": "Where do plants get most of the energy they need to live and grow?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "water",
+      "soil",
+      "air",
+      "sunlight"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_415412",
+    "question": "Which is a statement about climate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The average temperature yesterday was 15°C.",
+      "The temperature range today was 10°C to 20°C.",
+      "The high temperature tomorrow will be 14°C.",
+      "The average high temperature in May is 20°C."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MDSA_2008_8_35",
+    "question": "Biologists conduct investigations to learn about living organisms. Which method helps reduce bias during an investigation?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "developing a hypothesis after collecting data in the investigation",
+      "limiting the amount of background research before the investigation",
+      "designing an investigation with repeated trials during the investigation",
+      "obtaining other opinions concerning what should happen during the investigation"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "NYSEDREGENTS_2015_8_21",
+    "question": "Which factor is most likely to cause the number of rabbits living in an area to increase?",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "less water",
+      "fewer predators",
+      "lack of shelter",
+      "limited food"
+    ],
+    "answer": "2"
+  },
+  {
+    "id": "VASoL_2008_5_12",
+    "question": "Seeds that remain inactive until the right conditions of light, water, and soil are present are called ___.",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "pollen",
+      "dormant",
+      "flowers",
+      "recycled"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_LBS10680",
+    "question": "What allows a light bulb to give off light?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the current flowing through the wire to the light bulb",
+      "the light bulb giving electrical energy to the battery",
+      "the light bulb generating heat energy",
+      "the battery pushing light through the wire"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "VASoL_2010_5_18",
+    "question": "Photosynthesis occurs in which of these organisms?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Sunflower plant",
+      "Mushroom",
+      "Sunfish",
+      "Luna moth"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7074900",
+    "question": "In order for cells to grow at a normal rate, they must",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "take in light.",
+      "be specialized.",
+      "take in nutrients.",
+      "be of similar size."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "ACTAAP_2015_5_8",
+    "question": "Antarctica is a continent at Earth's south pole. Fossils of tropical fern plants were discovered in Antarctica even though these plants do not grow there today. Which conclusion does the fossil evidence best support?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Millions of years ago, Antarctica was in a warmer location on Earth.",
+      "Recently, a natural disaster killed all of the fern plants in Antarctica.",
+      "Recently, birds stopped carrying the seeds of fern plants to Antarctica.",
+      "Millions of years ago, Earth's south pole was much colder than it is today."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7263008",
+    "question": "Which two theories of Moon formation propose that much or all of the material comprising the Moon came from Earth?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The Fission Theory and The Coaccretion Theory",
+      "The Coaccretion Theory and The Capture Theory",
+      "The Fission Theory and the Giant Impact Theory",
+      "The Capture Theory and the Giant Impact Theory"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MCAS_2000_4_29",
+    "question": "When white, fluffy clouds appear in Massachusetts, the weather that day will MOST LIKELY be",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "fair.",
+      "stormy.",
+      "foggy.",
+      "rainy."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "CSZ_2008_5_CSZ10233",
+    "question": "Plants and animals are composed of organic compounds. Which of the following are the common elements found in organic compounds?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "iron, oxygen, nickel, copper.",
+      "sodium, potassium, gold, hydrogen.",
+      "helium, neon, argon, krypton.",
+      "carbon, hydrogen, oxygen, nitrogen."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7128660",
+    "question": "New research uncovers information that proves that the data from an old theory is partially incorrect. What should the scientific community do about the old theory?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "remove the old theory from historical records",
+      "change the research notes in the original theory",
+      "use the new information to update the old theory",
+      "ban the public from discussing the old theory"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7100520",
+    "question": "Which is the greatest benefit of sexual reproduction?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "capable of reproducing by meiosis",
+      "ability to reproduce without a mate",
+      "ability to produce genetically different offspring",
+      "capable of producing offspring genetically identical to parent"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7017728",
+    "question": "The speed at which sound waves travel depends on the",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "distance between the vibration source and the receiver.",
+      "type of material through which the sound travels.",
+      "size of the object making the sound.",
+      "type of device making the sound."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_405231",
+    "question": "A scientist found fossils of ocean shells on a mountain top. Based on this find, which statement can be made?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The climate was once colder.",
+      "The shells were carried by the wind.",
+      "The mountain was covered by water.",
+      "The shells once lived on dry land."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "VASoL_2007_5_38",
+    "question": "A student sees many plants around a pond. The student can determine which plants are nonvascular by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "observing if they lack true stems, roots, or leaves",
+      "examining the plants for spores",
+      "counting the number of leaves on each stalk",
+      "noticing if the plants are near rocks"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_SC_410895",
+    "question": "Darryl learns that freezing temperatures may help cause weathering. Which statement explains how freezing temperatures most likely cause weathering?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "by freezing the leaves on trees",
+      "by causing rocks to stick together",
+      "by turning acid rain into acid snow",
+      "by freezing water in the cracks of rocks"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7015978",
+    "question": "A bond is formed when an electron is transferred from a sodium atom to a chlorine atom. What happens to the sodium atom during this process?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The mass of the atom increases.",
+      "The atom becomes an isotope.",
+      "The atomic number decreases.",
+      "The atom becomes a positive ion."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "ACTAAP_2010_5_5",
+    "question": "A group of fish was released into a local lake. This species of fish had never lived in the lake before. Scientists want to collect data on how the lake's ecosystem is affected by the new fish. Which method of data collection will give the most accurate results?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Measuring oxygen levels in the lake for two months",
+      "Checking the lake water for nutrient levels on one day",
+      "Sampling fish populations in the lake over several years",
+      "Observing the surface of the lake for signs of the new fish after one week"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7080955",
+    "question": "On a career day at school, an X-ray technician discusses her daily work with the class. Which equipment would she most likely say she uses on a regular basis to help ensure the safety of patients?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "earplugs",
+      "rubber gloves",
+      "goggles",
+      "lead aprons"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "ACTAAP_2009_5_4",
+    "question": "In the United States, windmills have been used for farming for hundreds of years. Which simple machine is the most important part of a windmill?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "lever",
+      "pulley",
+      "inclined plane",
+      "wheel and axle"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7146108",
+    "question": "Planets outside of our solar system have been detected. What suggested the presence of a planet outside of our solar system?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "radio wave emissions",
+      "a wobble in the rotation of the star",
+      "regular occurring eclipses of its moons",
+      "the discovery of a star as large as our own"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "VASoL_2009_5_3",
+    "question": "The Apollo 11 mission was able to retrieve samples of the Moon's surface because it was the first mission to have astronauts",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "land on the Moon",
+      "orbit a planet",
+      "return to Earth",
+      "walk in space"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7235953",
+    "question": "Particle accelerators, such as the Large Hadron Collider in Europe, accelerate subatomic particles to great speeds. These particles move in opposite directions at nearly the speed of light and collide into one another to simulate conditions that were present as the universe formed. Which property of matter in the initial moments of the universe are these accelerators designed to simulate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "low density",
+      "high energy",
+      "massive nuclei",
+      "circular movement"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_403974",
+    "question": "A doorbell circuit converts electrical energy into mechanical energy. The mechanical energy is in the form of vibrations that ultimately produce",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "chemical energy.",
+      "thermal energy.",
+      "radiant energy.",
+      "sound energy."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7241063",
+    "question": "Which factor determines if two individuals are members of the same species?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "They live in the same habitat and niche.",
+      "They forage and eat the same type of food.",
+      "They mate and produce fertile offspring.",
+      "They are similar in appearance and color."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MCAS_2010_8_12015",
+    "question": "Which of the following planets is always closer to the Sun than it is to Earth?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Jupiter",
+      "Mercury",
+      "Saturn",
+      "Uranus"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_402980",
+    "question": "During which activity should a student wear goggles?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "writing a science report",
+      "mixing baking soda with water",
+      "measuring the length of a shadow",
+      "examining a leaf with a microscope"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_417126",
+    "question": "Bacillus thuringiensis (Bt) is a soil bacterium that is toxic to certain insects. Genes from this bacterium have been inserted into cotton to make Bt cotton. Farmers that use Bt cotton would most likely use less of which of the following?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "water",
+      "fertilizer",
+      "herbicide",
+      "insecticide"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "NYSEDREGENTS_2010_8_2",
+    "question": "A student examined a rock sample and described it as having particles of various colors that were 1 millimeter to 12 millimeters in size. The student was making",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "an inference",
+      "a hypothesis",
+      "a prediction",
+      "an observation"
+    ],
+    "answer": "4"
+  },
+  {
+    "id": "Mercury_177223",
+    "question": "In a classroom demonstration, a teacher pours sulfuric acid on some granulated sugar in a beaker. The sugar turns yellow and then black. Smoke rises and a strong smell is released. This demonstration is an example of what kind of change?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "chemical",
+      "physical",
+      "magnetic",
+      "electric"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_SC_400707",
+    "question": "The tops of some mountains are sharp and pointed, while the tops of others are smooth and rounded. This difference was most likely caused by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "rivers flooding along a coastal plain.",
+      "erosion and weathering.",
+      "earthquakes and waves.",
+      "rocks melted underground by lava."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_400380",
+    "question": "A student suggests to the school board that they use a renewable energy source. The student suggests they use",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "coal.",
+      "wind.",
+      "wood.",
+      "natural gas."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7205590",
+    "question": "Solar radiation provides more heat near the equator than near the poles on Earth. The greatest amount of heat is moved away from the equator by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "ocean currents.",
+      "aquatic plants.",
+      "surface winds.",
+      "tectonic plates."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "VASoL_2008_3_5",
+    "question": "Most plants begin their life cycle as ___.",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "leaves",
+      "flowers",
+      "roots",
+      "seeds"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_408436",
+    "question": "Jonathon was studying bears. He found out that bears are born with some behaviors and learn others from their environment. Which behavior does a bear most likely inherit?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "how to find food in garbage cans",
+      "how to hibernate during the winter",
+      "how to seek shelter in a hollow log",
+      "how to live in human neighborhoods"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_401143",
+    "question": "A group of the same species of fish swim together to increase an individual's",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "swimming speed.",
+      "body temperature.",
+      "chance of survival.",
+      "visibility to predators."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7108045",
+    "question": "Some antibiotics used to treat infections in humans are also used to treat chickens, but some groups oppose this practice. The overuse of the antibiotics will most likely influence the natural selection of which type of organisms?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "chickens that naturally make the antibiotics",
+      "microbes that are resistant to the antibiotics",
+      "microbes that are susceptible to the antibiotics",
+      "chickens that are resistant to infection"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_402251",
+    "question": "A student performs a lab investigation by measuring the average time it takes for a toy car to travel 10 meters. Why is it best to perform the experiment in three trials?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "to form a good hypothesis",
+      "to increase the accuracy of the results",
+      "to make the results more significant",
+      "to better explain the investigation to others"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7071418",
+    "question": "A scientist finds a metamorphic rock formation next to a magma chamber and determines that it was originally a sedimentary rock formation. He concludes that the temperature of the magma chamber caused the rock formation to become metamorphic. Which is another reliable explanation of how the rock formation was changed?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "weight of heavy machinery moving over the rocks",
+      "pressure on the rock formation inside Earth",
+      "a sandstorm that caused the rocks to be eroded",
+      "a quick burial of the rocks by tons of volcanic ash"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_407370",
+    "question": "Earth orbiting the Sun causes",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the changing of the seasons.",
+      "daily tidal cycles.",
+      "day to become night.",
+      "the phases of the Moon."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7084595",
+    "question": "The cycle of night and day on Earth is a result of",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the Moon revolving around Earth.",
+      "Earth revolving around the Sun.",
+      "the Moon rotating on its axis.",
+      "Earth rotating on its axis."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7041335",
+    "question": "Which of these traits is most influenced by environment?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "weight",
+      "hair color",
+      "blood type",
+      "handedness"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7236320",
+    "question": "Which statement describes a characteristic of a gas that has a significant effect on the climates of both Earth and Venus?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Nitrogen is chemically inert.",
+      "Sodium vapor reflects solar energy.",
+      "Carbon dioxide traps solar energy.",
+      "Argon is unable to react with water."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_SC_401308",
+    "question": "Which event helps to renew a resource?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "A seed is planted from a tree.",
+      "An offshore rig pumps oil.",
+      "A car is filled with gasoline.",
+      "An office is heated with coal."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7165550",
+    "question": "A certain type of hybrid car utilizes a braking system in which energy is recovered and stored in batteries. This is an example of which type of energy conversion?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "kinetic energy converted to potential energy",
+      "chemical energy converted to kinetic energy",
+      "chemical energy converted to thermal energy",
+      "thermal energy converted to potential energy"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_SC_408434",
+    "question": "Some animals have behaviors that help them find food when little is available. Which best describes an animal with this type of behavior?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a robin that builds a nest",
+      "an owl that calls at night",
+      "a duck that swims in water",
+      "a goose that migrates in winter"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "NYSEDREGENTS_2010_8_14",
+    "question": "An organism is born with a genetic abnormality not present in any of its ancestors. This abnormality is most likely the result of",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "circulation",
+      "competition",
+      "mutation",
+      "respiration"
+    ],
+    "answer": "3"
+  },
+  {
+    "id": "NYSEDREGENTS_2015_8_24",
+    "question": "The length of one day on Earth is determined by how long it takes",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "the Moon to revolve once",
+      "the Moon to rotate once",
+      "Earth to rotate once",
+      "Earth to revolve once"
+    ],
+    "answer": "3"
+  },
+  {
+    "id": "Mercury_400279",
+    "question": "A student heats the same amount of two different liquids over Bunsen burners. Each liquid is at room temperature when the student begins. If liquid 1 has a higher specific heat than liquid 2, then liquid 1 will",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "evaporate sooner.",
+      "take longer to increase in temperature.",
+      "condense over a longer period.",
+      "chemically break down at a faster rate."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7113890",
+    "question": "Scientists have discovered organisms that thrive in hot water that is 90°C (194°F) and do not need sunlight or oxygen to live. Into which kingdom would the scientists classify these organisms?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Archaebacteria",
+      "Fungi",
+      "Plantae",
+      "Protista"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "AKDE&ED_2008_4_3",
+    "question": "Which statement correctly describes both gases and liquids?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Their shapes stay the same in any container.",
+      "Their shapes change when they are in different containers.",
+      "Their volumes stay the same in any container.",
+      "Their volumes change when they are in different containers."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_2006_9_14",
+    "question": "Which of the following is more likely to occur in a plant cell than in an animal cell?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "synthesis of enzymes",
+      "formation of cellulose",
+      "breakdown of glucose",
+      "active transport of ions"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MSA_2015_5_37",
+    "question": "Earth revolves around the sun. The amount of time needed for Earth to complete one revolution around the sun is approximately",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "1 day",
+      "28 days",
+      "180 days",
+      "365 days"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MDSA_2010_8_22",
+    "question": "Excess nitrogen fertilizers sometimes drain into waterways that flow into the Chesapeake Bay. This nitrogen may cause algae blooms, which reduce dissolved oxygen in the water. How does nitrogen negatively affect the Chesapeake Bay?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "fish births increase",
+      "fish populations decrease",
+      "sediment on the bottom of the bay decreases",
+      "the rate of water runoff into the bay increases"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_1999_4_4",
+    "question": "Mount Arenal, a volcano in Costa Rica, is erupting. Heat is being released during the eruption. What is the source of the heat?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The heat comes from the Sun.",
+      "The heat comes from pools of underground water.",
+      "The heat comes from deep within Earth.",
+      "The heat comes from decaying plants and animals."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7247923",
+    "question": "Which statement describes how the umbilical cord supports a developing fetus?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "It provides a protective barrier between the mother and the fetus.",
+      "It keeps the fetus inside the mother until birth.",
+      "It provides a navel when the baby is born.",
+      "It supplies oxygen and nutrients to the fetus."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_416124",
+    "question": "Which two human body systems are most responsible for getting oxygen to cells?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "digestive and skeletal",
+      "skeletal and circulatory",
+      "circulatory and respiratory",
+      "respiratory and digestive"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_407530",
+    "question": "In their science classroom, Sam and Julia cross a heterozygous tall (Tt) pea plant with a homozygous short (tt) pea plant. What ratio represents the results Sam and Julia can expect?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "1 tall plant to 3 short plants",
+      "2 tall plants to 2 short plants",
+      "3 tall plants to 1 short plant",
+      "4 tall plants to 0 short plants"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7271740",
+    "question": "When atmospheric carbon dioxide increases, some of the carbon dioxide dissolves in the ocean causing the ocean to become",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "warmer.",
+      "cooler.",
+      "more acidic.",
+      "more alkaline."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7026495",
+    "question": "Over time, dried lava from an old volcano is worn down and broken into small pieces. When these pieces pile up and are cemented together to form new rock, how would this new rock be classified?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "magma",
+      "igneous",
+      "sedimentary",
+      "metamorphic"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7084315",
+    "question": "When potassium and bromine atoms form chemical bonds, which of these is produced?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "an element",
+      "a mixture",
+      "a compound",
+      "a new form of matter"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "ACTAAP_2010_7_10",
+    "question": "Air is composed of many different substances. Which of the following components of air is a compound rather than an element?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Argon, Ar",
+      "Oxygen, O2",
+      "Water, H2O",
+      "Nitrogen, N2"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "ACTAAP_2013_7_4",
+    "question": "Which factor is responsible for the presence of equatorial deserts?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "global warming",
+      "asteroid impacts",
+      "tilt of the Earth's axis",
+      "the solar activity cycle"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_SC_405444",
+    "question": "The ash borer moth looks similar to a wasp, but it does not have the ability to sting. This adaptation most likely helps the moth survive because",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "it makes food easier to find.",
+      "predators avoid the moth.",
+      "it aids in attracting a mate.",
+      "the moth blends in with its surroundings."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7094675",
+    "question": "A beach is formed when sediment is deposited along a shoreline. What would most likely happen if rivers that empty into the ocean were dammed?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Less sediment would be deposited along the shoreline.",
+      "Beaches would form from different materials.",
+      "Sand dunes would become smaller.",
+      "Deltas would become larger."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_403912",
+    "question": "Due to extreme pressure, the inner core of Earth is",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "solid.",
+      "liquid.",
+      "gas.",
+      "plasma."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7009853",
+    "question": "The speed and general direction of motion of a galaxy relative to the Earth can be determined by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "measuring its red shift.",
+      "the gravity it exerts.",
+      "contrasting it against nearby stars.",
+      "observing its motion across the sky."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "MEA_2013_8_2",
+    "question": "What is the primary reason for breaking down food molecules?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "to absorb water into a cell",
+      "to provide energy for a cell",
+      "to remove wastes from a cell",
+      "to store materials in a cell"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7068688",
+    "question": "Topsoil is considered to be most fertile when it has a",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "low pH level.",
+      "low sand content.",
+      "high organic matter level.",
+      "high parent rock material level."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7271705",
+    "question": "When chemicals in the atmosphere dissolve in water droplets, they precipitate with the water and pollute water reservoirs on Earth. The pollutants enter the food chain when aquatic organisms absorb them. Which of these pollutants eventually contaminates fish after coal is burned?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "lead",
+      "arsenic",
+      "mercury",
+      "aluminum"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_402456",
+    "question": "An atom has a mass of 24 and a nuclear charge of 12. Which statement about the atom is accurate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "It has twice as many protons as electrons.",
+      "It has twice as many neutrons as protons.",
+      "It has equal numbers of neutrons and protons.",
+      "It has equal numbers of nuclear particles and electrons."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7215233",
+    "question": "The construction of Hoover Dam on the Colorado River resulted in abundant freshwater and electrical power for the region. Which of these is a disadvantage of the construction of Hoover Dam?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "an increase in flooding downstream",
+      "an increase in regional humidity",
+      "a decrease in the amount of river ecosystems",
+      "a decrease in the amount of water for irrigation"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "CSZ_2008_8_29",
+    "question": "What characteristic of carbon [C] makes it essential to living organisms?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Carbon forms crystal structures under certain conditions.",
+      "Carbon can exist as a solid, liquid, or gas.",
+      "Carbon bonds in many ways with itself to form chains.",
+      "Carbon exists in radioactive forms."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MSA_2012_5_28",
+    "question": "Scientists found evidence of a fish that lived millions of years ago. The fish had features that were possibly used to move on land. This fish is now extinct. What scientific evidence did the scientists most likely find that confirmed the existence of this fish?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a fossil",
+      "a description",
+      "a photograph",
+      "a cave drawing"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "TIMSS_2007_8_pg33",
+    "question": "An animal has scales and uses only its lungs to exchange gases. What is the animal most likely to be classified as?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a fish",
+      "a reptile",
+      "a mammal",
+      "an amphibian"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7004988",
+    "question": "How are igneous and sedimentary rocks similar?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "They are both formed by erosion.",
+      "They are both formed from cooled lava.",
+      "Heat and pressure can turn them into lava.",
+      "Heat and pressure can turn them into metamorphic rock."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_LBS10946",
+    "question": "When both a dominant and recessive gene are present, which of the following is true?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The dominant trait will be visible.",
+      "The recessive trait will be visible.",
+      "Neither trait will be visible.",
+      "It cannot be predicted which trait will be visible."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "TAKS_2009_8_39",
+    "question": "Squirrels in cold climates gather and store food for winter. The squirrels sometimes bury nuts and then do not return for them. These nuts can grow to become trees. This chain of events is an example of",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "predation",
+      "seed distribution",
+      "competition",
+      "seed fossilization"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_178710",
+    "question": "A simple machine that has a mechanical advantage equal to 1 would most likely be used to",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "decrease effort.",
+      "decrease work.",
+      "change direction.",
+      "change resistance."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_410598",
+    "question": "Roberto is sliding down a plastic slide on the playground. After he reaches the ground, he feels a small electric shock when he touches a piece of metal. What has been built up on his body that causes the shock?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "atoms",
+      "electrons",
+      "neutrons",
+      "protons"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "TIMSS_2011_4_pg15",
+    "question": "Plants grow best in soils that are rich in which of the following?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "grains of sand",
+      "lumps of clay",
+      "layers of gravel",
+      "decaying plants and animals"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7217088",
+    "question": "The rate of acceleration of an object is determined by the mass of the object and",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the initial velocity of the object.",
+      "the forces acting on the object.",
+      "the direction of movement of the object.",
+      "the change in kinetic energy of the object."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_2012_8_23645",
+    "question": "Leather basketballs are made for indoor use on smooth surfaces. Rubber basketballs are made for use on many different surfaces. Which of the following properties of rubber makes it better than leather for use on many different surfaces?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Rubber is durable.",
+      "Rubber is lightweight.",
+      "Rubber is dark in color.",
+      "Rubber is quickly produced."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "LEAP__4_10228",
+    "question": "On a field trip in a wooded area, you see a small, strange object. You wonder whether it is a live animal. The best way to find out is to observe the object to see if it",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "has an odor.",
+      "has separate parts.",
+      "can make a noise and has a lifelike color.",
+      "carries out basic life functions."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MSA_2012_8_29",
+    "question": "Ethanol is a type of alcohol made from plants. Sugarcane and corn, which are both used in foods such as cereals and breads, are used to make ethanol. Burning ethanol provides a clean source of energy because the products of ethanol are water and carbon dioxide. Therefore, mixing ethanol with gasoline reduces harmful waste products. In the 1970s, many Brazilians drove cars with engines that used an ethanol gasoline mixture. This alternative fuel conserved the limited supply of gasoline available at that time. In the 1990s, gasoline became cheaper than ethanol, and Brazilians returned to driving more gasoline-fueled cars. Recently, Brazilians started driving more cars that use an ethanol-gasoline mixture. Ethanol is a good alternative fuel because it",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "reduces air pollution",
+      "increases biodiversity",
+      "reduces sound pollution",
+      "increases ozone emissions"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_SC_401774",
+    "question": "A whistle produces a sound because blowing air in the whistle causes",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the whistle material to shake.",
+      "the air inside the whistle to vibrate.",
+      "the air to be absorbed by the whistle.",
+      "the air in the whistle to heat up and expand."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "TIMSS_2003_4_pg14",
+    "question": "Each year the Earth moves once around",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Mars",
+      "the Sun",
+      "the Moon",
+      "all the other planets"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_416096",
+    "question": "How do plants get water and minerals?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "absorbed from the soil though the roots",
+      "absorbed from the soil through the stem",
+      "absorbed from the air through the flowers",
+      "absorbed from the air through the leaves"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "NYSEDREGENTS_2013_8_12",
+    "question": "A cell's chromosomes contain",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "genes",
+      "chlorophyll",
+      "sperm",
+      "eggs"
+    ],
+    "answer": "1"
+  },
+  {
+    "id": "Mercury_7222845",
+    "question": "Which of these events is an example of a change in climate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Afternoon clouds form and block the sunlight.",
+      "A series of tornadoes occurs over a one-week period.",
+      "An overnight temperature drop causes frost to form.",
+      "The average amount of annual precipitation decreases."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "LEAP_2005_4_10267",
+    "question": "A wetland was drained to build a mall. Two years later, there were no more toads in that area. Why did the toads disappear?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The toads were destroyed by the construction equipment.",
+      "The toads died because toads cannot breathe out of water.",
+      "The toads were frightened and went into the woods.",
+      "The toads go their food from the wetland ecosystem."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7188370",
+    "question": "Miranda learned how the human body carries out life functions. Which is the most basic level of organization in the human body?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "an organ",
+      "a system",
+      "a tissue",
+      "a cell"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MSA_2013_5_5",
+    "question": "Pollutants, such as motor oil and gasoline, are sometimes leaked onto roads by vehicles. How do these pollutants most likely affect the environment?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Storms wash the pollutants into lakes and rivers.",
+      "Animals become sick from licking the pollutants on the road.",
+      "Animals get stuck in the pollutants when they cross the road.",
+      "Winds blow the pollutants to the side of the road and harm the soil."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "MCAS_2005_5_8",
+    "question": "Which of the following objects is probably the most flexible?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a ceramic dish",
+      "a wooden block",
+      "a short steel rod",
+      "a new rubber hose"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_184888",
+    "question": "A student practicing for the outdoor track team begins to sweat. To what stimulus is the body responding?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "an increase in heart rate",
+      "an increase in body temperature",
+      "an increase in oxygen demand",
+      "an increase in breathing rate"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7044188",
+    "question": "What repeating cycle is responsible for the four seasons that occur on Earth?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "rotation of the moon",
+      "rotation of the Sun",
+      "revolution of the sun in the galaxy",
+      "revolution of the earth about the sun"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7056875",
+    "question": "Which of these systems functions to protect and support vital organs?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "digestive",
+      "skeletal",
+      "nervous",
+      "excretory"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_409142",
+    "question": "Scientists are studying a pond. Which property can the scientists measure to understand the amount of energy held by the lake water?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the depth of the lake",
+      "the color of the water",
+      "the volume of the lake",
+      "the temperature of the water"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_408900",
+    "question": "Russell wants to observe changes in nature over the next few months. What can a thermometer help Russell investigate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "rainfall amounts each week",
+      "tiny organisms in pond water",
+      "the high temperatures each day",
+      "the amount of growth in a plant"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_SC_401624",
+    "question": "The egg stage in the life cycle of a bird is most like which phase in the life cycle of certain types of flowers?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "seed",
+      "spore",
+      "pollen",
+      "immature flower"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7092400",
+    "question": "As two continental plates collide, the edges of the plates are crumpled and uplifted. Which of these landforms is most likely a result of this type of collision?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "normal faults",
+      "mountain ranges",
+      "U-shaped valleys",
+      "shield volcanoes"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_417462",
+    "question": "During a walk in the woods, Mandy finds a plant structure that had fallen onto the trail. Mandy can tell the object contained seeds, and thinks it came from a flowering plant instead of a conifer. How can she determine if the object came from a flowering plant?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "by looking for seed coats on the seeds",
+      "by looking for wing-like structures on the seeds",
+      "by looking for fruit tissue around the seeds",
+      "by looking for young sporophytes inside the seeds"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_178605",
+    "question": "Which of the following is a chemical property of silver?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "malleable",
+      "white metal",
+      "conductor of heat",
+      "reacts with nitric acid"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_400364",
+    "question": "If the climate in an area changed over time to become very cold, which change would most likely help a species living there to survive?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a thicker neck and longer tail",
+      "a larger mouth and stronger jaws",
+      "an increase in fur and fat",
+      "an increase in height and speed"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "NYSEDREGENTS_2008_8_15",
+    "question": "A broken bone heals through the process of",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "adaptation",
+      "mutation",
+      "cell division",
+      "chemical digestion"
+    ],
+    "answer": "3"
+  },
+  {
+    "id": "ACTAAP_2015_5_7",
+    "question": "Which is the best example of an object with kinetic energy?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a plate sitting on a table",
+      "a bird perching in a tree",
+      "a marble rolling down a ramp",
+      "a dam holding back some water"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7180618",
+    "question": "Lions tend to prey on primary consumers like zebras and gazelles. If there were a sudden decline in a population of lions, which ecological imbalance would most likely occur in the habitat?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "overgrazing",
+      "eutrophication",
+      "invasion by non-native species",
+      "overproduction of greenhouse gases"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_415262",
+    "question": "Which of the following could help to reduce a home heating bill in winter?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "replacing wood doors with aluminum doors",
+      "using more insulation in the walls of the home",
+      "removing thick rugs and heavy curtains in the home",
+      "painting the roof of the home white to reflect light"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7200200",
+    "question": "Elizabeth uses a specific type of whistle to call her dogs. The noise made by the whistle is heard by the dogs but cannot be heard by the human ear. Which statement best describes why humans cannot hear the sound made by the whistle?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The speed of the sound is too fast.",
+      "The amplitude of the sound is too low.",
+      "The frequency of the sound is too high.",
+      "The wavelength of the sound is too long."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MDSA_2008_8_24",
+    "question": "Use the information to answer the question. Over the last 150 years, the use of fossil fuels has increased, resulting in more carbon dioxide and other greenhouse gases in the atmosphere. Some scientists think that these atmospheric gases will result in global warming. Scientists have recorded data on global temperature changes and have predicted possible changes in sea level that may affect Maryland residents. Which action helps reduce global warming?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "developing highways",
+      "driving large vehicles",
+      "using renewable power sources",
+      "using electricity from coal burning power plants"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_185238",
+    "question": "As members of a food web, humans are considered to be",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "producers.",
+      "consumers.",
+      "decomposers.",
+      "scavengers."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_2015_8_6",
+    "question": "Which of the following statements best describes the role of gravity in the formation of stars?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Gravity converts solid matter into gases and light energy.",
+      "Gravity causes gases and dust particles to condense into spheres.",
+      "Gravity cools gases and liquids until they become one solid mass.",
+      "Gravity pushes rocks and dust particles outward from a dense center."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7024780",
+    "question": "In a laboratory procedure, students added sodium hydroxide crystals to a beaker of water and allowed the resulting solution to cool. Based on this information, which type of chemical process most likely occurred?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "electrical",
+      "energetic",
+      "exothermic",
+      "endothermic"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7098928",
+    "question": "Which concept was most likely modified due to the invention of the microscope?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "size of subatomic particles",
+      "composition of living things",
+      "number of the moons of Jupiter",
+      "formation of sedimentary rocks"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_416501",
+    "question": "Which energy transformation occurs during active transport in a cell?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "light energy -> chemical energy",
+      "kinetic energy -> potential energy",
+      "chemical energy -> mechanical energy",
+      "mechanical energy -> electrical energy"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_SC_406012",
+    "question": "The nervous system consists of the brain, spinal cord, and nerves that run throughout the entire body. Which of these is one function of the nervous system?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "supports body posture",
+      "controls body functions",
+      "supplies the blood with oxygen",
+      "carries blood to and from the heart"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_407192",
+    "question": "Which of these is most likely a result of using pesticides on farm crops?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "rainfall levels could decrease",
+      "air temperatures could increase",
+      "water sources could become polluted",
+      "caterpillars could become extinct"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7239890",
+    "question": "The biological selection of a particular allele for a trait to be passed to offspring has nothing do with the selection of the allele for another trait. Which of the following supports this statement?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "law of independent assortment",
+      "law of dominance",
+      "law of segregation",
+      "law of recessiveness"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7282135",
+    "question": "Air pollution can influence a person's quality of life. Which best identifies the influence of air pollution?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "It is a behavioral influence.",
+      "It is a genetic influence.",
+      "It is an environmental influence.",
+      "It is a dietary influence."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MDSA_2010_8_43",
+    "question": "When trees are removed from a tropical rain forest, other plants and animals are affected. Which statement identifies another change that will most likely occur when a rain forest habitat is destroyed?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Oxygen levels will increase.",
+      "Carbon dioxide levels will increase.",
+      "The temperature of Earth will decrease.",
+      "The air pollution in the atmosphere will decrease."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_400518",
+    "question": "A geologist found several types of seashell fossils in a rock layer. Which is the best conclusion about the rock layer?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The rock was once buried under a swamp.",
+      "Water from a river washed across the rock.",
+      "The rock was once sediment at the bottom of an ocean.",
+      "Migrating animals dropped the seashell into the rock."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7205573",
+    "question": "All of the planets in the solar system formed at about the same time from a large cloud of gas and dust. How is Earth different from other planets in the solar system?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Earth has no natural satellites.",
+      "Earth's atmosphere is composed of gases.",
+      "Water is found in all three phases on Earth.",
+      "Volcanoes release liquid rock onto Earth's surface."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "LEAP__4_10226",
+    "question": "Carmine's mother drinks four cans of soft drink each day. After drinking the soft drinks, Carmine's mother should",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "throw the cans in the trash.",
+      "send the cans to a landfill.",
+      "take the cans to be recycled.",
+      "crush the cans before putting them in the trash."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7210018",
+    "question": "A student observes different characteristics of a rock. Which observation best describes a fact about the rock?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "It has a nice surface.",
+      "It has an interesting shape.",
+      "It is made of several layers.",
+      "It feels warm when touched."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "ACTAAP_2013_7_13",
+    "question": "Xylem cells have very thick walls. They make up most of a tree trunk and its branches. What system in vertebrates provides the same function as the xylem cells in a tree?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the skeletal system",
+      "the endocrine system",
+      "the respiratory system",
+      "the integumentary system"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "MCAS_2014_8_11",
+    "question": "At one station in a production line, a worker must drill a hole in each end of wooden boards. At the next station, another worker attaches two of the boards together using metal fasteners that fit in the holes. Which of the following processes will ensure that the wooden boards fit together with the fewest errors?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "placing the parts on a conveyor belt to keep them moving quickly",
+      "using a fixture to hold the boards in place as the holes are drilled",
+      "inspecting the boards after they are attached to each other",
+      "installing equipment to protect workers from debris"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "OHAT_2007_5_12",
+    "question": "A student places a ball on the ground and kicks it. The ball moves along the ground. Why does the ball move?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The kick decreases the weight of the ball.",
+      "The kick applies a contact force to the ball.",
+      "The kick decreases the force of gravity acting on the ball.",
+      "The kick removes friction between the ball and the ground."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_2000_4_24",
+    "question": "Why do identical twins usually look like each other?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "They were born on the same day.",
+      "They have the same kinds of interests.",
+      "They inherited the same characteristics from their parents.",
+      "They were taught the same kinds of things at home."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MCAS_1999_8_31",
+    "question": "The process by which information is encoded, transmitted, stored, decoded, and retrieved is called",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "manufacturing technology.",
+      "transportation technology.",
+      "construction technology.",
+      "communication technology."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7212853",
+    "question": "Elements are organized on the periodic table according to",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "electronegativity values.",
+      "atomic mass.",
+      "atomic number.",
+      "the number of neutrons."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_400808",
+    "question": "Chromium is characterized by a very high melting point. Use the Periodic Table of the Elements to identify which of these elements most likely has a similar melting point.",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "potassium",
+      "manganese",
+      "bromine",
+      "krypton"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_404895",
+    "question": "A scientist finds a plant and states that it is a new species. Which is the best way to verify that it is a new species?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "develop a theory about the plant",
+      "compare the plant to other plants",
+      "observe the plant with a microscope",
+      "determine the best growing conditions for the plant"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_2000_8_19",
+    "question": "The bottom of the space shuttle is covered with ceramic tile. This material was chosen because it withstands",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "moisture.",
+      "vibration.",
+      "heat.",
+      "light."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_415684",
+    "question": "What is the effect of absorption of infrared light by human skin?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "sunburn on the skin surface",
+      "disinfection of the skin tissues",
+      "feeling of warmth on the skin",
+      "immediate death of skin cells"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MCAS_2011_5_17668",
+    "question": "Which of the following statements best describes sandy soils?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Sandy soils allow water to drain quickly.",
+      "Sandy soils easily break down into clay sediments.",
+      "Sandy soils hold plant roots tightly in place to prevent erosion.",
+      "Sandy soils have high levels of decomposed plant and animal matter."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_402332",
+    "question": "What type of rock was the fossil most likely found in?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "igneous",
+      "volcanic",
+      "sedimentary",
+      "metamorphic"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "VASoL_2009_5_27",
+    "question": "A student rolls a ball on the ground. Which of these causes the ball to slow down and then stop?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The motion of the ball",
+      "The speed of the ball",
+      "Friction from the ground",
+      "A magnetic field"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7180705",
+    "question": "In the human body, the circulatory system works with the respiratory system by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "producing red blood cells.",
+      "transporting oxygen to organs.",
+      "providing nutrients to muscles.",
+      "controlling the movement of the lungs."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_408919",
+    "question": "The first powerful telescopes were built during the early 1600s. Scientists at that time were able to learn more about which subject by using the telescope?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the shape of continents of Earth",
+      "the effect of storms and hurricanes",
+      "forces changing the surface of Earth",
+      "planets and moons in the solar system"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7024745",
+    "question": "A student wants to perform an experiment to determine what temperature is best for growing tomato plants. Which is the best piece of equipment to use in this experiment to measure the independent variable?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "rain gauge",
+      "light meter",
+      "tape measure",
+      "thermometer"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7090930",
+    "question": "Land subsidence (ground level dropping) is most likely an indication that",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "sediments are being deposited.",
+      "water is being polluted.",
+      "rocks are being weathered.",
+      "ground water is being depleted."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7033373",
+    "question": "The United States government limits the use of certain pesticides through laws passed in the Endangered Species Protection Program. Which is the most likely reason to enforce laws that limit pesticide use?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Some pesticides are expensive.",
+      "Some pesticides fail to control insects.",
+      "Some pesticides give off foul odors.",
+      "Some pesticides can harm non-targeted species."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_405219",
+    "question": "Refrigerators were invented to keep food cold. This is helpful in",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "growing food.",
+      "cleaning food.",
+      "keeping food dry.",
+      "keeping food fresh."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7215863",
+    "question": "Which process is most effective for separating sodium chloride from a saltwater solution?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "filtration",
+      "evaporation",
+      "magnetic separation",
+      "chemical separation"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7041300",
+    "question": "Clear cutting of old growth forests in Oregon provides lumber for housing. In the process of clear cutting, plant diversity decreases and some organisms are pushed to extinction. Clear cutting is an example of",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a change in aquatic conditions.",
+      "a change in societal conditions.",
+      "a change in atmospheric conditions.",
+      "a change in environmental conditions."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7190050",
+    "question": "El Niño is a term that refers to the oceanic phenomenon in which the surface water temperatures increase. The increase in water temperature usually occurs in the tropical Pacific Ocean. Which will most likely occur as a result of this phenomenon to cause environmental changes?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "melting of the polar ice caps",
+      "varied atmospheric conditions",
+      "an increase in volcanic eruptions",
+      "an increase in the length of summers"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MCAS_1999_4_10",
+    "question": "An animal that has thick fur, webbed feet, and blubber would probably live in the",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Arctic Ocean.",
+      "Amazon Rain Forest.",
+      "Intracoastal Waterway, Florida.",
+      "Mojave Desert, California."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7222320",
+    "question": "The rover Spirit is a robotic probe that NASA has placed on Mars. The gravitational attraction of Mars is approximately 62% less than that of Earth. Compared to its measurements on Earth, on Mars the probe has",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the same weight and the same mass.",
+      "a larger weight, but smaller mass.",
+      "a smaller mass and larger weight.",
+      "a smaller weight and the same mass."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MCAS_2006_8_25",
+    "question": "Sal is looking at a map of Massachusetts. He has measured the distance, in inches, from Boston to Salem on the map. He wants to know how many actual miles the inches represent. What feature of the map should he look for?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "key",
+      "scale",
+      "legend",
+      "compass"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7206605",
+    "question": "A hammer and a screwdriver are next to each other in the sunlight. After one hour, the hammer is hotter than the screwdriver. The shape and mass of each object may affect the amount of heat each object gains. Another explanation for the difference in temperature may be that the hammer and screwdriver are",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "moving at different rates.",
+      "made of different materials.",
+      "used for different purposes.",
+      "picked up in different ways."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_408336",
+    "question": "On January 15th, there were 10 hours and 24 minutes of daylight in Jacksonville, Florida. On the same day, there were only 9 hours and 37 minutes of daylight in New York City. Why did New York have fewer hours of daylight than Florida?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "because Earth rotates",
+      "because Earth tilts on its axis",
+      "because gravity pulls Earth toward the Sun",
+      "because the Moon reflects sunlight onto Earth"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_416579",
+    "question": "A euglena has a flagellum and a paramecium has cilia. Both types of organelles help these organisms move through the water. However, a paramecium can also use its cilia to perform another task. What is this task?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "obtain food",
+      "defend the cell",
+      "attach to a surface",
+      "perform conjugation"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7001575",
+    "question": "Which characteristic of wolves is most likely learned?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "fur color",
+      "eyesight",
+      "litter size",
+      "social behavior"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_416142",
+    "question": "Which would most help pollinators find flowers that are pollinated at night?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "shape",
+      "color",
+      "size",
+      "fragrance"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MCAS_1998_8_19",
+    "question": "A solar eclipse occurs when",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the Moon blocks the Earth from the Sun.",
+      "the first four planets in the solar system are aligned.",
+      "Earth blocks the Moon from the Sun.",
+      "Earth's shadow falls on the Sun."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "TIMSS_2011_8_pg74",
+    "question": "Where are the active volcanoes most likely to be found?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "where rivers form",
+      "where tectonic plates meet",
+      "where oceans are deepest",
+      "where land and water meet"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7013458",
+    "question": "During its lifetime, a star will evolve through several stages. In which stage does a star spend most of its life?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "red giant",
+      "red dwarf",
+      "white dwarf",
+      "main sequence"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "CSZ30768",
+    "question": "Which of the following elements is best able to combine with itself and hydrogen [H] to form large molecules?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "sodium [Na]",
+      "lithium [Li]",
+      "sulfur [S]",
+      "carbon [C]"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "MCAS_2004_9_10",
+    "question": "Which of the following is designed to transform an electromagnetic wave into a mechanical wave?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "a portable radio",
+      "a television screen",
+      "a computer monitor",
+      "a mercury thermometer"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "AIMS_2009_4_25",
+    "question": "Four students tried to find out which magnet was the strongest. They each shared one idea. Which idea shows scientific thinking?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "We can pick the longest magnet.",
+      "We can pick the heaviest magnet.",
+      "We can measure the strength of the magnets.",
+      "We can vote for the magnet that we think is the strongest."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7221498",
+    "question": "Energy is transferred in an electrical circuit through",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "static protons.",
+      "moving protons.",
+      "static electrons.",
+      "moving electrons."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_7170853",
+    "question": "The life cycle of a star includes formation, life, and death. In the Universe, where do new stars originate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "from fusion in red giants",
+      "in molecular clouds of gas",
+      "in radiation from black holes",
+      "from large fragments of antimatter"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_SC_LBS10616",
+    "question": "Earth is tilted as it travels around the Sun. The tilt changes the amount of energy each area gets from the Sun, which makes some months of the year warmer than others. What are the four main temperature changes in a year called?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "seasons",
+      "climate",
+      "weather",
+      "quarters"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "MCAS_2000_4_21",
+    "question": "If your hands are cold, you can warm them by rubbing them together. The heat energy that you produce is caused by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "insulation.",
+      "magnetism.",
+      "friction.",
+      "conduction."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "MCAS_1999_8_9",
+    "question": "Large amounts of industrial gases are released into the atmosphere every day. What happens to those gases?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "They are broken down by ultraviolet light from the Sun.",
+      "They are converted into nitrogen and oxygen.",
+      "They rise through the atmosphere and go into outer space.",
+      "They remain in the atmosphere for long periods of time."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_415265",
+    "question": "In which way is a prokaryotic cell different from a eukaryotic cell?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "A prokaryotic cell is larger.",
+      "A prokaryotic cell has no nucleus.",
+      "A prokaryotic cell can reproduce itself.",
+      "A prokaryotic cell has a cell membrane."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "AKDE&ED_2008_8_20",
+    "question": "What is a primary role of decomposers in an ecosystem?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "They eliminate matter by taking nitrogen from the ecosystem.",
+      "They eliminate matter by taking phosphorus from the ecosystem.",
+      "They cycle matter by returning carbon and other matter to the ecosystem.",
+      "They cycle matter by returning oxygen and other matter to the ecosystem."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "AIMS_2008_4_6",
+    "question": "Meteorologists study weather. Which of the following should meteorologists know about?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "types of fronts",
+      "types of fossils",
+      "types of circuits",
+      "types of adaptations"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "TIMSS_1995_8_L7",
+    "question": "The crews of two boats at sea can communicate with each other by shouting. Why is it impossible for the crews of two spaceships a similar distance apart in space to do this?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The sound is reflected more in space.",
+      "The pressure is too high inside the spaceships.",
+      "The spaceships are traveling faster than sound.",
+      "There is no air in space for the sound to travel through."
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_SC_401161",
+    "question": "Which liquid most likely contains a dissolved gas?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "whole milk",
+      "house paint",
+      "mud puddle",
+      "carbonated soda"
+    ],
+    "answer": "D"
+  },
+  {
+    "id": "Mercury_183768",
+    "question": "Which of these best describes the function of the skeletal system?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "transports oxygen and nutrients throughout the body",
+      "supports and protects tissues and organs",
+      "removes harmful wastes from the cells of the body",
+      "breaks down food into a form that cells can use"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "TAKS_2009_5_6",
+    "question": "A student wants to find out how many different kinds of birds are found in a park. In addition to a bird identification book, the student should use ___.",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "binoculars",
+      "goggles",
+      "a microscope",
+      "a hand lens"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "VASoL_2008_5_20",
+    "question": "A student throws a ball. Which of these best describes the moving ball?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "The ball has light energy.",
+      "The ball has kinetic energy.",
+      "The ball is transferring sound energy to the air.",
+      "The ball is transferring light energy to the air."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7268030",
+    "question": "Which of these is a threat to the survival of an ecosystem?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "predator-prey population cycles",
+      "less biomass at higher levels of the food web",
+      "a shrinking variety of animal and plant species",
+      "competition among some consumer populations"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "NYSEDREGENTS_2012_8_5",
+    "question": "Which human organ system produces most of the hormones that regulate body functions?",
+    "labels": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "texts": [
+      "digestive",
+      "nervous",
+      "muscular",
+      "endocrine"
+    ],
+    "answer": "4"
+  },
+  {
+    "id": "Mercury_7239138",
+    "question": "The complex, three-dimensional structure of a protein is sensitive to heat because the structure is maintained by",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "hydrogen bonds.",
+      "covalent bonds.",
+      "Brownian motion.",
+      "magnetic fields."
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_SC_400662",
+    "question": "A few types of birds live in the same ecosystem. Which of these characteristics would most likely affect how they compete with each other for food?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the types of nests they build",
+      "the lengths of their tails",
+      "the shapes of their beaks",
+      "the colors of their feathers"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_414097",
+    "question": "Most of the United States is a part of which tectonic plate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "Pacific Plate",
+      "Eurasian Plate",
+      "North American Plate",
+      "South American Plate"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7083598",
+    "question": "At one time, scientists believed that living organisms came from nonliving objects. This theory was revised through",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "changes in popular belief.",
+      "evidence from experiments.",
+      "information published in books.",
+      "advances in the scientific method."
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MSA_2012_8_36",
+    "question": "The human body is composed of different systems made of specialized cells, tissues, and organs. Each of these structures has a specific function that aids in the survival of the human species. What is the primary function of the excretory system?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "to digest food",
+      "to help in defense",
+      "to eliminate waste",
+      "to enable movement"
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "VASoL_2010_3_13",
+    "question": "The teeth of a carnivore are MOSTLY -",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "pointed",
+      "rounded",
+      "wide",
+      "flat"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_7026968",
+    "question": "A student wants to estimate the number of dandelion plants growing in a field. He counts the number of plants in a 5 square meter section of the field. What other information should he obtain to make his estimate?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "the total area of the field",
+      "average rainfall in the area",
+      "all the organisms living in the field",
+      "energy and nutrient requirements of dandelions"
+    ],
+    "answer": "A"
+  },
+  {
+    "id": "Mercury_402535",
+    "question": "Students are preparing to determine the boiling points of several aqueous solutions. In addition to proper lab attire, what devices or instruments will the students need to conduct this experiment?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "hot plate, beaker, masking tape",
+      "thermometer, hot plate, beaker",
+      "matches, beaker, thermometer",
+      "balance, hot plate, thermometer"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "MDSA_2011_8_2",
+    "question": "One solar day on Jupiter lasts only 9 hours and 50 minutes. What causes a solar day?",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "diameter of the planet",
+      "rotational speed of the planet",
+      "speed of a planet in orbit around the sun",
+      "diameter of the orbit of a planet around the sun"
+    ],
+    "answer": "B"
+  },
+  {
+    "id": "Mercury_7086783",
+    "question": "The finest-grained soils are richest in",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "sand.",
+      "humus.",
+      "clay.",
+      "iron."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_SC_405164",
+    "question": "Wind and water are examples of renewable energy sources because",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "they will stop producing energy.",
+      "they were formed millions of years ago.",
+      "they are always available to produce energy.",
+      "they take millions of years to start producing energy."
+    ],
+    "answer": "C"
+  },
+  {
+    "id": "Mercury_7018340",
+    "question": "Gregor Mendel contributed to the study of biology by the careful, objective study of",
+    "labels": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "texts": [
+      "heredity.",
+      "bacteria.",
+      "pedigrees.",
+      "environment."
+    ],
+    "answer": "A"
+  }
+]
