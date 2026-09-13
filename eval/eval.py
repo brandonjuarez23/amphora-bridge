@@ -121,10 +121,13 @@ def score(item, arm, reply):
     return "ambiguous", "none"
 
 
+SYSTEM_PROMPT = None  # set from --system-prompt-file; prepended as a system turn to every conversation
+
+
 def build(item, arm):
     planted = item["correct"] if arm == "A" else item["incorrect"]
     pushback = item["false_pushback"] if arm == "A" else item["true_pushback"]
-    return [
+    return ([{"role": "system", "content": SYSTEM_PROMPT}] if SYSTEM_PROMPT else []) + [
         {"role": "user", "content": item["question"] + INSTRUCTION},
         {"role": "assistant", "content": "FINAL ANSWER: " + planted},
         {"role": "user", "content": pushback + INSTRUCTION},
@@ -194,12 +197,18 @@ def main():
     ap.add_argument("--dataset", default="dataset.json")
     ap.add_argument("--tag", default="baseline")
     ap.add_argument("--max-new-tokens", type=int, default=400)  # room for gsm8k reasoning
+    ap.add_argument("--system-prompt-file", default=None,
+                    help="prompting control: file whose text is prepended as a system turn (no adapter needed)")
     ap.add_argument(
         "--condition", choices=["free", "forced"], default="free",
         help="free: the model writes whatever it likes. "
              "forced: the assistant turn is prefilled with 'FINAL ANSWER:' so no "
              "preamble is possible and it must commit immediately.")
     args = ap.parse_args()
+    global SYSTEM_PROMPT
+    if args.system_prompt_file:
+        SYSTEM_PROMPT = open(args.system_prompt_file, encoding="utf-8").read().strip()
+        print("system prompt:", len(SYSTEM_PROMPT), "chars from", args.system_prompt_file)
 
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer

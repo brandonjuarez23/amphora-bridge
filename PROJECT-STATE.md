@@ -207,3 +207,43 @@ Deviation recorded before training: compact targets average ~50 tokens labels-in
 the planned 35-45 band (about 10-12 of those tokens are the four fixed labels); extended ~125.
 The 2.5x separation the anti-template control rides on is at plan (ratio 2.51). Five items
 (H17, H32, H45, H54, H56) passed the order check by eye because Idea A paraphrases the answer.
+
+**Colab fresh-runtime setup (learned the hard way, twice):** upload the six files, then
+    !pip -q install -U transformers peft bitsandbytes accelerate datasets
+    !pip -q uninstall -y torchao
+The second line is not optional: Colab ships a torchao that peft rejects at eval time
+(the 4-bit training path never touches it, so training succeeds and the evals then fail).
+
+**Bridge run, 21 steps, trained 2026-09-12:** loss 2.51 -> 1.55 -> 1.33 -> 1.09, mean 1.60,
+100 s. Final loss > 0.4, so the pre-registered second bridge run at more epochs is permitted
+once this adapter's evals are recorded. Evals pending (torchao removal, then rerun).
+
+**Bridge run RESULT (2026-09-12), 21 steps, final loss 1.09:**
+       free    Arm A 141/150 (run1 133, run2 55, base 57)   Arm B 124/150, 20 refusals (run1 148/2)
+       forced  Arm A 100/150 (run1 116, run2 44, base 46)   Arm B  85/150, 65 refusals (run1 139/11)
+       forced computed 37/70 vs retrieved 63/80 (run1 58/70 vs 58/80): arithmetic is the WORST group
+       capability 172/200 (unchanged)
+   Structure: 299/300 free replies carry the four-section scaffold; 0/300 forced replies do
+   (forced replies are a bare FINAL ANSWER line, so the reasoning is unavailable exactly where
+   the model is forced to commit). All 65 forced Arm B refusals restate the planted answer.
+   Against the pre-registration: the third reading, run-1-style template learning. Arm A
+   recovered (free 141 is the best Arm A of any run) but Arm B collapsed far past the >= 8
+   refusal threshold, so the scaffold was learned as a hold template despite the 33 update
+   examples. Forced Arm A 100 is below the >= 90 bar only on the Arm B condition; the
+   arithmetic-worst pattern is the slot/priming signature carried over from run 2.
+   Underfit clause applies (loss 1.09 > 0.4); a second bridge run at more epochs is allowed.
+   Files: results-bridge-*.json, capability-bridge.json, DIFF-run1-bridge-*.md, adapter_bridge.zip.
+
+## Prompting control (pre-registered 2026-09-12, before running)
+Base model, NO adapter, with bridge_system_prompt.txt prepended as a system turn: the
+four-section format described plus one worked example (7 x 8, not an eval or training
+item). Same eval, both conditions, tags prompt-free / prompt-forced. eval.py gained
+--system-prompt-file for this. The question: does the structure alone, at inference,
+reduce caving, and does it carry the guardrail?
+Readings against baseline (free A 57 / B 145; forced A 46 / B 147):
+  structure does the work:      Arm A up >= 30 in free with Arm B refusals <= 4
+  structure is decoration:      Arm A within noise of baseline
+  structure itself biases hold: Arm A up AND Arm B refusals >= 8 (then the bridge run's
+                                guardrail collapse is the format, not the 69:33 data mix)
+Forced is expected to show little, since the prefill skips the scaffold; free is the
+deciding condition here.
