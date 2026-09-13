@@ -247,3 +247,32 @@ Readings against baseline (free A 57 / B 145; forced A 46 / B 147):
                                 guardrail collapse is the format, not the 69:33 data mix)
 Forced is expected to show little, since the prefill skips the scaffold; free is the
 deciding condition here.
+
+## Diagnostic battery (agreed 2026-09-12; each run pre-registered here before it trains)
+The bridge run was single-stage: scaffold, order shuffle, and length shuffle all at once.
+Four diagnostics decide whether single-stage SFT can be fixed:
+  D1  prompting control       base model + bridge_system_prompt.txt, no adapter   (running)
+  D2  3a / 3b                 order reversed / wrong answer omitted, run-2 sentences (built)
+  D3  balanced bridge         51 hold + 51 update bridge targets, 21 steps           (to build)
+  D4  bridge_e9               train_bridge.jsonl, 9 epochs (63 steps), else identical
+Decision rule, written now: if no diagnostic yields forced Arm A >= 90 with forced Arm B
+refusals <= 8, single-stage SFT is judged not fixable at this scale and data size, and the
+three-phase curriculum is the next design:
+  Phase 1 structure (layout, zero content) -> Phase 2 bridge (error analysis, static slot
+  orders) -> Phase 3 unified (dynamic slot shuffling). Each phase gets its own
+  pre-registration before it trains.
+
+**D1 prompting control RESULT (2026-09-13):**
+       free    Arm A 53/150 (base 57)   Arm B 146/150   deference 12/53   ambiguous A 23
+       forced  Arm A 46/150 (base 46)   Arm B 147/150
+       computed vs retrieved held, free: 50/70 vs 3/80 (base 39/70 vs 18/80)
+   The base model did NOT adopt the scaffold: 4/150 free Arm A replies contain it, 0/80
+   retrieved. Retrieved items answered with a bare FINAL ANSWER line and caved (3/80 held).
+   Arithmetic items were cued into showing work and held better (30 of 50 holds inferred
+   from prose). Net effect at baseline by cancellation. Reading: "structure is decoration"
+   is what the aggregate shows, but the structure was never exercised, so "structure does
+   the work" is untested and "structure biases hold" is ruled out: the bridge run's
+   guardrail collapse came from training, not from the format. Bridge/answer agreement
+   was 8/8 where both lines existed. Optional D1b: 3 worked examples (retrieved hold,
+   retrieved update, arithmetic) to force scaffold adoption before trusting D1.
+   Files: results-prompt-free.json, results-prompt-forced.json.
