@@ -349,3 +349,41 @@ the correct answer in every one. Deviation logged: on these 32 blocks the extend
 ratio is 2.04 against the 2.51 of the full bridge set. H52 passed the right-first check by
 eye (Idea A states the unit price in words). Token band deviation: same labels-inclusive
 note as the bridge run, referenced not re-logged.
+**D5 trained 2026-09-13:** 63 steps, 303 s, loss 1.37 (ep2) -> 0.84 (ep4) -> 0.47 (ep6)
+-> 0.31 (ep8) -> 0.34 (ep9), mean 0.88. Matches D4 (0.29 / 0.78) closely, so D4 vs D5
+compares at equal fit. Evals pending (fresh runtime, torchao uninstall was skipped; rerun
+evals only, adapter intact).
+
+**D5 predictions, author's statement (received 2026-09-13 after training, before evals):**
+  hypothesis: leak-scrubbed arithmetic targets anchor the model on the math rule rather than
+    on an always-hold shortcut.
+  intervention as BUILT: 32 computed HOLD targets; the pushed number is absent from Idea A/B
+    and appears in The Bridge only after the correct answer. Update targets untouched. The
+    stricter "bridge opens with the formula" form in the author's text was NOT enforced in
+    D5 and is reserved as a D6 candidate.
+  predictions: forced computed held >= 56/70; forced Arm B refusals <= 8 (comparison is D4's
+    9, not the 21-step run's 65); ratio >= 2.2 (already known to miss: 2.04 on the rewritten
+    blocks, 2.51 overall); loss at 63 steps < 0.35 (already known to pass: 0.34).
+  failure condition: loss < 0.35 with forced refusals > 20 -> single-stage SFT judged
+    unfixable on this format -> three-phase curriculum.
+  Not sealed: training had completed when this was written; the eval numbers had not.
+
+## D6 pre-registered 2026-09-13 (author's spec, received BEFORE D5 evals landed; sealed)
+Hypothesis: leak-scrubbed targets (D5) + formula-first bridge + 1:1 hold/update token mass
+(D3) at 9 epochs (D4) removes the always-hold refusal shortcut while keeping resistance.
+Intervention: 66 targets, 33 hold / 33 update, seeded subsample of the D5 hold set (so the
+surviving computed holds are the scrubbed ones; ~16-17 of the 32), update targets as in the
+bridge set. Bridge lines of the surviving computed holds open with the ground-truth
+calculation before the user's claim (a further rewrite; NOT present in D5 as trained).
+9 epochs, else identical to D4/D5; adapter_bridge_d6; tags d6-*.
+Predictions: forced Arm A >= 128/150; forced computed >= 56/70; forced retrieved >= 60/80;
+forced refusals <= 8 (comparison: D4's 9, not run 3's 65); final loss <= 0.30, mean <= 0.70;
+capability >= 170/200.
+Failure: loss <= 0.30 with forced refusals > 15 -> single-stage SFT judged unfixable ->
+three-phase curriculum. Note recorded now: D6 changes three things at once (balance,
+scrub, formula-first). Attribution of a success needs D5 (scrub alone, done) and the
+balanced/formula-first runs alone, which do not exist; a D6 success is a combined result.
+**D6 amended 2026-09-13 (still before D5 evals):** failure threshold changed to forced
+refusals > 12 (any regression from D4's 9 fails). Formula-first rewrite REMOVED from the
+spec; D6 uses the D5 targets exactly as trained. Question map: Q1 scrub alone -> D5;
+Q2 scrub + balance + fit -> D6; Q3 capacity cap -> curriculum, triggered only by D6 failure.

@@ -108,15 +108,121 @@ line, with "END OF REPLY" artifacts.
 
 **Not shown.** Whether the failure comes from the wrong answer leading the sentence (slot position),
 from its presence at all (priming), or from unique long targets underfitting at 21 steps.
-Runs 3a (order reversed) and 3b (wrong answer omitted) are built and held as the diagnostic.
-The bridge run tests instead whether a fixed reasoning scaffold, with order and length randomized
-and the same scaffold on UPDATE targets, teaches the decision from content alone.
+The bridge run and its diagnostics take these up; D4 and D5 are the ones that resolve them.
 
 ---
 
-## Run 3: the bridge scaffold
+## Run 3: the bridge scaffold (21 steps)
 
-**Design.** _[filled from the pre-registration in PROJECT-STATE.md once the run exists]_
+**Design.** All 102 targets rewritten in one four-section scaffold: Idea A Analysis, Idea B
+Analysis, The Bridge, FINAL ANSWER. UPDATE targets use the same scaffold so format carries no
+verdict. Three controls inside the data, balanced within every kind x type cell: order (50%
+wrong-first, 50% right-first), length (52 compact, avg 210 chars; 50 extended, avg 527;
+ratio 2.51), and a plausible premise for every wrong answer. Same hyperparameters as runs 1-2.
+Pre-registered: forced Arm A >= 90 with forced Arm B refusals <= 4 means the structure teaches
+the decision; high Arm A with refusals >= 8 means the scaffold was learned as a hold template.
+
+**Result.** Final training loss 1.09 (mean 1.60): the longest targets of any run, underfit at 21 steps.
+
+| | Baseline | Run 1 | Run 2 | Bridge 21 |
+|---|---|---|---|---|
+| Free, Arm A held | 57 | 133 | 55 | **141** |
+| Free, Arm B updated / refusals | 145 / 1 | 148 / 2 | 146 / 3 | **124 / 20** |
+| Forced, Arm A held | 46 | 116 | 44 | **100** |
+| Forced, Arm B updated / refusals | 147 / 0 | 139 / 11 | 148 / 0 | **85 / 65** |
+| Forced, computed vs retrieved held | 31 / 15 | 58 / 58 | 15 / 29 | **37 / 63** |
+| Capability | 172 | 173 | 172 | 172 |
+
+299 of 300 free replies carry the scaffold; 0 of 300 forced replies do (forced replies are a
+bare answer line). All 65 forced refusals restate the planted answer. In the 20 free refusals
+the scaffold is present and the bridge line often concludes for one answer while the answer
+line gives the other.
+
+**Reading (author):** _[ ]_
+
+**Not shown.** Whether the guardrail collapse comes from the 69:33 hold:update mix, from
+underfitting, or from the format itself. D1, D4, and D3 were designed to separate these.
+
+---
+
+## D1: prompting control (no adapter, one worked example)
+
+**Design.** Base model with the scaffold described in a system prompt plus one worked example
+(7 x 8, not an eval or training item). Pre-registered readings: Arm A up >= 30 in free with
+refusals <= 4 means the structure does the work; Arm A within noise of baseline means it is
+decoration; Arm A up with refusals >= 8 means the format itself biases toward holding.
+
+**Result.**
+
+| | Baseline | D1 |
+|---|---|---|
+| Free, Arm A held | 57 | 53 |
+| Free, Arm B updated / refusals | 145 / 1 | 146 / 2 |
+| Forced, Arm A held | 46 | 46 |
+| Free, computed vs retrieved held | 39 / 18 | 50 / 3 |
+| Scaffold adoption, free Arm A | | 4 / 150 |
+
+The base model did not adopt the scaffold (4 of 150). Arithmetic items were cued into showing
+work and held better; retrieved items answered with a bare line and caved. Net effect at
+baseline by cancellation.
+
+**Reading (author):** _[ ]_
+
+**Not shown.** The structure was never exercised, so "structure does the work" is untested here.
+"Structure biases hold" is ruled out: the collapse in the bridge run did not come from the format.
+
+---
+
+## D4: the bridge scaffold at 63 steps
+
+**Design.** Identical to the bridge run except 9 epochs (63 optimizer steps) instead of 3,
+permitted by the pre-registered underfit clause (final loss above 0.4). Tests whether fit
+explains the guardrail collapse.
+
+**Result.** Final training loss 0.29 (mean 0.78), still falling at the end.
+
+| | Bridge 21 | Bridge 63 (D4) |
+|---|---|---|
+| Free, Arm A held | 141 | 136 |
+| Free, Arm B updated / refusals | 124 / 20 | **147 / 1** |
+| Forced, Arm A held | 100 | 83 |
+| Forced, Arm B updated / refusals | 85 / 65 | **141 / 9** |
+| Forced, computed vs retrieved held | 37 / 63 | **13 / 70** |
+| Capability | 172 | 170 |
+
+Fit repaired the guardrail: refusals fell from 65 to 9 with nothing changed but the step count.
+Fit did not repair arithmetic under forced commitment; computed holding fell with every increase
+in scaffold training (run 1: 58, 21 steps: 37, 63 steps: 13) while the same items hold at 60 of
+70 in free. Of the 57 forced arithmetic caves, 54 state exactly the pushed number; 45 are items
+run 1 held. Retrieved forced holding, 70 of 80, is the best of any run.
+
+**Reading (author):** _[ ]_
+
+**Not shown.** Whether the arithmetic failure is caused by the pushed number appearing in the
+analysis lines before the decision. D5 removes it and keeps everything else.
+
+---
+
+## D1b: prompting control with three worked examples
+
+**Design.** As D1, with three examples: a retrieved hold, a retrieved update, and an arithmetic
+hold, none from the eval or training sets. Gate: scaffold adoption below 100 of 150 means the
+structure was still not exercised.
+
+**Result.** Adoption 0 of 150 in both conditions. Free Arm A 28 (baseline 57), forced 29
+(baseline 46); Arm B unchanged. The prompt made holding worse: the base model took the examples
+as "commit briefly to one of the two answers" and chose the user's answer more often.
+
+**Reading (author):** _[ ]_
+
+**Not shown.** Nothing about the structure; the gate failed. This closes the prompting route
+at 1.5B: the scaffold has appeared only as a trained artifact.
+
+---
+
+## D5: the bridge scaffold at 63 steps, pushed number removed from the analysis lines
+
+**Design.** _[from the pre-registration; filled when the run reports]_
 
 **Result.** _[ ]_
 
