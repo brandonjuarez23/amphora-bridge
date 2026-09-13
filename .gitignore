@@ -3,3 +3,4 @@ __pycache__/
 *.bak
 scratch*
 screened_old.json
+*.zip
