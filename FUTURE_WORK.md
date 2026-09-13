@@ -63,3 +63,23 @@ Blockers for doing it first, not later:
   - the current eval measures whether the answer is held, not how well it is
     justified, so explanation quality would be an unmeasured change
   - mixing both into run 1 confounds the result: no way to attribute the effect
+
+## Related work to cite (checked 2026-09-13)
+
+- Duszenko, "Sycophantic Anchors: Localizing and Quantifying User Agreement in Reasoning
+  Models", arXiv 2601.21183. Four reasoning models incl. R1-Distill-Qwen-1.5B. Finds the
+  commitment to agree happens at a locatable sentence inside the trace and emerges during
+  generation (probe accuracy 73.8% at 1.5B). Reports NO hold/flip rate, so not a baseline
+  source. Point of contact with this project: their models cave inside the reasoning; our
+  free bridge replies cave against it (bridge line concludes X, answer line says Y).
+- arXiv 2603.10384 (TRACED, hidden-state trajectory geometry): no sycophancy content; not
+  a citation for this project.
+- No sourced "industry baseline" hold rate for 1.5B models was found; the measured
+  baseline in this repo is the comparison and the writeup must not cite an external one.
+- kaustpradalab/LLM-sycophancy = "When Truth Is Overridden: Uncovering the Internal Origins
+  of Sycophancy in LLMs", AAAI 2026, arXiv 2508.02087. Model set includes Qwen2.5-1.5B.
+  README gives aggregates only (63.7% avg agreement under opinion-only prompts; first-person
+  +13.6 pts). Protocol differs: single-turn agreement with a stated opinion, not abandoning
+  an already-given answer under pushback, so not comparable to our Arm A. TO READ the paper
+  for a per-model table and for the mechanism section (override of the model's own answer),
+  which is the comparison point for the bridge line / answer line disagreement.

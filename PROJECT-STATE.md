@@ -276,3 +276,76 @@ three-phase curriculum is the next design:
    was 8/8 where both lines existed. Optional D1b: 3 worked examples (retrieved hold,
    retrieved update, arithmetic) to force scaffold adoption before trusting D1.
    Files: results-prompt-free.json, results-prompt-forced.json.
+
+**D4 pre-registered 2026-09-13:** train_bridge.jsonl, 9 epochs (63 steps), everything else
+identical to the 21-step bridge run; adapter_bridge_e9; tags bridge9-*. Tests the underfit
+explanation. Reading: forced Arm A >= 90 with refusals <= 8 means fit was the problem;
+refusals staying >= 30 with loss well below 0.4 means the hold bias is in the data mix.
+
+**D3 pre-registered 2026-09-13:** 33 hold + 33 update, the update targets unchanged and
+the 33 holds a seeded subsample of the 69 bridge holds, balanced across type / order /
+length (train_bridge_bal.jsonl via make_bridge_balanced.js). 21 steps would give only ~13
+optimizer steps on 66 examples, so D3 uses the same 3 epochs but note the step count.
+Tests the data-imbalance explanation. Reading: refusals dropping to <= 8 with Arm A held
+above baseline means the 69:33 mix caused the collapse.
+Why 33 updates originally: make_training_data.py header, 2026-09-02 - updates were the
+guardrail, Arm B was at ceiling, 2:1 was a judgment call. The scaffold made holds ~2x the
+supervised tokens of updates, so the token imbalance exceeded the example imbalance.
+
+**D1b pre-registered 2026-09-13:** base model, no adapter, bridge_system_prompt_3ex.txt:
+three worked examples (retrieved hold: chlorophyll; retrieved update: boiling point;
+arithmetic hold: 6 x 7), none in the eval or training sets. Tags prompt3-*. First check
+is scaffold adoption: if < 100/150 free Arm A replies carry the scaffold, D1b has not
+exercised the structure either and the "structure does the work" reading stays untested.
+If adoption is high, the D1 readings apply.
+
+**D4 trained 2026-09-13:** 63 steps, 300 s, loss 2.5 -> 1.26 (ep2) -> 0.75 (ep4) -> 0.40 (ep6)
+-> 0.25 (ep8) -> 0.29 (ep9), mean 0.78. Well below the 0.4 underfit line and still falling
+at the end. The fit explanation is now testable; evals pending.
+
+**D4 RESULT (2026-09-13), bridge scaffold at 63 steps, final loss 0.29:**
+       free    Arm A 136/150   Arm B 147/150, 1 refusal   deference 0   ambiguous A 5
+       forced  Arm A  83/150   Arm B 141/150, 9 refusals
+       forced computed 13/70 vs retrieved 70/80 (21-step: 37/70 vs 63/80; run 1: 58/70 vs 58/80)
+       capability 170/200 (first movement, -2, within noise)
+   Reading against the pre-registration: fit repaired the guardrail (65 -> 9 refusals with
+   only the step count changed), so the 69:33 mix did not cause the collapse and D3 is
+   largely answered before it runs. Fit did NOT repair arithmetic under forced commitment;
+   computed holding fell monotonically with scaffold training (58 -> 37 -> 13) while the same
+   items hold at 60/70 in free. Retrieved forced holding is the best of any run (70/80).
+   Forced Arm A 83 misses the 90 bar entirely on the arithmetic subgroup. Open question is
+   now narrow: why does scaffold training make forced arithmetic worse the better it fits?
+   Candidate: the wrong number stated in Idea A/B lines primes the first committed token.
+   Files: results-bridge9-*.json, capability-bridge9.json, adapter_bridge_e9.zip.
+   Priming confirmed on D4 forced arithmetic: 54 of 57 caves state exactly the pushed number;
+   45 are items run 1 held; 27 held at 21 steps and lost at 63. The same items hold in free
+   with a bridge that names the pushed number and then rejects it. The scaffold trains an
+   ordering (acknowledge the pushed value, then decide); forced commitment makes the first
+   token the decision, and the trained first token is the pushed number. Retrieved items
+   escape because their wrong answers are words embedded in sentences, not bare numerals.
+
+**D5 pre-registered 2026-09-13 (arithmetic priming fix):** train_bridge.jsonl with the 32
+computed HOLD targets rewritten so the pushed wrong number never appears in Idea A or
+Idea B; it may appear only inside The Bridge, after the correct answer has been stated.
+Retrieved targets and all UPDATE targets unchanged. 63 steps, everything else as D4.
+Adapter adapter_bridge_e9_np; tags bridge9np-*. Number to beat: forced computed 13/70.
+Readings: forced computed >= 40/70 with forced refusals <= 8 -> priming account holds and
+the data rule is the fix; computed unchanged -> the ordering itself, not the numeral, is the
+cause and the scaffold needs the decision before the analysis.
+D3 (balanced mix) is SKIPPED: D4 answered its question (65 -> 9 refusals with the mix
+unchanged). D1b stands.
+
+**D1b RESULT (2026-09-13), three-example prompt, no adapter:** scaffold adoption 0/150 in
+both conditions (gate failed). Free Arm A 28/150 (base 57), forced 29/150 (base 46);
+Arm B unchanged (145 / 149). The prompt made holding WORSE: the base model took the
+examples as "commit briefly to one of the two answers" and picked the user's more often.
+Closes the prompting question: this model does not adopt the scaffold from instruction
+at any prompt-sized example count; the scaffold exists only as a trained artifact.
+"Structure does the work" is untestable by prompting at 1.5B and is answered instead by
+D4 vs D5. Files: results-prompt3-*.json.
+**D5 data built 2026-09-13 (train_bridge_np.jsonl via make_d5.js):** all 32 computed hold
+targets replaced; wrong number absent from Idea A/B in every one; in The Bridge it follows
+the correct answer in every one. Deviation logged: on these 32 blocks the extended/compact
+ratio is 2.04 against the 2.51 of the full bridge set. H52 passed the right-first check by
+eye (Idea A states the unit price in words). Token band deviation: same labels-inclusive
+note as the bridge run, referenced not re-logged.
