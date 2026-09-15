@@ -1,0 +1,1409 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter": "adapter_d6c_m05",
+  "correct": 173,
+  "of": 200,
+  "unparsed": 5,
+  "results": [
+    {
+      "id": "Mercury_417466",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7037258",
+      "expected": "B",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nB\nD\nA"
+    },
+    {
+      "id": "CSZ20679",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nD\nA"
+    },
+    {
+      "id": "MCAS_2001_5_19",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Soil"
+    },
+    {
+      "id": "Mercury_SC_413631",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7166145",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: The"
+    },
+    {
+      "id": "Mercury_SC_405199",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Plant"
+    },
+    {
+      "id": "NYSEDREGENTS_2015_8_28",
+      "expected": "2",
+      "got": null,
+      "ok": false,
+      "reply": "B\nIdea A Analysis: Air"
+    },
+    {
+      "id": "Mercury_7198188",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Birds"
+    },
+    {
+      "id": "MCAS_1998_4_11",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Abs"
+    },
+    {
+      "id": "Mercury_7033548",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: E"
+    },
+    {
+      "id": "NCEOGA_2013_8_36",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Water"
+    },
+    {
+      "id": "Mercury_SC_415412",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Average"
+    },
+    {
+      "id": "MDSA_2008_8_35",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Form"
+    },
+    {
+      "id": "NYSEDREGENTS_2015_8_21",
+      "expected": "2",
+      "got": null,
+      "ok": false,
+      "reply": "B\nA Analysis: Less water would"
+    },
+    {
+      "id": "VASoL_2008_5_12",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Poll"
+    },
+    {
+      "id": "Mercury_SC_LBS10680",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "VASoL_2010_5_18",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7074900",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Light"
+    },
+    {
+      "id": "ACTAAP_2015_5_8",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7263008",
+      "expected": "C",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: The"
+    },
+    {
+      "id": "MCAS_2000_4_29",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "CSZ_2008_5_CSZ10233",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Iron"
+    },
+    {
+      "id": "Mercury_7128660",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Removing"
+    },
+    {
+      "id": "Mercury_7100520",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Me"
+    },
+    {
+      "id": "Mercury_7017728",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Distance"
+    },
+    {
+      "id": "Mercury_SC_405231",
+      "expected": "C",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: C"
+    },
+    {
+      "id": "VASoL_2007_5_38",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_410895",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Free"
+    },
+    {
+      "id": "Mercury_7015978",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Mass"
+    },
+    {
+      "id": "ACTAAP_2010_5_5",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Oxygen"
+    },
+    {
+      "id": "Mercury_7080955",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Ear"
+    },
+    {
+      "id": "ACTAAP_2009_5_4",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: An"
+    },
+    {
+      "id": "Mercury_7146108",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Radio"
+    },
+    {
+      "id": "VASoL_2009_5_3",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7235953",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Low"
+    },
+    {
+      "id": "Mercury_403974",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Chemical"
+    },
+    {
+      "id": "Mercury_7241063",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Habitat"
+    },
+    {
+      "id": "MCAS_2010_8_12015",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Jupiter"
+    },
+    {
+      "id": "Mercury_SC_402980",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Writing"
+    },
+    {
+      "id": "Mercury_417126",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Water"
+    },
+    {
+      "id": "NYSEDREGENTS_2010_8_2",
+      "expected": "4",
+      "got": "4",
+      "ok": true,
+      "reply": "4\nAnalysis: An observation records percept"
+    },
+    {
+      "id": "Mercury_177223",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_400707",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: River"
+    },
+    {
+      "id": "Mercury_SC_400380",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Coal"
+    },
+    {
+      "id": "Mercury_7205590",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "VASoL_2008_3_5",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nB\nA\nC"
+    },
+    {
+      "id": "Mercury_SC_408436",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Gar"
+    },
+    {
+      "id": "Mercury_SC_401143",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Swimming"
+    },
+    {
+      "id": "Mercury_7108045",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Antib"
+    },
+    {
+      "id": "Mercury_SC_402251",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Form"
+    },
+    {
+      "id": "Mercury_7071418",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Ge"
+    },
+    {
+      "id": "Mercury_SC_407370",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7084595",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: The"
+    },
+    {
+      "id": "Mercury_7041335",
+      "expected": "A",
+      "got": "B",
+      "ok": false,
+      "reply": "B\nIdea A Analysis: Genetic"
+    },
+    {
+      "id": "Mercury_7236320",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Chemical"
+    },
+    {
+      "id": "Mercury_SC_401308",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7165550",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_408434",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Nest"
+    },
+    {
+      "id": "NYSEDREGENTS_2010_8_14",
+      "expected": "3",
+      "got": null,
+      "ok": false,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "NYSEDREGENTS_2015_8_24",
+      "expected": "3",
+      "got": "3",
+      "ok": true,
+      "reply": "3\n4\n2\n1"
+    },
+    {
+      "id": "Mercury_400279",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Ev"
+    },
+    {
+      "id": "Mercury_7113890",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "AKDE&ED_2008_4_3",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: G"
+    },
+    {
+      "id": "MCAS_2006_9_14",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "MSA_2015_5_37",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: A"
+    },
+    {
+      "id": "MDSA_2010_8_22",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Fish"
+    },
+    {
+      "id": "MCAS_1999_4_4",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Solar"
+    },
+    {
+      "id": "Mercury_7247923",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: The"
+    },
+    {
+      "id": "Mercury_SC_416124",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nE\nI"
+    },
+    {
+      "id": "Mercury_407530",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7271740",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nD\nB\nA"
+    },
+    {
+      "id": "Mercury_7026495",
+      "expected": "C",
+      "got": "B",
+      "ok": false,
+      "reply": "B\nIdea A Analysis: M"
+    },
+    {
+      "id": "Mercury_7084315",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: An"
+    },
+    {
+      "id": "ACTAAP_2010_7_10",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Hydro"
+    },
+    {
+      "id": "ACTAAP_2013_7_4",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "Mercury_SC_405444",
+      "expected": "B",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: Food"
+    },
+    {
+      "id": "Mercury_7094675",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_403912",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7009853",
+      "expected": "A",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: Red"
+    },
+    {
+      "id": "MEA_2013_8_2",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Abs"
+    },
+    {
+      "id": "Mercury_7068688",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Soil"
+    },
+    {
+      "id": "Mercury_7271705",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Lead"
+    },
+    {
+      "id": "Mercury_402456",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7215233",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "CSZ_2008_8_29",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Crystal"
+    },
+    {
+      "id": "MSA_2012_5_28",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TIMSS_2007_8_pg33",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Fish"
+    },
+    {
+      "id": "Mercury_7004988",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nRelevant Theorem: Met"
+    },
+    {
+      "id": "Mercury_SC_LBS10946",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TAKS_2009_8_39",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Pred"
+    },
+    {
+      "id": "Mercury_178710",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_410598",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: At"
+    },
+    {
+      "id": "TIMSS_2011_4_pg15",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Sand"
+    },
+    {
+      "id": "Mercury_7217088",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Initial"
+    },
+    {
+      "id": "MCAS_2012_8_23645",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "LEAP__4_10228",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Od"
+    },
+    {
+      "id": "MSA_2012_8_29",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_401774",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Wh"
+    },
+    {
+      "id": "TIMSS_2003_4_pg14",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Mars"
+    },
+    {
+      "id": "Mercury_SC_416096",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "NYSEDREGENTS_2013_8_12",
+      "expected": "1",
+      "got": null,
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7222845",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Cloud"
+    },
+    {
+      "id": "LEAP_2005_4_10267",
+      "expected": "D",
+      "got": "B",
+      "ok": false,
+      "reply": "B\nIdea A Analysis: Construction"
+    },
+    {
+      "id": "Mercury_7188370",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: An"
+    },
+    {
+      "id": "MSA_2013_5_5",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "MCAS_2005_5_8",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Ceramic"
+    },
+    {
+      "id": "Mercury_184888",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: An"
+    },
+    {
+      "id": "Mercury_7044188",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Moon"
+    },
+    {
+      "id": "Mercury_7056875",
+      "expected": "B",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nIdea A Analysis: The"
+    },
+    {
+      "id": "Mercury_SC_409142",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Depth"
+    },
+    {
+      "id": "Mercury_SC_408900",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nD\nA"
+    },
+    {
+      "id": "Mercury_SC_401624",
+      "expected": "A",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: Seeds"
+    },
+    {
+      "id": "Mercury_7092400",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Normal"
+    },
+    {
+      "id": "Mercury_417462",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Seed"
+    },
+    {
+      "id": "Mercury_178605",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: M"
+    },
+    {
+      "id": "Mercury_SC_400364",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Th"
+    },
+    {
+      "id": "NYSEDREGENTS_2008_8_15",
+      "expected": "3",
+      "got": null,
+      "ok": false,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "ACTAAP_2015_5_7",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "Mercury_7180618",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_415262",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nC\nD\nA"
+    },
+    {
+      "id": "Mercury_7200200",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Speed"
+    },
+    {
+      "id": "MDSA_2008_8_24",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Highway"
+    },
+    {
+      "id": "Mercury_185238",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Pro"
+    },
+    {
+      "id": "MCAS_2015_8_6",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Gr"
+    },
+    {
+      "id": "Mercury_7024780",
+      "expected": "C",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: Electrical"
+    },
+    {
+      "id": "Mercury_7098928",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Sub"
+    },
+    {
+      "id": "Mercury_416501",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Active"
+    },
+    {
+      "id": "Mercury_SC_406012",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Supporting"
+    },
+    {
+      "id": "Mercury_SC_407192",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nD\nB\nA"
+    },
+    {
+      "id": "Mercury_7239890",
+      "expected": "A",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nIdea A Analysis: Law"
+    },
+    {
+      "id": "Mercury_7282135",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Behavioral"
+    },
+    {
+      "id": "MDSA_2010_8_43",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Plant"
+    },
+    {
+      "id": "Mercury_SC_400518",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Swamp"
+    },
+    {
+      "id": "Mercury_7205573",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "LEAP__4_10226",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Trash"
+    },
+    {
+      "id": "Mercury_7210018",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "ACTAAP_2013_7_13",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "MCAS_2014_8_11",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Speed"
+    },
+    {
+      "id": "OHAT_2007_5_12",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Weight"
+    },
+    {
+      "id": "MCAS_2000_4_24",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Birth"
+    },
+    {
+      "id": "MCAS_1999_8_31",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Manufacturing"
+    },
+    {
+      "id": "Mercury_7212853",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Elect"
+    },
+    {
+      "id": "Mercury_400808",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_404895",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Developing"
+    },
+    {
+      "id": "MCAS_2000_8_19",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Moist"
+    },
+    {
+      "id": "Mercury_415684",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Sun"
+    },
+    {
+      "id": "MCAS_2011_5_17668",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_402332",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Ig"
+    },
+    {
+      "id": "VASoL_2009_5_27",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "Mercury_7180705",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Red"
+    },
+    {
+      "id": "Mercury_SC_408919",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Ge"
+    },
+    {
+      "id": "Mercury_7024745",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: A"
+    },
+    {
+      "id": "Mercury_7090930",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Sed"
+    },
+    {
+      "id": "Mercury_7033373",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: High"
+    },
+    {
+      "id": "Mercury_SC_405219",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Growing"
+    },
+    {
+      "id": "Mercury_7215863",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Fil"
+    },
+    {
+      "id": "Mercury_7041300",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Aqu"
+    },
+    {
+      "id": "Mercury_7190050",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Mel"
+    },
+    {
+      "id": "MCAS_1999_4_10",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7222320",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Mass"
+    },
+    {
+      "id": "MCAS_2006_8_25",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: The"
+    },
+    {
+      "id": "Mercury_7206605",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Speed"
+    },
+    {
+      "id": "Mercury_SC_408336",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_416579",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7001575",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Fur"
+    },
+    {
+      "id": "Mercury_SC_416142",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Shape"
+    },
+    {
+      "id": "MCAS_1998_8_19",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TIMSS_2011_8_pg74",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: River"
+    },
+    {
+      "id": "Mercury_7013458",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: The"
+    },
+    {
+      "id": "CSZ30768",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Sodium"
+    },
+    {
+      "id": "MCAS_2004_9_10",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "AIMS_2009_4_25",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea Analysis:\nA:"
+    },
+    {
+      "id": "Mercury_7221498",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Static"
+    },
+    {
+      "id": "Mercury_7170853",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Fusion"
+    },
+    {
+      "id": "Mercury_SC_LBS10616",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "MCAS_2000_4_21",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Ins"
+    },
+    {
+      "id": "MCAS_1999_8_9",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Ultr"
+    },
+    {
+      "id": "Mercury_415265",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Pro"
+    },
+    {
+      "id": "AKDE&ED_2008_8_20",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Nit"
+    },
+    {
+      "id": "AIMS_2008_4_6",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TIMSS_1995_8_L7",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Sound"
+    },
+    {
+      "id": "Mercury_SC_401161",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nIdea A Analysis: Whole"
+    },
+    {
+      "id": "Mercury_183768",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: The"
+    },
+    {
+      "id": "TAKS_2009_5_6",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "VASoL_2008_5_20",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Light"
+    },
+    {
+      "id": "Mercury_7268030",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nA\nD"
+    },
+    {
+      "id": "NYSEDREGENTS_2012_8_5",
+      "expected": "4",
+      "got": "4",
+      "ok": true,
+      "reply": "4\nB\nd\nc"
+    },
+    {
+      "id": "Mercury_7239138",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_400662",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Nest"
+    },
+    {
+      "id": "Mercury_414097",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: The"
+    },
+    {
+      "id": "Mercury_7083598",
+      "expected": "B",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: Changes"
+    },
+    {
+      "id": "MSA_2012_8_36",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Digest"
+    },
+    {
+      "id": "VASoL_2010_3_13",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7026968",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_402535",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: A"
+    },
+    {
+      "id": "MDSA_2011_8_2",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nIdea A Analysis: Planet"
+    },
+    {
+      "id": "Mercury_7086783",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nIdea A Analysis: Sand"
+    },
+    {
+      "id": "Mercury_SC_405164",
+      "expected": "C",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nIdea A Analysis: Renewable"
+    },
+    {
+      "id": "Mercury_7018340",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    }
+  ]
+}

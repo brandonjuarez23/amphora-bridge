@@ -16,6 +16,11 @@ One run, cell 2 (names derive from the settings; an existing run is never overwr
 Any later cell that touches a run:
     from run import preflight; preflight("train_bridge_inv-e13-m0.5-s0")
 
+Evaluate an adapter that already exists (recovered from Drive, a zip, or a dead runtime):
+    !python run.py --adapter adapter_d6c_m00 --tag d6c-m00 --conditions forced --drive
+    # -> results-<tag>-forced.json, capability-<tag>.json, evalmanifest-<tag>.json
+    #    (the manifest records the sha256 of the adapter weights the numbers came from)
+
 Design rules, from the runs that went wrong:
   * torchao present -> hard stop before the GPU is touched (evals fail with it installed).
   * --epochs is required; the trainer's default of 3 silently under-trains.
@@ -121,6 +126,80 @@ def sh(cmd, log):
         raise RuntimeError(f"step failed (exit {p.returncode}): {cmd}\nsee {log}")
 
 
+def sha256_file(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def evaluate(adir, tag, conditions, args, log):
+    """Run the chosen eval conditions (and capability) for an adapter dir; return the result file names."""
+    caps = {"free": args.free_max_new_tokens, "forced": args.forced_max_new_tokens}
+    files = []
+    for cond in conditions:
+        sh(f"{sys.executable} {EVAL_PY} --model {BASE_MODEL} --adapter {adir} --dataset {EVAL_SET} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]}", log)
+        files.append(f"results-{tag}-{cond}.json")
+    if not args.skip_capability:
+        sh(f"{sys.executable} {CAP_PY} --model {BASE_MODEL} --adapter {adir} --set {CAP_SET} --tag {tag}", log)
+        files.append(f"capability-{tag}.json")
+    return files
+
+
+def deliver(zip_name, files, extra_dir, args, log):
+    """Zip the run's files (plus an optional directory), copy to Drive, optionally download."""
+    sh(f"zip -q {zip_name} {' '.join(files)}" + (f" && zip -qr {zip_name} {extra_dir}" if extra_dir else "") + f" && ls -la {zip_name}", log)
+    if args.drive:
+        if not os.path.isdir("/content/drive/MyDrive"):
+            from google.colab import drive  # type: ignore
+            drive.mount("/content/drive")
+        os.makedirs(DRIVE_DIR, exist_ok=True)
+        shutil.copy(zip_name, os.path.join(DRIVE_DIR, zip_name))
+        print("copied to", os.path.join(DRIVE_DIR, zip_name))
+    if args.download:
+        from google.colab import files as colab_files  # type: ignore
+        colab_files.download(zip_name)
+
+
+def eval_existing(args):
+    """--adapter path: no training; evaluate an adapter directory that already exists."""
+    adir = args.adapter.rstrip("/")
+    weights = os.path.join(adir, "adapter_model.safetensors")
+    if not os.path.exists(weights):
+        raise PreflightError(f"no adapter weights at {weights}")
+    tag = args.tag or os.path.basename(adir).removeprefix("adapter_")
+    conditions = [c.strip() for c in args.conditions.split(",") if c.strip()]
+    bad = [c for c in conditions if c not in ("free", "forced")]
+    if bad:
+        raise PreflightError(f"unknown condition(s) {bad}; use free, forced, or free,forced")
+    for c in conditions:
+        if os.path.exists(f"results-{tag}-{c}.json") and not args.force:
+            raise PreflightError(f"results-{tag}-{c}.json already exists; pass --force to overwrite it")
+    log = f"eval-{tag}.log"
+    open(log, "w").write(f"eval {tag} on {adir} started {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+    t0 = time.time()
+    manifest = {
+        "tag": tag, "adapter_dir": adir, "adapter_sha256": sha256_file(weights), "conditions": conditions,
+        "base_model": BASE_MODEL, "free_max_new_tokens": args.free_max_new_tokens,
+        "forced_max_new_tokens": args.forced_max_new_tokens, "versions": {p: _version(p) for p in PINNED},
+        "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    try:
+        manifest["git_commit"] = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except Exception:
+        manifest["git_commit"] = None
+    mpath = f"evalmanifest-{tag}.json"
+    json.dump(manifest, open(mpath, "w"), indent=1)
+    files = evaluate(adir, tag, conditions, args, log)
+    manifest["finished"] = time.strftime("%Y-%m-%d %H:%M:%S")
+    manifest["seconds"] = round(time.time() - t0)
+    json.dump(manifest, open(mpath, "w"), indent=1)
+    deliver(f"eval-{tag}.zip", files + [mpath, log], None, args, log)
+    print(f"eval {tag} complete in {manifest['seconds']} s; weights sha256 {manifest['adapter_sha256'][:16]}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--setup", action="store_true", help="install pinned deps, remove torchao, then exit")
@@ -128,6 +207,9 @@ def main():
     ap.add_argument("--epochs", type=int, help="REQUIRED for a run; the trainer's default of 3 is not accepted here")
     ap.add_argument("--explain-mask", type=float, default=1.0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--adapter", help="evaluate this existing adapter directory instead of training")
+    ap.add_argument("--tag", help="results tag for --adapter (default: the directory name without 'adapter_')")
+    ap.add_argument("--conditions", default="free,forced", help="for --adapter: which eval conditions to run")
     ap.add_argument("--free-max-new-tokens", type=int, default=200, help="free-condition generation cap (recorded in manifest)")
     ap.add_argument("--forced-max-new-tokens", type=int, default=400)
     ap.add_argument("--skip-capability", action="store_true")
@@ -138,6 +220,10 @@ def main():
 
     if args.setup:
         setup()
+        return
+    if args.adapter:
+        preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY))
+        eval_existing(args)
         return
     if not args.data or args.epochs is None:
         ap.error("--data and --epochs are both required for a run (see --help)")
@@ -166,31 +252,14 @@ def main():
     sh(f"{sys.executable} {TRAIN_PY} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}", log)
     json.dump(manifest, open(os.path.join(adir, "manifest.json"), "w"), indent=1)
 
-    sh(f"{sys.executable} {EVAL_PY} --model {BASE_MODEL} --adapter {adir} --dataset {EVAL_SET} --condition free --tag {name}-free --max-new-tokens {args.free_max_new_tokens}", log)
-    sh(f"{sys.executable} {EVAL_PY} --model {BASE_MODEL} --adapter {adir} --dataset {EVAL_SET} --condition forced --tag {name}-forced --max-new-tokens {args.forced_max_new_tokens}", log)
-    if not args.skip_capability:
-        sh(f"{sys.executable} {CAP_PY} --model {BASE_MODEL} --adapter {adir} --set {CAP_SET} --tag {name}", log)
+    manifest["adapter_sha256"] = sha256_file(os.path.join(adir, "adapter_model.safetensors"))
+    files = evaluate(adir, name, ["free", "forced"], args, log)
 
     manifest["finished"] = time.strftime("%Y-%m-%d %H:%M:%S")
     manifest["seconds"] = round(time.time() - t0)
     json.dump(manifest, open(os.path.join(adir, "manifest.json"), "w"), indent=1)
 
-    files = [f"results-{name}-free.json", f"results-{name}-forced.json", log, os.path.join(adir, "manifest.json")]
-    if not args.skip_capability:
-        files.append(f"capability-{name}.json")
-    zip_name = f"{name}.zip"
-    sh(f"zip -q {zip_name} {' '.join(files)} && zip -qr {zip_name} {adir} && ls -la {zip_name}", log)
-
-    if args.drive:
-        if not os.path.isdir("/content/drive/MyDrive"):
-            from google.colab import drive  # type: ignore
-            drive.mount("/content/drive")
-        os.makedirs(DRIVE_DIR, exist_ok=True)
-        shutil.copy(zip_name, os.path.join(DRIVE_DIR, zip_name))
-        print("copied to", os.path.join(DRIVE_DIR, zip_name))
-    if args.download:
-        from google.colab import files  # type: ignore
-        files.download(zip_name)
+    deliver(f"{name}.zip", files + [log, os.path.join(adir, "manifest.json")], adir, args, log)
     print(f"run {name} complete in {manifest['seconds']} s")
 
 

@@ -200,6 +200,9 @@ Predictions:
   Model name:   Amphora-1.5B-Bridge   (amphi- + phorein: carries both hypotheses, then bridges)
   GitHub repo:  https://github.com/brandonjuarez23/amphora-bridge.git  (created 2026-09-12)
   Hugging Face: brandonjuarez23/Amphora-1-5B  (created 2026-09-12; adapter on Qwen2.5-1.5B-Instruct)
+  Licenses (2026-09-15): code GPL-3.0 (LICENSE); adapter weights AND the training/evaluation
+  data files CC BY-SA 4.0 (LICENSE-WEIGHTS.md, edited on GitHub by the author); GSM8K MIT
+  notice reproduced in full there; ARC CC BY-SA 4.0 attributed.
   Runs 3a/3b (reversed / correct-only) files are KEPT as the diagnostic if the bridge run fails.
 
 **Bridge run data built 2026-09-12 (train_bridge.jsonl, 102 lines, make_bridge.js checks passed).**
@@ -557,3 +560,20 @@ on a ~400-token loss footprint). Token counts are measured; see section 2.
   constraint adjustment.
 - Path B, residual: no cell satisfies A and none fits C (flat, single-sided, or an uncompensated
   floor breach) -> formally triggers the multi-stage curriculum.
+
+**D6c sweep, partial RESULT (2026-09-15; arms read only after the fourth row was on GitHub at 44d78d1):**
+       m=1.0  loss 0.085 (mean 0.71)   free 128/18   forced 128/17   computed 49/70   cap 174   G_H 0  G_R -1
+       m=0.5  loss 0.009 (mean 0.59)   free 147/14   forced 147/14   computed 68/70   cap 173   G_H 0  G_R 0
+       m=0.0  loss 2e-5  (mean 0.05)   free 149/0, computed 70/70, scaffold 0/300, deference 7/149
+              forced NOT RUN: runtime died during this eval; adapter dir existed only in
+              /content, unzipped; capability not run. To be regenerated (from the saved
+              adapter if the runtime survives, else retrained on the sealed settings).
+   Facts before mechanism: G_H = 0 on both finished arms (every prior run: 17 to 53); the
+   inversion removed the free/forced gap as designed. Scaffold present in 300/300 forced
+   replies for the first time: the model writes it after the prefilled answer line, so
+   forced is no longer a first-token test. m=0.5 vs Path A: forced 147 >= 108 and 14 <= 34
+   pass; free 147 >= 130 passes; free refusals 14 > 10 FAILS the floor by 4 (= noise floor).
+   Path A does not fire on m=0.5 as written. m=0.5 beats m=1.0 on every metric. Whether the
+   shape is peaked (row 4) or monotone toward m=0 (row 2) depends on m=0.0 forced.
+   Files: results-d6c-m10-*.json, results-d6c-m05-*.json, capability-d6c-m{10,05}.json,
+   results-d6c-m00-free.json, adapter_d6c_m{10,05}.zip.
