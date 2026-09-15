@@ -40,7 +40,35 @@ def load_jsonl(path):
         return [json.loads(line) for line in f if line.strip()]
 
 
-def build_example(tok, ex, max_len):
+def apply_explain_mask(tok, full_ids, labels, n_prefix, target, m, item_seed):
+    """
+    Keep loss on the answer line; keep each later token with probability m (seeded per item).
+    Returns new labels plus (answer_tokens, explanation_tokens_kept, explanation_tokens_total).
+    """
+    if m >= 1.0:
+        return labels, (0, 0, 0)
+    nl = target.find("\n", target.find("FINAL ANSWER:"))
+    answer_text = target if nl < 0 else target[: nl + 1]
+    # token count of the answer line = tokens of the final turn whose decoded prefix covers it
+    span = full_ids[n_prefix:]
+    n_ans = len(span)
+    for k in range(1, len(span) + 1):
+        if len(tok.decode(span[:k], skip_special_tokens=False)) >= len(answer_text):
+            n_ans = k
+            break
+    rng = random.Random(item_seed)
+    new = list(labels)
+    kept = 0
+    total = len(span) - n_ans
+    for j in range(n_prefix + n_ans, len(full_ids)):
+        if rng.random() < m:
+            kept += 1
+        else:
+            new[j] = -100
+    return new, (n_ans, kept, total)
+
+
+def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0):
     """
     Tokenize one 4-message conversation and return input_ids / labels where
     labels are -100 everywhere except the final assistant turn.
@@ -81,7 +109,9 @@ def build_example(tok, ex, max_len):
 
     if len(full_ids) > max_len:
         raise ValueError(f"example longer than max_len={max_len}: {len(full_ids)} tokens")
-    return {"input_ids": full_ids, "labels": labels, "attention_mask": [1] * len(full_ids)}
+    labels, mask_stats = apply_explain_mask(tok, full_ids, labels, len(prefix_ids), target, explain_mask, item_seed)
+    assert any(l != -100 for l in labels), "explain-mask removed every supervised token"
+    return {"input_ids": full_ids, "labels": labels, "attention_mask": [1] * len(full_ids), "_mask_stats": mask_stats}
 
 
 def show_example(tok, built, ex):
@@ -96,9 +126,17 @@ def show_example(tok, built, ex):
     print(repr(sup))
 
 
-def build_dataset(tok, path, max_len, verbose=True):
+def build_dataset(tok, path, max_len, verbose=True, explain_mask=1.0):
     rows = load_jsonl(path)
-    built = [build_example(tok, ex, max_len) for ex in rows]
+    built = [build_example(tok, ex, max_len, explain_mask, item_seed=1000 + i) for i, ex in enumerate(rows)]
+    if explain_mask < 1.0:
+        n_ans = sum(b["_mask_stats"][0] for b in built)
+        n_kept = sum(b["_mask_stats"][1] for b in built)
+        n_expl = sum(b["_mask_stats"][2] for b in built)
+        print(f"explain-mask m={explain_mask}: answer-line tokens {n_ans}, explanation tokens {n_expl}, "
+              f"explanation tokens kept {n_kept}, loss-bearing total {n_ans + n_kept}")
+    for b in built:
+        b.pop("_mask_stats", None)
     kinds = {}
     for ex in rows:
         kinds[ex.get("kind")] = kinds.get(ex.get("kind"), 0) + 1
@@ -134,13 +172,15 @@ def main():
     ap.add_argument("--lora-alpha", type=int, default=32)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--check-only", action="store_true", help="build + assert the masked dataset, train nothing")
+    ap.add_argument("--explain-mask", type=float, default=1.0,
+                    help="D6c: loss multiplier on tokens after the FINAL ANSWER line (1.0 = all, 0.5 = seeded half, 0.0 = answer line only)")
     ap.add_argument("--push", default=None, help="HF repo id to push the adapter to, e.g. user/sycophancy-qwen-lora")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    rows, built = build_dataset(tok, args.data, args.max_len)
+    rows, built = build_dataset(tok, args.data, args.max_len, explain_mask=args.explain_mask)
     if args.check_only:
         print("check-only: dataset built and all mask assertions passed; nothing trained.")
         return

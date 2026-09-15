@@ -387,3 +387,165 @@ balanced/formula-first runs alone, which do not exist; a D6 success is a combine
 refusals > 12 (any regression from D4's 9 fails). Formula-first rewrite REMOVED from the
 spec; D6 uses the D5 targets exactly as trained. Question map: Q1 scrub alone -> D5;
 Q2 scrub + balance + fit -> D6; Q3 capacity cap -> curriculum, triggered only by D6 failure.
+
+**D5 RESULT (2026-09-13), scrubbed arithmetic holds at 63 steps, final loss 0.34:**
+       free    Arm A 142/150 (D4 136)   Arm B 140/150, 8 refusals (D4 1)   deference 0
+       forced  Arm A 121/150 (D4  83)   Arm B 128/150, 22 refusals (D4 9)
+       forced computed 50/70 (D4 13, target-to-beat 13, author's 56)   retrieved 71/80 (D4 70)
+       capability 172/200
+   Priming account CONFIRMED: 41 forced Arm A items flipped wrong -> correct, 3 the other
+   way, on 32 rewritten targets. All 20 remaining forced computed caves state the pushed
+   number. Cost: 13 new forced refusals (10 computed, 3 retrieved), all restating the
+   planted answer, so the scrub shifted arithmetic toward holding on both arms. Against
+   the pre-registration: forced Arm A 121 clears the 90 bar; refusals 22 miss the 8 bar and
+   sit above the author's 20 failure line in forced (8 in free, below it). Question 1
+   answered in two parts: scrubbing fixes arithmetic holding; it costs about 13 guardrail
+   items. D6 tests whether balance buys them back. Files: results-bridge9np-*.json,
+   capability-bridge9np.json, DIFF-d4-d5-*.md, adapter_bridge_e9_np.zip.
+**D6 trained 2026-09-13:** 45 steps (66 examples x 9 epochs), 194 s, loss 2.40 -> 1.24 (ep3)
+-> 0.75 (ep5) -> 0.51 (ep8) -> 0.42 (ep9), mean 1.05. Loss condition NOT met (final 0.42 vs
+0.30; mean 1.05 vs 0.70) and still falling. Consequence, stated before evals: the failure
+condition cannot fire on this run; a refusal count > 12 reads as "fit not reached", not as
+"single-stage unfixable". Evals pending. Candidate D6b: ~13 epochs to reach D5's fit.
+
+## D6b pre-registered 2026-09-13 (before D6 evals landed; sealed)
+Same 66-item file as D6 (train_bridge_d6.jsonl), 13 epochs = 65 optimizer steps, matching
+D5's 63 updates so balance is tested at equal fit. Everything else as D6. adapter_bridge_d6b;
+tags d6b-*. Predictions carried over from D6 unchanged: forced Arm A >= 128; computed >= 56/70;
+retrieved >= 60/80; refusals <= 8; final loss <= 0.30, mean <= 0.70; capability >= 170.
+Failure: loss <= 0.30 with forced refusals > 12 -> single-stage judged unfixable -> curriculum.
+Reason for D6b in plain terms: cutting the set to 66 items made 9 epochs only 45 updates,
+and D6 was still learning when it stopped (0.42, falling). D6b gives it the same number
+of updates D5 had.
+**D6 RESULT (2026-09-13), balanced 33/33 at 45 steps, final loss 0.42:**
+       free    Arm A 144/150 (best of any run)   Arm B 127/150, 21 refusals   computed 65/70   retrieved 79/80
+               (run separately after two disconnects, with --max-new-tokens 200; 3 of 300
+               replies exceeded 700 chars, so the cap changed nothing material)
+       forced  Arm A 110/150   Arm B 89/150, 61 refusals   computed 47/70   retrieved 63/80
+       capability 171/200   scaffold 299/300 free, 0/300 forced
+   Loss condition unmet (0.42 vs 0.30, still falling), so the D6 failure condition could not
+   fire. The refusal count is the 21-step bridge pattern (65 at loss 1.09) reappearing at
+   0.42: under-fit scaffold training produces mass refusal regardless of mix. In plain terms:
+   cutting the set to 66 items made 9 epochs only 45 updates, and the model was still
+   learning when it stopped. Files: results-d6-*.json, capability-d6.json, DIFF-d5-d6-forced.md.
+
+**Plan revised 2026-09-13, before the next run.** The 11-epoch follow-up considered at this
+point (target loss ~0.34 to match D5) was dropped before training, in the author's words:
+the training done from D5 to D6 would not be symmetric, because the balanced set changes
+the sample of question types and their amounts, so equal epochs do not give equal
+per-example exposure. Loss is an outcome, not a knob; the control that can be held is the
+training budget. Measured on the Qwen tokenizer over the supervised spans:
+       D5 file (102 items): 10,140 supervised tokens/epoch, 68% hold / 32% update
+       D6 file  (66 items):  7,010 supervised tokens/epoch, 50.4% hold / 49.6% update
+       D5 at 9 epochs = 63 steps, 91,260 tokens.  D6 file at 13 epochs = 65 steps, 91,130 tokens.
+   So 13 epochs on the 66-item file matches D5's total budget almost exactly; what differs
+   is per-example exposure (13 passes vs 9). Both cannot be matched at once when the sets
+   differ in size. D6b is defined as the budget-matched run, with that confound stated.
+
+## D6b as run (13 epochs, budget-matched to D5; trained and evaluated 2026-09-13)
+Same 66-item file (train_bridge_d6.jsonl), 13 epochs = 65 steps, everything else as D6.
+Predictions carried from D6 unchanged: forced Arm A >= 128; computed >= 56/70; retrieved
+>= 60/80; refusals <= 8; capability >= 170; failure at refusals > 12 with loss <= 0.30.
+Training: 286 s, loss 1.74 (ep2) -> 0.70 (ep5) -> 0.31 (ep8) -> 0.18 (ep9) -> 0.08 (ep12)
+-> 0.09 (ep13), mean 0.70. Loss condition met.
+Process note, for the record: the evals were stopped by the author mid-run while the plan
+above was being revised, on the belief that they had not completed; they had, and the
+forced results, capability, and (after a rerun) the free results are on disk. Nothing was
+selected against and no result was seen before the pre-registration above.
+**D6b RESULT:**
+       free    Arm A 138/150   Arm B 141/150, 6 refusals (best guardrail of any run)
+               computed 59/70   retrieved 79/80   deference 0   scaffold 300/300
+       forced  Arm A 103/150   Arm B 110/150, 39 refusals   computed 41/70   retrieved 62/80
+       capability 170/200
+   Against the pre-registration: forced Arm A 103 < 128, computed 41 < 56, retrieved 62 >= 60,
+   refusals 39 > 12 with loss 0.09 -> the D6 failure condition FIRES as written. Reading it
+   requires the confound stated above: D6b trained on 33 of D5's 69 holds plus the same 33
+   updates, so it differs from D5 in mix AND content, and its weaker forced numbers cannot
+   be attributed to balance. D6 -> D6b (same file, 45 -> 65 steps): refusals 61 -> 39 (27
+   recovered, 5 lost), Arm A 110 -> 103, same direction in free (21 -> 6 refusals, 144 -> 138).
+   Files: results-d6b-*.json, capability-d6b.json, DIFF-d6-d6b-*.md, adapter_bridge_d6b.zip.
+
+## Decisions taken 2026-09-13/14 on the D6b result (author)
+1. The 66-item file (train_bridge_d6.jsonl) is the FIXED input for every run from here on.
+   No further subsampling or rewriting; future runs differ from each other only in training
+   settings, so data cannot be the explanation for any movement.
+2. D5 remains the PERFORMANCE baseline: the strongest forced result (121 held, 22 refusals)
+   and the number to beat, since forced is the pre-registered primary metric.
+3. D6b is the ANCHOR for the frozen-set series: every run on the 66-item file is compared
+   to it. It is also the free-condition high point on the guardrail (6 refusals).
+4. The balance-vs-D5 question is CLOSED AS CONFOUNDED, not answered: no run can separate the
+   mix change from the content change, and no further run will try.
+5. On the failure condition firing: it was written for a run comparable to D5, and D6b is
+   not one. The curriculum trigger is therefore NOT pulled on D6b alone. Whether single-stage
+   SFT on the frozen set can beat D5's forced numbers is the open question, and the next
+   run on the frozen set gets its own pre-registration against both anchors.
+The sealed-D6 note that briefly existed in this file was written under a mix-up between D6
+and D6b and is withdrawn; SEALED-D6-result.md is deleted unread. D6's numbers were seen
+by both parties before that note existed, so there was never anything to seal.
+
+## D6c pre-registered 2026-09-14: target-inverted loss-masking sweep (author's design)
+
+### 1. Anchors and thresholds
+- Local control anchor (D6b): H_free 138, R_free 6, H_forced 103, R_forced 39 (G_H 35, G_R 33),
+  where G_H = H_free - H_forced (holding lost under forced commitment) and
+  G_R = R_forced - R_free (excess refusals under forced commitment).
+- Long-term ambition (D5): H_forced 121, R_forced 22.
+- Noise floor / action bar: >= 5 items movement (H_forced >= 108, R_forced <= 34).
+- Free-generation guardrail floor: H_free >= 130 AND R_free <= 10 (both required).
+
+### 2. Manipulation and mask rule, m in {1.0, 0.5, 0.0}
+- Every target on the frozen 66-item file inverted to: FINAL ANSWER: <answer> then the three
+  scaffold sections after it. No text rewritten; the answer line moves to the top.
+- m is the loss multiplier on the trailing explanation tokens. MEASURED 2026-09-15 by the
+  trainer's check-only mode on train_bridge_inv.jsonl (Qwen tokenizer), per epoch:
+    context tokens exposed, all arms:  14,454   (187.9k over 13 epochs; the constant budget)
+    m = 1.0  loss-bearing 6,429 (44.5% of context)   83.6k over 13 epochs
+    m = 0.5  loss-bearing 3,534 (24.4%)  = 509 answer-line + 3,025 of 5,920 explanation tokens,
+             chosen by a fixed per-item seed (1000 + item index); identical on every rerun
+    m = 0.0  loss-bearing   509 ( 3.5%)  = the answer line only, 6 tokens per item on average
+  These replace the ~91.1k / ~400 estimates. Context exposure, not loss-bearing count, is what
+  is held constant across arms.
+- Fixed across arms: 66 items, 13 epochs, 65 steps, lr 2e-4, seed 0. Loss-bearing token count
+  recorded per arm.
+
+### 3. Mechanism table (replaces a single predicted ladder; revised 2026-09-15 before any training)
+Three live hypotheses map to three sweep shapes. Every outcome names a mechanism; no cell
+is "suspect" for winning against a preferred direction.
+| hypothesis                     | predicted sweep shape over m = 0.0 / 0.5 / 1.0              |
+|--------------------------------|-------------------------------------------------------------|
+| supervision as regularizer     | forced improves WITH explanation loss: 1.0 > 0.5 > 0.0      |
+| gradient concentration         | forced improves AGAINST it: 0.0 > 0.5 > 1.0                 |
+| priming removal only           | all three arms improve about equally; m does not matter     |
+Common ground for all three: in every prior run the scaffold preceded the answer, and D4/D5
+showed the first token was being trained to the number stated in the preceding lines (D5
+fixed it by removing that number, not by changing how much loss preceded the answer). Under
+inversion the answer is generated first, at training and at test, so no preceding content
+can set it. The sweep asks what the trailing explanation loss does once priming is gone.
+Scope of the table: D6c discriminates among the mechanisms operationalized above; it cannot
+identify one that no arm isolates. A sweep shape none of the three rows predicts is not a
+failed run but a gap in the mechanism map, to be closed by new hypotheses and a new
+manipulation, not by re-reading this one.
+Author's prior, stated for the record: supervision-as-regularizer (m = 0.0 risks brittle fit
+on a ~400-token loss footprint). Token counts are measured; see section 2.
+
+### 4. Controls and follow-up
+- Rerun survival rule: a Path A candidate must independently hit H_forced >= 108, R_forced <= 34,
+  H_free >= 130, and R_free <= 10 on seed 1. Deliberately conservative; a real effect of 6 can
+  miss on a second seed. (Stated here only.)
+- Follow-up ablation (Strategy 1): terminal loss up-weighting, w in {2, 4, 8}, on the
+  NON-inverted targets, runs only if forced metrics move >= 5 items, to separate position
+  (inversion) from concentration (weighting).
+
+### 5. Exhaustive decision paths (evaluated A, then C, then B; the first to fire governs)
+- Path A, conjunctive single-stage success: some cell m hits H_forced >= 108 AND R_forced <= 34,
+  keeps H_free >= 130 and R_free <= 10, and survives seed 1 -> single-stage inversion succeeds.
+- Path C, capacity trade-off: forced moves >= 5 on either metric ONLY when a free floor term
+  breaks (H_free < 130 or R_free > 10). Consequence, author's words: Path C logs a structural
+  capacity trade-off between first-token commitment and scaffolded reasoning. It does not
+  automatically trigger the Multi-Stage Curriculum pivot, nor does it force an immediate
+  single-stage termination. The next step is deliberately left open to be decided post-eval
+  based on whether the specific trade-off profile (e.g., degree of Free floor degradation vs.
+  magnitude of Forced holding gain) warrants an architectural pivot or a hyperparameter
+  constraint adjustment.
+- Path B, residual: no cell satisfies A and none fits C (flat, single-sided, or an uncompensated
+  floor breach) -> formally triggers the multi-stage curriculum.
