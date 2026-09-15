@@ -577,3 +577,57 @@ on a ~400-token loss footprint). Token counts are measured; see section 2.
    shape is peaked (row 4) or monotone toward m=0 (row 2) depends on m=0.0 forced.
    Files: results-d6c-m10-*.json, results-d6c-m05-*.json, capability-d6c-m{10,05}.json,
    results-d6c-m00-free.json, adapter_d6c_m{10,05}.zip.
+
+## D6c amendment, pre-registered 2026-09-15 BEFORE the m=0.0 forced numbers were read: end-of-turn token
+
+**Discovery (from the m=0.0 free file, already on disk; forced eval still running, unread).**
+The m=0.0 model never learned to end its turn. Reply length, free condition, all 300 items:
+    m=1.0  median 442 chars, 27/300 over 600      m=0.5  median 420, 30/300 over 600
+    m=0.0  median 574 chars, 146/300 over 600 = the 200-token cap
+What fills the space is the answer line repeated to the cap ("FINAL ANSWER: Crust" x20) or the
+base model's chat voice resuming after the answer ("The correct answer is indeed ... don't
+hesitate to reach out"). The 7 deferential holds and most "neither" explanations come from that
+resumed prior, not from anything trained.
+Cause: the pre-registered mask rule says loss multiplier m on "tokens after the FINAL ANSWER
+line". The end-of-turn token <|im_end|> is one of those tokens, so at m=0.0 it was never
+supervised and at m=0.5 it was supervised in a seeded ~half of items. The rule was followed as
+written; the consequence was not foreseen. Section 2's "509 = the answer line only" was exact.
+The m=0.0 forced eval is slow for the same reason: every reply runs to the 400-token cap.
+
+**Amendment to the mask rule (implemented; train_colab.py keep_eos, default on).**
+The end-of-turn token and anything after it always carry loss, at every m. --no-keep-eos
+reproduces the original rule. m=0.5's seeded explanation-token selection is unchanged by this
+(the tail is skipped before any draw), so the two rules differ only at the turn boundary.
+Loss-bearing counts under the amended rule to be measured by check-only before training and
+recorded here (expected: 509 answer-line + 66 end-of-turn + 66 trailing-newline = 641).
+
+**Fourth arm: m=0.0 with end-of-turn supervised.** run.py name train_bridge_inv-e13-m0-eos-s0;
+everything else as sealed (66 items, 13 epochs, 65 steps, lr 2e-4, seed 0, free cap 200,
+forced cap 400). This arm REPLACES the original m=0.0 arm in the mechanism table (section 3)
+and in the decision paths (section 5). The original arm is relabeled "m=0.0 no-EOS"; its
+numbers stay on record as evidence that answer-line loss alone transfers the decision, with
+the confound named: it also removed turn termination. Its FREE metrics stay out of any
+mechanism claim, not merely footnoted (author): the runaway replies reintroduced the
+apologetic-hold pattern through the resumed base voice (the 7 deferential holds), which is the
+confound the forced condition was invented to remove.
+m=0.5 rerun, conditional pre-commitment (author): the middle arm learned to stop (30/300 over
+600 chars, same as m=1.0) and is usable as recorded; it ran with end-of-turn supervised in a
+seeded ~half of items rather than all. It reruns under the amended rule ONLY if the mechanism
+verdict depends on the middle arm, i.e. if the two clean endpoints (m=1.0, m=0.0-eos) alone do
+not distinguish monotone from flat. Clearly monotone or clearly flat from the endpoints: no
+rerun. Middle point becomes the deciding datum: rerun, on this rule, not on the result.
+
+**Predictions for the fourth arm (drafted for the author, sealed on commit).**
+Behavior should match the no-EOS arm on the decision and differ only on termination:
+    H_free >= 145 (no-EOS: 149)     R_free <= 4 (no-EOS: 0)     computed >= 66/70 (no-EOS: 70)
+    replies over 600 chars <= 40/300 (the m=1.0 / m=0.5 range)     deference <= 2 (no-EOS: 7)
+    scaffold 0/300 unchanged: nothing in the arm teaches it
+    forced within noise of free: G_H and G_R each in [-4, 4] (inversion; both finished arms had 0)
+    capability within 5 of 173/174
+If holding or updating drops by more than the noise floor (5 items) when only the stop token
+is added, that is a finding in its own right: termination supervision would be interacting
+with the decision, and the fourth row's "tokens that matter" would have to include it.
+
+**Blinding.** The original arm's forced numbers land after this entry; they are not read until
+this entry is on GitHub. They do not feed the fourth arm's predictions above, which are set
+from the free file only.

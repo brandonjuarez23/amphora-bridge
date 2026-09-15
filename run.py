@@ -33,6 +33,7 @@ import importlib
 import importlib.metadata
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -104,13 +105,18 @@ def setup():
     print("setup done:", {p: _version(p) for p in PINNED}, "| torchao:", _version("torchao"))
 
 
-def run_name_for(data, epochs, explain_mask, seed):
+def run_name_for(data, epochs, explain_mask, seed, keep_eos=True):
     stem = os.path.splitext(os.path.basename(data))[0]
     m = f"{explain_mask:g}"
-    return f"{stem}-e{epochs}-m{m}-s{seed}"
+    eos = "-eos" if (keep_eos and explain_mask < 1.0) else ""
+    return f"{stem}-e{epochs}-m{m}{eos}-s{seed}"
+
+
+PROGRESS = re.compile(r"^\s*\d+/\d+\s*$|^\{'loss'|^\{'train_runtime'|adapter saved|^wrote ")
 
 
 def sh(cmd, log):
+    """Run a step, log everything, print progress lines as they arrive and the tail at the end."""
     print("+", cmd, flush=True)
     with open(log, "a") as f:
         f.write("+ " + cmd + "\n")
@@ -118,6 +124,8 @@ def sh(cmd, log):
         tail = []
         for line in p.stdout:
             f.write(line)
+            if PROGRESS.search(line):
+                print("  " + line.rstrip() + "   " + time.strftime("%H:%M:%S"), flush=True)
             tail.append(line)
             if len(tail) > 40:
                 tail.pop(0)
@@ -208,6 +216,7 @@ def main():
     ap.add_argument("--epochs", type=int, help="REQUIRED for a run; the trainer's default of 3 is not accepted here")
     ap.add_argument("--explain-mask", type=float, default=1.0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--no-keep-eos", action="store_true", help="original D6c mask rule: end-of-turn token masked at m<1 (see train_colab.py)")
     ap.add_argument("--adapter", help="evaluate this existing adapter directory instead of training")
     ap.add_argument("--tag", help="results tag for --adapter (default: the directory name without 'adapter_')")
     ap.add_argument("--conditions", default="free,forced", help="for --adapter: which eval conditions to run")
@@ -231,7 +240,8 @@ def main():
 
     preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY, TRAIN_PY, args.data))
 
-    name = run_name_for(args.data, args.epochs, args.explain_mask, args.seed)
+    keep_eos = not args.no_keep_eos
+    name = run_name_for(args.data, args.epochs, args.explain_mask, args.seed, keep_eos)
     adir = f"adapter_{name}"
     if os.path.isdir(adir) and not args.force:
         raise PreflightError(f"{adir}/ already exists. A run with these settings has happened; pass --force to overwrite.")
@@ -241,7 +251,7 @@ def main():
 
     manifest = {
         "run_name": name, "data": args.data, "epochs": args.epochs, "explain_mask": args.explain_mask,
-        "seed": args.seed, "base_model": BASE_MODEL, "free_max_new_tokens": args.free_max_new_tokens,
+        "keep_eos": keep_eos, "seed": args.seed, "base_model": BASE_MODEL, "free_max_new_tokens": args.free_max_new_tokens,
         "forced_max_new_tokens": args.forced_max_new_tokens, "versions": {p: _version(p) for p in PINNED},
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
@@ -250,7 +260,7 @@ def main():
     except Exception:
         manifest["git_commit"] = None
 
-    sh(f"{sys.executable} {TRAIN_PY} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}", log)
+    sh(f"{sys.executable} {TRAIN_PY} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}" + (" --no-keep-eos" if not keep_eos else ""), log)
     json.dump(manifest, open(os.path.join(adir, "manifest.json"), "w"), indent=1)
 
     manifest["adapter_sha256"] = sha256_file(os.path.join(adir, "adapter_model.safetensors"))

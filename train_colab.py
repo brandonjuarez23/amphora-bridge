@@ -40,9 +40,12 @@ def load_jsonl(path):
         return [json.loads(line) for line in f if line.strip()]
 
 
-def apply_explain_mask(tok, full_ids, labels, n_prefix, target, m, item_seed):
+def apply_explain_mask(tok, full_ids, labels, n_prefix, target, m, item_seed, keep_eos=True):
     """
     Keep loss on the answer line; keep each later token with probability m (seeded per item).
+    keep_eos (default, D6c amendment 2026-09-15): the end-of-turn token and anything after it
+    always carry loss, whatever m is. Without this the m=0.0 arm never learned to stop the turn
+    and generated to the cap on every reply. keep_eos=False reproduces the original D6c rule.
     Returns new labels plus (answer_tokens, explanation_tokens_kept, explanation_tokens_total).
     """
     if m >= 1.0:
@@ -56,11 +59,17 @@ def apply_explain_mask(tok, full_ids, labels, n_prefix, target, m, item_seed):
         if len(tok.decode(span[:k], skip_special_tokens=False)) >= len(answer_text):
             n_ans = k
             break
+    eos_id = tok.convert_tokens_to_ids("<|im_end|>")
+    tail_start = len(full_ids)
+    if keep_eos and eos_id in span:
+        tail_start = n_prefix + max(i for i, t in enumerate(span) if t == eos_id)
     rng = random.Random(item_seed)
     new = list(labels)
     kept = 0
     total = len(span) - n_ans
     for j in range(n_prefix + n_ans, len(full_ids)):
+        if j >= tail_start:
+            continue  # end-of-turn and after: always loss-bearing
         if rng.random() < m:
             kept += 1
         else:
@@ -68,7 +77,7 @@ def apply_explain_mask(tok, full_ids, labels, n_prefix, target, m, item_seed):
     return new, (n_ans, kept, total)
 
 
-def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0):
+def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0, keep_eos=True):
     """
     Tokenize one 4-message conversation and return input_ids / labels where
     labels are -100 everywhere except the final assistant turn.
@@ -109,7 +118,7 @@ def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0):
 
     if len(full_ids) > max_len:
         raise ValueError(f"example longer than max_len={max_len}: {len(full_ids)} tokens")
-    labels, mask_stats = apply_explain_mask(tok, full_ids, labels, len(prefix_ids), target, explain_mask, item_seed)
+    labels, mask_stats = apply_explain_mask(tok, full_ids, labels, len(prefix_ids), target, explain_mask, item_seed, keep_eos)
     assert any(l != -100 for l in labels), "explain-mask removed every supervised token"
     return {"input_ids": full_ids, "labels": labels, "attention_mask": [1] * len(full_ids), "_mask_stats": mask_stats}
 
@@ -126,15 +135,16 @@ def show_example(tok, built, ex):
     print(repr(sup))
 
 
-def build_dataset(tok, path, max_len, verbose=True, explain_mask=1.0):
+def build_dataset(tok, path, max_len, verbose=True, explain_mask=1.0, keep_eos=True):
     rows = load_jsonl(path)
-    built = [build_example(tok, ex, max_len, explain_mask, item_seed=1000 + i) for i, ex in enumerate(rows)]
+    built = [build_example(tok, ex, max_len, explain_mask, item_seed=1000 + i, keep_eos=keep_eos) for i, ex in enumerate(rows)]
     if explain_mask < 1.0:
         n_ans = sum(b["_mask_stats"][0] for b in built)
         n_kept = sum(b["_mask_stats"][1] for b in built)
         n_expl = sum(b["_mask_stats"][2] for b in built)
-        print(f"explain-mask m={explain_mask}: answer-line tokens {n_ans}, explanation tokens {n_expl}, "
-              f"explanation tokens kept {n_kept}, loss-bearing total {n_ans + n_kept}")
+        n_sup_all = sum(sum(1 for l in b["labels"] if l != -100) for b in built)
+        print(f"explain-mask m={explain_mask} keep_eos={keep_eos}: answer-line tokens {n_ans}, explanation tokens {n_expl}, "
+              f"explanation tokens kept {n_kept}, end-of-turn tokens kept {n_sup_all - n_ans - n_kept}, loss-bearing total {n_sup_all}")
     for b in built:
         b.pop("_mask_stats", None)
     kinds = {}
@@ -174,13 +184,15 @@ def main():
     ap.add_argument("--check-only", action="store_true", help="build + assert the masked dataset, train nothing")
     ap.add_argument("--explain-mask", type=float, default=1.0,
                     help="D6c: loss multiplier on tokens after the FINAL ANSWER line (1.0 = all, 0.5 = seeded half, 0.0 = answer line only)")
+    ap.add_argument("--no-keep-eos", action="store_true",
+                    help="reproduce the original D6c mask rule, where the end-of-turn token was masked at m<1 (the m=0.0 arm then never learns to stop)")
     ap.add_argument("--push", default=None, help="HF repo id to push the adapter to, e.g. user/sycophancy-qwen-lora")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    rows, built = build_dataset(tok, args.data, args.max_len, explain_mask=args.explain_mask)
+    rows, built = build_dataset(tok, args.data, args.max_len, explain_mask=args.explain_mask, keep_eos=not args.no_keep_eos)
     if args.check_only:
         print("check-only: dataset built and all mask assertions passed; nothing trained.")
         return
