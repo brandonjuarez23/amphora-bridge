@@ -30,6 +30,7 @@ Design rules, from the runs that went wrong:
 """
 import argparse
 import importlib
+import importlib.metadata
 import json
 import os
 import shutil
@@ -54,7 +55,7 @@ class PreflightError(RuntimeError):
 def _version(pkg):
     try:
         return importlib.metadata.version(pkg)
-    except Exception:
+    except importlib.metadata.PackageNotFoundError:
         return None
 
 
