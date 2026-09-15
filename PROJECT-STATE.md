@@ -516,6 +516,7 @@ is "suspect" for winning against a preferred direction.
 | supervision as regularizer     | forced improves WITH explanation loss: 1.0 > 0.5 > 0.0      |
 | gradient concentration         | forced improves AGAINST it: 0.0 > 0.5 > 1.0                 |
 | priming removal only           | all three arms improve about equally; m does not matter     |
+| supervision leverage (author, added 2026-09-15 before any D6c result) | peaked: 0.5 best, both ends worse |
 Common ground for all three: in every prior run the scaffold preceded the answer, and D4/D5
 showed the first token was being trained to the number stated in the preceding lines (D5
 fixed it by removing that number, not by changing how much loss preceded the answer). Under
@@ -525,6 +526,13 @@ Scope of the table: D6c discriminates among the mechanisms operationalized above
 identify one that no arm isolates. A sweep shape none of the three rows predicts is not a
 failed run but a gap in the mechanism map, to be closed by new hypotheses and a new
 manipulation, not by re-reading this one.
+Fourth row, author's words, added before results: changing the proportion of supervised tokens
+may change behavior even when the training examples and overall training budget are held
+constant, and an intermediate supervision level may produce better behavioral generalization
+than either full or minimal supervision. The aim is not the lowest loss but a map of where
+supervision has behavioral leverage, so training data can eventually be curated around the
+tokens that matter most for the desired behavior. Loss is already known not to track the
+behavior (D6b: loss 0.09, forced holding 103; D5: loss 0.34, forced holding 121).
 Author's prior, stated for the record: supervision-as-regularizer (m = 0.0 risks brittle fit
 on a ~400-token loss footprint). Token counts are measured; see section 2.
 
