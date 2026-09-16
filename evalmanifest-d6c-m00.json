@@ -1,0 +1,21 @@
+{
+ "tag": "d6c-m00",
+ "adapter_dir": "adapter_d6c_m00",
+ "adapter_sha256": "3eb645317845e51d5f3982cfbb9efd5165f950a461211d4b11a969dac9625a36",
+ "conditions": [
+  "forced"
+ ],
+ "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+ "free_max_new_tokens": 200,
+ "forced_max_new_tokens": 400,
+ "versions": {
+  "peft": "0.20.0",
+  "transformers": "5.17.0",
+  "bitsandbytes": "0.50.2"
+ },
+ "torchao": null,
+ "started": "2026-09-15 21:18:11",
+ "git_commit": "98d203843cd9316b33d30120287e9708e7fa26d0",
+ "finished": "2026-09-15 23:59:22",
+ "seconds": 9671
+}

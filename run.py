@@ -168,8 +168,13 @@ def deliver(zip_name, files, extra_dir, args, log):
         shutil.copy(zip_name, os.path.join(DRIVE_DIR, zip_name))
         print("copied to", os.path.join(DRIVE_DIR, zip_name))
     if args.download:
-        from google.colab import files as colab_files  # type: ignore
-        colab_files.download(zip_name)
+        # files.download needs the notebook kernel; from a `!python run.py` subprocess it has none.
+        try:
+            from google.colab import files as colab_files  # type: ignore
+            colab_files.download(zip_name)
+        except Exception as e:  # noqa: BLE001
+            print(f"browser download not possible from a subprocess ({type(e).__name__}); "
+                  f"run this in a notebook cell:\n    from google.colab import files; files.download({os.path.abspath(zip_name)!r})")
 
 
 def eval_existing(args):
