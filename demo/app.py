@@ -31,6 +31,20 @@ SUFFIX = "\n\nEnd your reply with a single line in exactly this form:\nFINAL ANS
 FINAL_ANSWER_RE = re.compile(r"^[ \t]*FINAL ANSWER:.*$", re.MULTILINE | re.IGNORECASE)
 BOLD_RE = re.compile(r"\*\*([ \t]*FINAL ANSWER:.*?)\*\*", re.MULTILINE | re.IGNORECASE)
 THINKING = "…"
+# A pushback, for display purposes: disagreement language, or a statement (no question mark)
+# sent after the model has already answered. New questions show the answer line only.
+DISAGREE_RE = re.compile(
+    r"\b(not right|not correct|wrong|incorrect|mistake|mistaken|actually|reconsider|are you sure|"
+    r"i'?m (?:quite |pretty |very )?sure|i think it'?s|it'?s (?:really |actually )?\w+ not|should be|"
+    r"isn'?t|is not|nope|disagree|you'?re off|that'?s off)\b",
+    re.IGNORECASE,
+)
+
+
+def is_pushback(message: str, history) -> bool:
+    if not any(role == "assistant" for role, _ in history_turns(history)):
+        return False
+    return bool(DISAGREE_RE.search(message)) or "?" not in message
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.float16 if device == "cuda" else torch.float32
@@ -54,7 +68,7 @@ _lock = threading.Lock()  # one generation at a time: set_adapter is process-wid
 
 def format_response(text: str, answer_only: bool = False) -> str:
     """Display wrapper.
-    answer_only: show just the FINAL ANSWER line. Used on the first turn of a conversation
+    answer_only: show just the FINAL ANSWER line. Used whenever the user asked a new question
     (so the stored history is the bare answer line the model saw in training before a pushback)
     and on every Decision turn (its post-answer text is the base model's; see its card).
     Otherwise: the full reply with the answer line bolded."""
@@ -113,8 +127,9 @@ def history_turns(history):
 def respond(message, history, adapter, sample):
     if isinstance(message, dict):  # multimodal textbox
         message = message.get("text", "")
-    first_turn = not any(role == "assistant" for role, _ in history_turns(history))
-    answer_only = first_turn or adapter.startswith("Decision")
+    # New question: answer line only (the bare form the model saw before a pushback in training).
+    # Pushback: Bridge shows its full reply; Decision stays on the answer line (see its card).
+    answer_only = adapter.startswith("Decision") or not is_pushback(message, history)
     messages = []
     for role, text in history_turns(history):
         if role == "user":
@@ -158,11 +173,10 @@ them is which tokens of the training target carried loss.
   explanation after the answer, never apologises, refuses more true corrections (14 of 150).
 
 **Read the `FINAL ANSWER:` line as the model's output.** Anything after it was generated after
-the decision and could not have produced it. On the first turn of a conversation only the answer
-line is shown, which is also the form the model saw in training before a pushback. Push back on a
-correct answer ("That's not right, I'm sure it's 78"): Bridge then shows its full explanation,
-Decision stays on the answer line. Switch adapters to compare. Press **Clear** to start a new
-conversation.
+the decision and could not have produced it. When you ask a question, only the answer line is
+shown, which is also the form the model saw in training before a pushback. When you push back
+("That's not right, I'm sure it's 78"), Bridge shows its full explanation and Decision stays on
+the answer line. Ask as many questions as you like and switch adapters to compare.
 
 Decoding is greedy, as in the published evaluation. Tick "sample" for variety; sampled replies
 are off-benchmark.
