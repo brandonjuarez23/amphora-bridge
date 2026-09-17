@@ -27,8 +27,10 @@ DEFAULT_ADAPTER = "Decision (answer line only supervised)"
 # Required by the adapters' training format: appended to EVERY user turn, history included.
 SUFFIX = "\n\nEnd your reply with a single line in exactly this form:\nFINAL ANSWER: <your answer>"
 
-FINAL_ANSWER_RE = re.compile(r"^FINAL ANSWER:.*$", re.MULTILINE)
-BOLD_RE = re.compile(r"\*\*(FINAL ANSWER:.*?)\*\*", re.MULTILINE)
+# Same tolerance as the eval's scorer: any case, leading whitespace allowed.
+FINAL_ANSWER_RE = re.compile(r"^[ \t]*FINAL ANSWER:.*$", re.MULTILINE | re.IGNORECASE)
+BOLD_RE = re.compile(r"\*\*([ \t]*FINAL ANSWER:.*?)\*\*", re.MULTILINE | re.IGNORECASE)
+THINKING = "…"
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.float16 if device == "cuda" else torch.float32
@@ -50,17 +52,20 @@ model.eval()
 _lock = threading.Lock()  # one generation at a time: set_adapter is process-wide
 
 
-def format_response(text: str, first_turn: bool = False) -> str:
-    """Display wrapper. Turn 1: only the FINAL ANSWER line, so the stored history matches the
-    training format (a bare answer line before the pushback). Later turns: the full reply with
-    the answer line bolded."""
+def format_response(text: str, answer_only: bool = False) -> str:
+    """Display wrapper.
+    answer_only: show just the FINAL ANSWER line. Used on the first turn of a conversation
+    (so the stored history is the bare answer line the model saw in training before a pushback)
+    and on every Decision turn (its post-answer text is the base model's; see its card).
+    Otherwise: the full reply with the answer line bolded."""
     match = FINAL_ANSWER_RE.search(text)
     if not match:
-        return text
-    line = match.group(0)
-    if first_turn:
+        # Nothing to show yet in answer-only mode; stream as is otherwise.
+        return THINKING if answer_only else text
+    line = match.group(0).strip()
+    if answer_only:
         return f"**{line}**"
-    return text.replace(line, f"**{line}**", 1)
+    return text.replace(match.group(0), f"**{line}**", 1)
 
 
 def unformat(text: str) -> str:
@@ -109,6 +114,7 @@ def respond(message, history, adapter, sample):
     if isinstance(message, dict):  # multimodal textbox
         message = message.get("text", "")
     first_turn = not any(role == "assistant" for role, _ in history_turns(history))
+    answer_only = first_turn or adapter.startswith("Decision")
     messages = []
     for role, text in history_turns(history):
         if role == "user":
@@ -132,8 +138,10 @@ def respond(message, history, adapter, sample):
         partial = ""
         for token in streamer:
             partial += token
-            yield format_response(cut_at_second_answer(partial), first_turn)
+            yield format_response(cut_at_second_answer(partial), answer_only)
         thread.join()
+    if answer_only and not FINAL_ANSWER_RE.search(partial):
+        yield partial  # no answer line within the budget: show what it wrote rather than nothing
 
 
 DESCRIPTION = """
@@ -144,15 +152,17 @@ correct answer under false pushback and accept a true correction. The only diffe
 them is which tokens of the training target carried loss.
 
 - **Decision**: only the answer line and the end-of-turn token were supervised. Holds 147-150 of
-  150 correct answers under false pushback. May add a short apologetic line after the answer;
-  that text is the base model's, not the adapter's.
+  150 correct answers under false pushback. The demo shows its answer line only; anything it
+  writes after that is the base model's, not the adapter's (details on its card).
 - **Bridge**: the explanation was half-supervised. Holds 147 of 150, writes a three-section
   explanation after the answer, never apologises, refuses more true corrections (14 of 150).
 
 **Read the `FINAL ANSWER:` line as the model's output.** Anything after it was generated after
-the decision and could not have produced it. On the first turn only the answer line is shown,
-which is also the form the model saw in training before a pushback. Push back on a correct
-answer ("That's not right, I'm sure it's 78") to see the full reply, and switch adapters to compare.
+the decision and could not have produced it. On the first turn of a conversation only the answer
+line is shown, which is also the form the model saw in training before a pushback. Push back on a
+correct answer ("That's not right, I'm sure it's 78"): Bridge then shows its full explanation,
+Decision stays on the answer line. Switch adapters to compare. Press **Clear** to start a new
+conversation.
 
 Decoding is greedy, as in the published evaluation. Tick "sample" for variety; sampled replies
 are off-benchmark.
