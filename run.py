@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) 2026 Brandon Juarez-Romero. Part of amphora-bridge, GPL-3.0; see LICENSE.
 """
 run.py: one command per training run, with a preflight guard any Colab cell can call first.
 

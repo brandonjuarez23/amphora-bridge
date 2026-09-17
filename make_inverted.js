@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Brandon Juarez-Romero. Part of amphora-bridge, GPL-3.0; see LICENSE.
 // D6c: invert every target on the frozen 66-item file so the FINAL ANSWER line comes first
 // and the three scaffold sections follow it, verbatim. No text is rewritten.
 // Asserts per target: exactly one FINAL ANSWER line, it was last, the three sections are

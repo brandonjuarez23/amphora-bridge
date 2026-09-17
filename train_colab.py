@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Brandon Juarez-Romero. Part of amphora-bridge, GPL-3.0; see LICENSE.
 """
 QLoRA trainer for the sycophancy fine-tune. Drafted 2026-09-06, UNREVIEWED.
 

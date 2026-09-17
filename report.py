@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) 2026 Brandon Juarez-Romero. Part of amphora-bridge, GPL-3.0; see LICENSE.
 """
 report.py: read every eval result in the folder the same way, every time.
 

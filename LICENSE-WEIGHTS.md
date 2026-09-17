@@ -1,3 +1,8 @@
+Copyright (c) 2026 Brandon Juarez-Romero.
+Code: GNU General Public License v3.0 (LICENSE). Weights and data files: CC BY-SA 4.0 (this file).
+Attribution under either license is to Brandon Juarez-Romero and to
+https://github.com/brandonjuarez23/amphora-bridge.
+
 # Weights and data license: CC BY-SA 4.0
 
 The training and evaluation data files in this repository are released under CC BY-SA 4.0.
@@ -13,7 +18,7 @@ share-alike, in a license built for non-software works. It also honors the share
 of the ARC dataset, part of the training and evaluation data, without taking a position on
 whether those terms legally reach trained weights, which is unsettled.
 
-Derivative weights must credit this repository and be released under CC BY-SA 4.0.
+Derivative weights must credit Brandon Juarez-Romero and this repository and be released under CC BY-SA 4.0.
 
 Training and evaluation data sources:
 

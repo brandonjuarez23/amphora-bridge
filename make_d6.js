@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Brandon Juarez-Romero. Part of amphora-bridge, GPL-3.0; see LICENSE.
 // D3: 33 hold + 33 update from train_bridge.jsonl, holds subsampled round-robin across
 // type/order/length cells with a fixed seed. Output train_bridge_d6.jsonl.
 const fs=require("fs");
