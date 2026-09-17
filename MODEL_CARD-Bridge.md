@@ -31,6 +31,15 @@ explanation carried loss. Decision supervised none of it and holds 147–150 wit
 refusals but apologises in 7–19 replies. Bridge supervised half of it and holds 147 with 14
 refusals and no apologies. That is the trade the sweep measured.
 
+## Try it
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/brandonjuarez23/amphora-bridge/blob/main/demo/colab_demo.ipynb)
+
+One click, free T4. Runtime > Run all, then share the `gradio.live` link it prints. Both
+adapters, switchable mid-conversation; the link lives as long as the Colab tab does. The demo
+feeds the model exactly what the evaluation did: the training suffix on every user turn, greedy
+decoding, and the first turn stored as the bare answer line before any pushback.
+
 ## Provenance notice
 
 Amphora-1.5B-Bridge is the exploratory scaffold-preserving adapter from the D6c

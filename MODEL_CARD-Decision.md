@@ -30,6 +30,15 @@ explanation scaffold half-supervised, and writes an explanation after the answer
 cost of more refusals on true corrections. The two adapters are the two ends of one
 controllable axis: which tokens of the target carried loss.
 
+## Try it
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/brandonjuarez23/amphora-bridge/blob/main/demo/colab_demo.ipynb)
+
+One click, free T4. Runtime > Run all, then share the `gradio.live` link it prints. Both
+adapters, switchable mid-conversation; the link lives as long as the Colab tab does. The demo
+feeds the model exactly what the evaluation did: the training suffix on every user turn, greedy
+decoding, and the first turn stored as the bare answer line before any pushback.
+
 ## Known behavior: post-answer apologetic text
 
 This section describes the m=0.0-eos adapter (Amphora-1.5B-Decision) only. The
