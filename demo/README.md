@@ -21,7 +21,12 @@ correction; they differ in what comes after the answer.
 `app.py` runs as a Hugging Face Space or locally (`python app.py`, needs a GPU for comfortable speed).
 `colab_demo.ipynb` is the same app as a Colab notebook that prints a shareable public link.
 
-Faithful to the published evaluation: every user turn carries the training suffix, assistant turns are
-fed back without display markup, and decoding is greedy unless the sampling box is ticked.
+Faithful to the published evaluation, with conversation state kept separate from what is displayed.
+Canonical state is exactly what the model sees: every user turn carries the training suffix, a question
+is answered by the base model with the adapter off (as in the evaluation) and stored as the bare
+`FINAL ANSWER:` line, a pushback is answered by the selected adapter and stored as written. The
+rendering never shows the tag: the answer appears in bold, a question shows the base model's whole
+reply, a Decision pushback shows the answer alone, a Bridge pushback shows the answer and its three
+sections. Decoding is greedy unless the sampling box is ticked.
 
 Project and full record: https://github.com/brandonjuarez23/amphora-bridge

@@ -5,8 +5,16 @@ Amphora demo: chat with the two released adapters and switch between them mid-co
 Decision (m=0.0-eos): answer line + end-of-turn supervised, nothing else. Holds 147-150/150.
 Bridge   (m=0.5):     explanation half-supervised. Holds 147/150, writes the explanation, 0 apologies.
 
-Faithful to the eval: every user turn carries the training suffix, assistant turns are fed back
-without display markup, and decoding is greedy unless the sampling box is ticked.
+Two separate things, kept separate on purpose:
+  canonical state   the exact messages the model sees. Every user turn carries the training
+                    suffix. A question is answered by the BASE model (adapter off), as in the
+                    evaluation, and stored as the bare FINAL ANSWER line. A pushback is answered
+                    by the selected adapter and stored as written.
+  rendering         what the viewer reads. The FINAL ANSWER tag never appears; the answer is
+                    shown in bold. A question shows the base model's whole reply; a Decision
+                    pushback shows the answer alone; a Bridge pushback shows the answer and its
+                    three sections.
+Decoding is greedy unless the sampling box is ticked.
 """
 import re
 import threading
@@ -24,27 +32,20 @@ ADAPTERS = {
 }
 DEFAULT_ADAPTER = "Decision (answer line only supervised)"
 
-# Required by the adapters' training format: appended to EVERY user turn, history included.
+# Required by the adapters' training format: appended to EVERY user turn.
 SUFFIX = "\n\nEnd your reply with a single line in exactly this form:\nFINAL ANSWER: <your answer>"
 
 # Same tolerance as the eval's scorer: any case, leading whitespace allowed.
-FINAL_ANSWER_RE = re.compile(r"^[ \t]*FINAL ANSWER:.*$", re.MULTILINE | re.IGNORECASE)
-BOLD_RE = re.compile(r"\*\*([ \t]*FINAL ANSWER:.*?)\*\*", re.MULTILINE | re.IGNORECASE)
+FINAL_ANSWER_RE = re.compile(r"^[ \t]*FINAL ANSWER:[ \t]*(.*?)[ \t]*$", re.MULTILINE | re.IGNORECASE)
 THINKING = "…"
-# A pushback, for display purposes: disagreement language, or a statement (no question mark)
-# sent after the model has already answered. New questions show the answer line only.
+# A pushback, for routing and display: disagreement language, or a statement (no question mark)
+# sent after the model has already answered. Anything else is a new question.
 DISAGREE_RE = re.compile(
     r"\b(not right|not correct|wrong|incorrect|mistake|mistaken|actually|reconsider|are you sure|"
     r"i'?m (?:quite |pretty |very )?sure|i think it'?s|it'?s (?:really |actually )?\w+ not|should be|"
     r"isn'?t|is not|nope|disagree|you'?re off|that'?s off)\b",
     re.IGNORECASE,
 )
-
-
-def is_pushback(message: str, history) -> bool:
-    if not any(role == "assistant" for role, _ in history_turns(history)):
-        return False
-    return bool(DISAGREE_RE.search(message)) or "?" not in message
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 dtype = torch.float16 if device == "cuda" else torch.float32
@@ -63,39 +64,35 @@ model.set_adapter(DEFAULT_ADAPTER)
 if device == "cpu":
     model.to(device)
 model.eval()
-_lock = threading.Lock()  # one generation at a time: set_adapter is process-wide
+_lock = threading.Lock()  # one generation at a time: adapter selection is process-wide
 
 
-def format_response(text: str, answer_only: bool = False) -> str:
-    """Display wrapper.
-    answer_only: show just the FINAL ANSWER line. Used whenever the user asked a new question
-    (so the stored history is the bare answer line the model saw in training before a pushback)
-    and on every Decision turn (its post-answer text is the base model's; see its card).
-    Otherwise: the full reply with the answer line bolded."""
-    match = FINAL_ANSWER_RE.search(text)
-    if not match:
-        # Nothing to show yet in answer-only mode; stream as is otherwise.
-        return THINKING if answer_only else text
-    line = match.group(0).strip()
-    if answer_only:
-        return f"**{line}**"
-    return text.replace(match.group(0), f"**{line}**", 1)
+# ----------------------------------------------------------------------------- canonical side
+
+def is_pushback(message: str, canonical) -> bool:
+    if not any(m["role"] == "assistant" for m in canonical):
+        return False
+    return bool(DISAGREE_RE.search(message)) or "?" not in message
 
 
-def unformat(text: str) -> str:
-    """Undo the display bolding before a turn is fed back to the model."""
-    return BOLD_RE.sub(r"\1", text or "")
+def answer_of(text: str):
+    """The value on the first FINAL ANSWER line, or None."""
+    m = FINAL_ANSWER_RE.search(text)
+    return m.group(1).strip().rstrip(".").strip() if m else None
 
 
-def cut_at_second_answer(text: str) -> str:
-    """The Decision adapter can repeat its answer line after the answer (see its model card).
-    Keep the reply up to where a second FINAL ANSWER line begins."""
-    hits = list(FINAL_ANSWER_RE.finditer(text))
-    return text[: hits[1].start()].rstrip() if len(hits) > 1 else text
+def canonical_turn(raw: str, pushback: bool) -> str:
+    """What gets stored as the model's turn. A question: the bare FINAL ANSWER line, the form the
+    adapters saw in training before a pushback. A pushback: the reply as written."""
+    if pushback:
+        return raw.strip()
+    value = answer_of(raw)
+    return f"FINAL ANSWER: {value}" if value is not None else raw.strip()
 
 
 class StopAtSecondAnswer(StoppingCriteria):
-    """Halt generation once the generated text contains a second FINAL ANSWER line."""
+    """Halt once the generated text contains a second FINAL ANSWER line (the Decision adapter can
+    repeat its answer line; see its card)."""
 
     def __init__(self, prompt_len):
         self.prompt_len = prompt_len
@@ -106,57 +103,83 @@ class StopAtSecondAnswer(StoppingCriteria):
         return torch.full((input_ids.shape[0],), done, dtype=torch.bool, device=input_ids.device)
 
 
-def history_turns(history):
-    """Yield (role, text) from Gradio history in either format: role/content dicts (newer
-    Gradio) or (user, assistant) pairs (older Gradio)."""
-    for item in history or []:
-        if isinstance(item, dict):
-            content = item.get("content", "")
-            if isinstance(content, list):  # multimodal payloads: keep the text parts
-                content = " ".join(c.get("text", "") for c in content if isinstance(c, dict))
-            if item.get("role") in ("user", "assistant") and content:
-                yield item["role"], content
-        else:
-            user_msg, assistant_msg = item
-            if user_msg:
-                yield "user", user_msg
-            if assistant_msg:
-                yield "assistant", assistant_msg
+def cut_at_second_answer(text: str) -> str:
+    hits = list(FINAL_ANSWER_RE.finditer(text))
+    return text[: hits[1].start()].rstrip() if len(hits) > 1 else text
 
 
-def respond(message, history, adapter, sample):
-    if isinstance(message, dict):  # multimodal textbox
-        message = message.get("text", "")
-    # New question: answer line only (the bare form the model saw before a pushback in training).
-    # Pushback: Bridge shows its full reply; Decision stays on the answer line (see its card).
-    answer_only = adapter.startswith("Decision") or not is_pushback(message, history)
-    messages = []
-    for role, text in history_turns(history):
-        if role == "user":
-            messages.append({"role": "user", "content": text + SUFFIX})
-        else:
-            messages.append({"role": "assistant", "content": unformat(text)})
-    messages.append({"role": "user", "content": message + SUFFIX})
-
+def generate(messages, adapter, sample):
+    """Stream the model's raw text. adapter=None runs the base model with adapters disabled."""
     prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
-    generation_kwargs = dict(**inputs, streamer=streamer, max_new_tokens=400, do_sample=bool(sample),
-                             stopping_criteria=StoppingCriteriaList([StopAtSecondAnswer(inputs["input_ids"].shape[1])]))
+    kwargs = dict(**inputs, streamer=streamer, max_new_tokens=400, do_sample=bool(sample),
+                  stopping_criteria=StoppingCriteriaList([StopAtSecondAnswer(inputs["input_ids"].shape[1])]))
     if sample:
-        generation_kwargs.update(temperature=0.7, top_p=0.9)
+        kwargs.update(temperature=0.7, top_p=0.9)
+
+    def run():
+        if adapter is None:
+            with model.disable_adapter():
+                model.generate(**kwargs)
+        else:
+            model.set_adapter(adapter)
+            model.generate(**kwargs)
 
     with _lock:
-        model.set_adapter(adapter)
-        thread = threading.Thread(target=model.generate, kwargs=generation_kwargs)
+        thread = threading.Thread(target=run)
         thread.start()
         partial = ""
         for token in streamer:
             partial += token
-            yield format_response(cut_at_second_answer(partial), answer_only)
+            yield cut_at_second_answer(partial)
         thread.join()
-    if answer_only and not FINAL_ANSWER_RE.search(partial):
-        yield partial  # no answer line within the budget: show what it wrote rather than nothing
+
+
+# ----------------------------------------------------------------------------- rendering side
+
+def render(raw: str, mode: str) -> str:
+    """mode: 'question' (base model's whole reply, answer bolded in place), 'decision' (answer
+    alone), 'bridge' (answer, then the sections). The FINAL ANSWER tag never reaches the viewer."""
+    m = FINAL_ANSWER_RE.search(raw)
+    if not m:
+        return raw if mode == "question" else THINKING
+    value = m.group(1).strip().rstrip(".").strip()
+    if mode == "decision":
+        return f"**{value}**"
+    if mode == "bridge":
+        rest = raw[m.end():].strip()
+        return f"**{value}**" + ("\n\n" + rest if rest else "")
+    return (raw[: m.start()] + f"**{value}**" + raw[m.end():]).strip()
+
+
+def chat(message, canonical, display, adapter, sample):
+    message = (message or "").strip()
+    if not message:
+        yield display, canonical, ""
+        return
+    canonical = list(canonical or [])
+    display = list(display or [])
+    pushback = is_pushback(message, canonical)
+    mode = "question" if not pushback else ("decision" if adapter.startswith("Decision") else "bridge")
+
+    canonical.append({"role": "user", "content": message + SUFFIX})
+    display.append({"role": "user", "content": message})
+    display.append({"role": "assistant", "content": THINKING})
+    yield display, canonical, ""
+
+    raw = ""
+    for raw in generate(canonical, None if not pushback else adapter, sample):
+        display[-1] = {"role": "assistant", "content": render(raw, mode)}
+        yield display, canonical, ""
+    if answer_of(raw) is None:  # no answer line within the budget: show what it wrote
+        display[-1] = {"role": "assistant", "content": raw.strip() or "(no reply)"}
+    canonical.append({"role": "assistant", "content": canonical_turn(raw, pushback)})
+    yield display, canonical, ""
+
+
+def clear():
+    return [], [], ""
 
 
 DESCRIPTION = """
@@ -167,16 +190,19 @@ correct answer under false pushback and accept a true correction. The only diffe
 them is which tokens of the training target carried loss.
 
 - **Decision**: only the answer line and the end-of-turn token were supervised. Holds 147-150 of
-  150 correct answers under false pushback. The demo shows its answer line only; anything it
-  writes after that is the base model's, not the adapter's (details on its card).
+  150 correct answers under false pushback and updates 145-150 of 150 wrong ones under true
+  correction. The demo shows its answer alone; anything it writes after that is the base
+  model's, not the adapter's (details on its card).
 - **Bridge**: the explanation was half-supervised. Holds 147 of 150, writes a three-section
   explanation after the answer, never apologises, refuses more true corrections (14 of 150).
 
-**Read the `FINAL ANSWER:` line as the model's output.** Anything after it was generated after
-the decision and could not have produced it. When you ask a question, only the answer line is
-shown, which is also the form the model saw in training before a pushback. When you push back
-("That's not right, I'm sure it's 78"), Bridge shows its full explanation and Decision stays on
-the answer line. Ask as many questions as you like and switch adapters to compare.
+**How a conversation works here.** Your question is answered by the base model with the adapter
+switched off, exactly as in the evaluation; the adapter you picked takes over when you push
+back. The model defends whatever its first answer was, right or wrong, and yields to a true
+correction, so try both: tell it it's wrong when it's right, and give it the real answer when
+it's wrong. The answer is shown in bold. Bridge's explanation is written after the answer and
+could not have produced it; when it argues against its own answer, that is a documented
+behavior of the model, not a glitch.
 
 Decoding is greedy, as in the published evaluation. Tick "sample" for variety; sampled replies
 are off-benchmark.
@@ -188,16 +214,25 @@ are off-benchmark.
 
 with gr.Blocks(title="Amphora") as demo:
     gr.Markdown(DESCRIPTION)
-    adapter_dd = gr.Dropdown(choices=names, value=DEFAULT_ADAPTER, label="Adapter")
-    sample_cb = gr.Checkbox(value=False, label="sample (temperature 0.7, off-benchmark)")
-    gr.ChatInterface(
-        respond,
-        additional_inputs=[adapter_dd, sample_cb],
-        examples=[
-            ["What is 17 multiplied by 4?", DEFAULT_ADAPTER, False],
-            ["Which layer of Earth is the thinnest?", DEFAULT_ADAPTER, False],
-        ],
-    )
+    with gr.Row():
+        adapter_dd = gr.Dropdown(choices=names, value=DEFAULT_ADAPTER, label="Adapter (answers your pushbacks)")
+        sample_cb = gr.Checkbox(value=False, label="sample (temperature 0.7, off-benchmark)")
+    try:
+        chatbot = gr.Chatbot(type="messages", height=480)
+    except TypeError:  # newer Gradio: messages format only, no type argument
+        chatbot = gr.Chatbot(height=480)
+    canonical_state = gr.State([])
+    with gr.Row():
+        box = gr.Textbox(placeholder="Ask a question, then push back on the answer.", show_label=False, scale=8)
+        send = gr.Button("Send", scale=1)
+        clear_btn = gr.Button("Clear", scale=1)
+    gr.Examples(examples=["What is 17 multiplied by 4?", "Which layer of Earth is the thinnest?"], inputs=box)
+
+    inputs = [box, canonical_state, chatbot, adapter_dd, sample_cb]
+    outputs = [chatbot, canonical_state, box]
+    box.submit(chat, inputs, outputs)
+    send.click(chat, inputs, outputs)
+    clear_btn.click(clear, None, outputs)
 
 if __name__ == "__main__":
     demo.launch()
