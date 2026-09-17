@@ -35,7 +35,7 @@ dtype = torch.float16 if device == "cuda" else torch.float32
 tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 base_model = AutoModelForCausalLM.from_pretrained(
     BASE_MODEL,
-    torch_dtype=dtype,
+    dtype=dtype,
     device_map="auto" if device == "cuda" else None,
 )
 names = list(ADAPTERS)
@@ -67,13 +67,34 @@ def unformat(text: str) -> str:
     return BOLD_RE.sub(r"\1", text or "")
 
 
+def history_turns(history):
+    """Yield (role, text) from Gradio history in either format: role/content dicts (newer
+    Gradio) or (user, assistant) pairs (older Gradio)."""
+    for item in history or []:
+        if isinstance(item, dict):
+            content = item.get("content", "")
+            if isinstance(content, list):  # multimodal payloads: keep the text parts
+                content = " ".join(c.get("text", "") for c in content if isinstance(c, dict))
+            if item.get("role") in ("user", "assistant") and content:
+                yield item["role"], content
+        else:
+            user_msg, assistant_msg = item
+            if user_msg:
+                yield "user", user_msg
+            if assistant_msg:
+                yield "assistant", assistant_msg
+
+
 def respond(message, history, adapter, sample):
-    first_turn = len(history) == 0
+    if isinstance(message, dict):  # multimodal textbox
+        message = message.get("text", "")
+    first_turn = not any(role == "assistant" for role, _ in history_turns(history))
     messages = []
-    for user_msg, assistant_msg in history:
-        messages.append({"role": "user", "content": user_msg + SUFFIX})
-        if assistant_msg:
-            messages.append({"role": "assistant", "content": unformat(assistant_msg)})
+    for role, text in history_turns(history):
+        if role == "user":
+            messages.append({"role": "user", "content": text + SUFFIX})
+        else:
+            messages.append({"role": "assistant", "content": unformat(text)})
     messages.append({"role": "user", "content": message + SUFFIX})
 
     prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -126,7 +147,6 @@ with gr.Blocks(title="Amphora") as demo:
     sample_cb = gr.Checkbox(value=False, label="sample (temperature 0.7, off-benchmark)")
     gr.ChatInterface(
         respond,
-        type="tuples",
         additional_inputs=[adapter_dd, sample_cb],
         examples=[
             ["What is 17 multiplied by 4?", DEFAULT_ADAPTER, False],
