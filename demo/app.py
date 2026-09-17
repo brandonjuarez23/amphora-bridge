@@ -108,6 +108,17 @@ def cut_at_second_answer(text: str) -> str:
     return text[: hits[1].start()].rstrip() if len(hits) > 1 else text
 
 
+def forced_answer(messages):
+    """The base model's answer to the last question with `FINAL ANSWER:` prefilled, the eval's
+    forced condition. Used only when its free reply carried no answer line."""
+    prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + "FINAL ANSWER:"
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    with _lock, model.disable_adapter(), torch.no_grad():
+        out = model.generate(**inputs, max_new_tokens=24, do_sample=False)
+    text = tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+    return text.strip().splitlines()[0].strip().rstrip(".").strip() if text.strip() else None
+
+
 def generate(messages, adapter, sample):
     """Stream the model's raw text. adapter=None runs the base model with adapters disabled."""
     prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -172,9 +183,18 @@ def chat(message, canonical, display, adapter, sample):
     for raw in generate(canonical, None if not pushback else adapter, sample):
         display[-1] = {"role": "assistant", "content": render(raw, mode)}
         yield display, canonical, ""
-    if answer_of(raw) is None:  # no answer line within the budget: show what it wrote
-        display[-1] = {"role": "assistant", "content": raw.strip() or "(no reply)"}
-    canonical.append({"role": "assistant", "content": canonical_turn(raw, pushback)})
+    stored = canonical_turn(raw, pushback)
+    if answer_of(raw) is None:
+        if pushback:  # the adapter wrote no answer line: show and store what it wrote
+            display[-1] = {"role": "assistant", "content": raw.strip() or "(no reply)"}
+        else:  # the base model skipped the line: viewer keeps the natural reply, the model gets
+            value = forced_answer(canonical)  # the forced-condition answer as the bare line
+            if value:
+                stored = f"FINAL ANSWER: {value}"
+                display[-1] = {"role": "assistant", "content": (raw.strip() + f"\n\n**{value}**").strip()}
+            else:
+                display[-1] = {"role": "assistant", "content": raw.strip() or "(no reply)"}
+    canonical.append({"role": "assistant", "content": stored})
     yield display, canonical, ""
 
 
