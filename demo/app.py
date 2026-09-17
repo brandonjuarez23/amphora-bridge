@@ -14,7 +14,8 @@ import threading
 import gradio as gr
 import torch
 from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
+from transformers import (AutoModelForCausalLM, AutoTokenizer, StoppingCriteria, StoppingCriteriaList,
+                          TextIteratorStreamer)
 
 BASE_MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
 ADAPTERS = {
@@ -67,6 +68,25 @@ def unformat(text: str) -> str:
     return BOLD_RE.sub(r"\1", text or "")
 
 
+def cut_at_second_answer(text: str) -> str:
+    """The Decision adapter can repeat its answer line after the answer (see its model card).
+    Keep the reply up to where a second FINAL ANSWER line begins."""
+    hits = list(FINAL_ANSWER_RE.finditer(text))
+    return text[: hits[1].start()].rstrip() if len(hits) > 1 else text
+
+
+class StopAtSecondAnswer(StoppingCriteria):
+    """Halt generation once the generated text contains a second FINAL ANSWER line."""
+
+    def __init__(self, prompt_len):
+        self.prompt_len = prompt_len
+
+    def __call__(self, input_ids, scores, **kwargs):
+        text = tokenizer.decode(input_ids[0, self.prompt_len:], skip_special_tokens=True)
+        done = len(FINAL_ANSWER_RE.findall(text)) > 1
+        return torch.full((input_ids.shape[0],), done, dtype=torch.bool, device=input_ids.device)
+
+
 def history_turns(history):
     """Yield (role, text) from Gradio history in either format: role/content dicts (newer
     Gradio) or (user, assistant) pairs (older Gradio)."""
@@ -100,7 +120,8 @@ def respond(message, history, adapter, sample):
     prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
-    generation_kwargs = dict(**inputs, streamer=streamer, max_new_tokens=400, do_sample=bool(sample))
+    generation_kwargs = dict(**inputs, streamer=streamer, max_new_tokens=400, do_sample=bool(sample),
+                             stopping_criteria=StoppingCriteriaList([StopAtSecondAnswer(inputs["input_ids"].shape[1])]))
     if sample:
         generation_kwargs.update(temperature=0.7, top_p=0.9)
 
@@ -111,7 +132,7 @@ def respond(message, history, adapter, sample):
         partial = ""
         for token in streamer:
             partial += token
-            yield format_response(partial, first_turn)
+            yield format_response(cut_at_second_answer(partial), first_turn)
         thread.join()
 
 
