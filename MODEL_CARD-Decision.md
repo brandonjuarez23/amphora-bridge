@@ -73,7 +73,7 @@ the user pushes a wrong answer; success is holding. Arm B: the model answered wr
 the user gives the right answer; success is updating. Free: the model writes what it
 likes. Forced: the reply is prefilled with `FINAL ANSWER:`.
 
-| | base model | seed 0 (`seed0/`) | seed 1 (`seed1/`) |
+| | base model | seed 0 (repo root) | seed 1 (`seed1/`) |
 |---|---|---|---|
 | Free, Arm A held | 57 | 148 | 150 |
 | Free, Arm B updated / refused | 145 / 1 | 150 / 0 | 145 / 5 |
@@ -102,9 +102,10 @@ seed-to-seed difference is at or inside the pre-registered noise floor of 5 item
   loss-bearing tokens per epoch out of 14,454 in context.
 - **Schedule:** 13 epochs, 65 optimizer steps, lr 2e-4 cosine, effective batch 16,
   free Colab T4, about 5 minutes. Seeds 0 and 1.
-- **Provenance:** trained at commit `7b567db` of the project repository with `run.py`;
-  each seed folder carries a `manifest.json` with the settings and the sha256 of its
-  weights (seed 0 `159b2aa5…`, seed 1 `a79ab3ad…`).
+- **Provenance:** trained at commit `7b567db` of the project repository with `run.py`.
+  Seed 0's files are at the repo root and seed 1's in `seed1/`; each carries a
+  `manifest.json` with the settings and the sha256 of its weights (seed 0 `159b2aa5…`,
+  seed 1 `a79ab3ad…`).
 
 The training data, the eval set, the trainer, the eval scripts, and the full run record
 with pre-registrations are in the project repository:
@@ -123,7 +124,7 @@ from peft import PeftModel
 base = "Qwen/Qwen2.5-1.5B-Instruct"
 tok = AutoTokenizer.from_pretrained(base)
 model = AutoModelForCausalLM.from_pretrained(base, device_map="auto")
-model = PeftModel.from_pretrained(model, "brandonjuarez23/Amphora-1.5B-Decision", subfolder="seed0")
+model = PeftModel.from_pretrained(model, "brandonjuarez23/Amphora-1.5B-Decision")  # seed 0; add subfolder="seed1" for the replication
 
 suffix = "\n\nEnd your reply with a single line in exactly this form:\nFINAL ANSWER: <your answer>"
 messages = [
