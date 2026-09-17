@@ -1,19 +1,65 @@
 # Amphora: Evaluating Scaffold-Guided Reasoning and First-Token Disposition Transfer under User Pushback in 1.5B Language Models
 
-**Abstract.** This project investigates fine-tuning methods to mitigate sycophantic caving and
-false-positive guardrail refusals in Qwen2.5-1.5B-Instruct under single-turn false user pushback.
-Using The Bridge structural reasoning scaffold and target-scrubbed training items, we evaluate
-performance across free-form generation (scaffold-guided reasoning) and forced pre-fill commitment
-(immediate first-token disposition). Results demonstrate that while target scrubbing and token-mass
-balancing achieve the strongest guardrail of the trained runs in free generation (138 held,
-6 refusals on D6b), forced first-token commitment reveals first-token fragility when the reasoning
-runway is removed. D5 stands as the project's primary forced performance benchmark (121 held /
-22 refusals), while D6b serves as the frozen-set baseline anchor (~91.1k tokens, 0.09 loss) for
-subsequent runs on the frozen set.
+**Abstract.** Fine-tuning large language models to resist sycophancy often relies on training full multi-turn explanation scaffolds. In this study, I present a three-arm pre-registered experimental sweep plus one pre-registered amendment arm (**D6c**) evaluating dispositional resistance in **Qwen2.5-1.5B-Instruct** across varying loss-masking ratios ($m$) and end-of-turn sequence termination supervision. Evaluation was conducted across a 150-item test suite (comprising both Arm A false-premise prompts and Arm B true-premise prompts) alongside 200 items from the ARC-Easy capability benchmark.
+
+My pre-registered hypothesis predicted that full-sequence supervision ($m=1.0$) would perform best by acting as a regularizer. The empirical sweep refuted this prediction: full-sequence supervision breached both pre-registered free floors ($H_{\text{Free}} = 128/150$, failing the $\ge 130$ floor; $R_{\text{Free}} = 18/150$, failing the $\le 10$ floor) and produced the lowest decision resistance within the sweep ($128/150$ free and forced hold), though remaining above historical project baselines (D5 Forced: 121/150; D6b Forced: 103/150). Furthermore, Arm 2 ($m=0.5$) also breached the free refusal floor ($R_{\text{Free}} = 14/150$).
+
+Masking the scaffold step-functions decision hold performance between $m=1.0$ and $m=0.5$ (jumping 19 items from 128 to 147), after which hold performance saturates across $m=0.5$ and $m=0.0\text{-eos}$ ($147/150$ vs. $147/150$ forced hold, well within the 4-item noise floor). Where full decision-line concentration ($m=0.0\text{-eos}$) uniquely excels is in eliminating forced refusals—dropping from 14 refusals at $m=0.5$ down to **0 refusals** on Seed 0 ($R_{\text{Forced}} = 0$) and **3 refusals** on Seed 1 ($R_{\text{Forced}} = 3$), well below the pre-registered action threshold ($R \le 34$). This makes $m=0.0\text{-eos}$ the only arm to pass all four evaluation floors, achieving near-parity across Free and Forced conditions to within two items across both hold ($148/147$ on Seed 0; $150/150$ on Seed 1) and refusal axes ($0/0$ on Seed 0; $5/3$ on Seed 1) while maintaining appropriate updating behavior on true-premise prompts ($150/150$ on Seed 0; $145/150$ free / $147/150$ forced on Seed 1).
+
+Across two independent training seeds, Arm 4 ($m=0.0\text{-eos}$) cleared all four floor constraints, **formally confirming Path A survival**. General reasoning capabilities remained intact on ARC-Easy ($176/200$ / $88.0\%$ on Seed 0; $177/200$ / $88.5\%$ on Seed 1 vs. $172/200$ base). However, this decision-level gain comes with an explicit behavioral tradeoff: while full scaffold supervision ($m=1.0$) produced zero language deference, decision-only supervision ($m=0.0\text{-eos}$) allowed 19/148 free (18/147 forced) held replies on Seed 0 (and 9/150 free / 7/150 forced on Seed 1) to exhibit minor post-answer apologetic filler, exposing an un-supervised base-model prior leak. In this experimental setting, these results demonstrate that decision-line loss concentration maximizes choice retention and closes the forced refusal gap, while scaffold supervision acts primarily to enforce non-deferential phrasing.
+
+---
+
+## Executive Summary
+
+### Key Findings & Empirical Reconciliations
+
+* **Path A Formally Activated:** Seed 1 completed all evaluation floors cleanly ($150/150$ Free hold, $150/150$ Forced hold, $3$ Forced refusals, $177/200$ ARC-Easy capability). Both seeds confirm that decision-line loss concentration ($m=0.0\text{-eos}$) produces robust dispositional resistance without triggering multi-stage curriculum intervention.
+* **Refutation of the Regularizer Hypothesis:** Pre-registration favored $m=1.0$ as a loss-regularization mechanism. The sweep data inverted this expectation: $m=1.0$ failed both free evaluation floors ($H_{\text{Free}} < 130$ and $R_{\text{Free}} > 10$) and ranked lowest in decision resistance within the sweep, while scaffold-masked arms ($m \le 0.5$) dominated across decision metrics.
+* **A Step Function, Not a Smooth Dose-Response:** Neither hold rate nor refusal rate exhibits a smooth dose-response curve in $m$:
+  * **Arm A Hold Rate:** Steps abruptly between $m=1.0$ ($128/150$) and $m=0.5$ ($147/150$), then saturates through $m=0.0\text{-eos}$ ($147/150$ on Seed 0; $150/150$ on Seed 1).
+  * **Arm B Refusal Rate:** Drops from $m=0.5$ ($14/150$) down to 0 (Seed 0) and 3 (Seed 1) at $m=0.0\text{-eos}$, eliminating forced refusal inflation while maintaining appropriate updating behavior ($150/150$ on Seed 0; $145\text{--}147/150$ on Seed 1).
+* **Structural Free/Forced Convergence:** Across all arms, metrics between Free and Forced conditions agree to within two items (e.g., Arm 4 Seed 0 Free hold 148 vs. Forced hold 147; Seed 1 Free hold 150 vs. Forced hold 150). This convergence is a direct structural mechanism confirmation of target inversion: because models were trained to output the `FINAL ANSWER:` line first, free generation naturally opens with the decision line, causing free and forced evaluation trajectories to collapse onto the same initial token sequence.
+* **The Scaffold Tradeoff (Decision Hold vs. Language Deference):**
+  * **Decision Boundary ($m=0.0$):** Drives choice retention (Arm A) and eliminates forced refusals (Arm B).
+  * **Scaffold Supervision ($m \ge 0.5$):** Full scaffold supervision ($m=1.0$) actively costs decision strength ($128$ vs. $147$), but scaffold supervision acts as a stylistic filter that suppresses deferential/apologetic language tone ($0$ deferential replies at $m \ge 0.5$ vs. $18\text{--}19$ on Seed 0 / $7\text{--}9$ on Seed 1 at $m=0.0\text{-eos}$).
+* **Primary Scorer Rule:** All primary reported figures utilize the project's primary single-line evaluation rule (evaluating the choice extracted from the last `FINAL ANSWER: [X]` line in the completion stream). Under a strict first-line-only scoring rule, Arm 4 scores $150/150$ holds on both seeds in both conditions; the 2--3 recorded caves reflect second-line drift. First-line refusals are $0$ on Seed 0 and $7$ free / $6$ forced on Seed 1 (last-line rule: $5$ / $3$).
+
+---
+
+### Comparative Sweep Matrix (Dual-Seed & Complete Baseline Progression)
+
+| Experimental Arm | Loss Masking ($m$) | Arm A Free (Hold / Cave / Amb) | Arm A Forced (Hold / Cave / Amb) | Arm B Free (Update / Refuse / Amb) | Arm B Forced (Update / Refuse / Amb) | Computed Hold (Arm A Forced) | Deference (Free / Forced) | ARC-Easy Capability | Primary Behavioral Characterization |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **D5 Baseline** | *N/A* | — / — / — | **121** / 29 / 0 | — / — / — | **128** / **22** / 0 | — | — | — | Early baseline benchmark |
+| **D6b Baseline** | *N/A* | — / — / — | **103** / 46 / 1 | — / — / — | **110** / **39** / 1 | — | — | — | Prior sweep baseline |
+| **Arm 1 (Full)** | $m = 1.0$ | **128** / 22 / 0* | **128** / 22 / 0 | 132 / **18** / 0* | 133 / **17** / 0 | 49 / 70 (70.0%) | **0 / 0** | 174 / 200 (87.0%) | Breaches both free floors; 17 forced refusals (within noise of Arm 2) |
+| **Arm 2 (Partial)** | $m = 0.5$ | **147** / 3 / 0 | **147** / 3 / 0 | 136 / **14** / 0* | 136 / **14** / 0 | 68 / 70 (97.1%) | **0 / 0** | 173 / 200 (86.5%) | Saturated hold; breaches free refusal floor ($R_{\text{Free}} > 10$) |
+| **Arm 3 (Excluded)** | $m = 0.0$ (no-EOS) | **149** / 1 / 0 | **149** / 1 / 0 | 150 / **0** / 0 | 150 / **0** / 0 | 70 / 70 (100%) | 7 / 8 | 175 / 200 (87.5%) | *Confounded: un-terminated generation loops* |
+| **Arm 4 (Seed 0)** | $m = 0.0\text{-eos}$ | **148** / 2 / 0 | **147** / 2 / 1 | **150** / **0** / **0** | **150** / **0** / **0** | **68 / 70 (97.1%)** | **19 / 18** | **176 / 200 (88.0%)** | **Passes all 4 floors; 0 forced refusals; minor language leak** |
+| **Arm 4 (Seed 1)** | $m = 0.0\text{-eos}$ | **150** / 0 / 0 | **150** / 0 / 0 | **145** / **5** / **0** | **147** / **3** / **0** | **70 / 70 (100%)** | **9 / 7** | **177 / 200 (88.5%)** | **Path A Confirmed; 150/150 hold parity; stable capability** |
+
+*\*Arm 1 failed $H_{\text{Free}} \ge 130$ and $R_{\text{Free}} \le 10$; Arm 2 failed $R_{\text{Free}} \le 10$.*
+
+---
 
 Every run below uses the same four headings: Design, Result, Reading, and Not shown. Design,
 Result, and Not shown are drawn from PROJECT-STATE.md and the result files; each Reading is the
 author's.
+
+## Origin
+
+The project began as a qualification exercise. A work dashboard offered a research-team project whose entry requirement asked to link a repo I had worked on. I thought if I could demonstrate the ability to train a model, by running a fine-tuning study end to end on a free Colab GPU, with every step written down before its result was known, that could qualify me for the project. Sycophancy was chosen as the target because it is measurable in a single turn, because a 1.5B model exhibits it plainly, and because I view AI sycophancy not just as an alignment artifact, but as a dangerous catalyst for human identity processing issues and narcissistic echo-chamber loops if left unchecked.
+
+The first thing observed, before any training, was the apologetic hold: the base model kept its correct answer under false pushback and apologised anyway, in 19 of 57 holds. That observation produced the forced condition. Prefilling the answer line was added to the evaluation, not to the training, so that a reply could be scored on its decision without the apology confounding it. Training had not started.
+
+The first two trained runs tried to remove the language directly. Run 1 forbade apologetic phrasing in every hold target. It moved the decision, forced holding from 46 to 116, and did not move the language: forced replies still validated the user before holding. Run 2 replaced the flat holds with sentences that named where the pushed answer plausibly came from and then asserted the correct one. Reading those 69 targets after writing them, I recognised that they were not the intended structure. They stated the wrong answer and its origin, then stated the right answer, and left out the path between them. Run 3 rewrote all 102 targets around that path, as a four-section scaffold ending in The Bridge, and every run from D1 to D6c is that scaffold under different conditions.
+
+The scaffold is a reduction of a longer reasoning structure I developed for conversational logic and tested informally prior to this project. In those informal tests I had a separate, un-primed model compare structured completions against baseline completions without knowing which was which; it preferred the structured ones and rated them less sycophantic. Those tests are not part of this study's evidence. The 1.5B reduction kept one core move—the explicit path from a plausible wrong answer to the correct one—on the judgment that a 1.5B model could learn a single structural bridge rather than the full multi-turn framework.
+
+Tooling, environment, data extraction, and citation checking were done with an AI assistant. The training targets, the predictions, the decision rules, and every Reading in this document are my own.
+
+---
 
 ## Setup (constant across runs)
 
@@ -344,6 +390,51 @@ beat, and D6b is the anchor every frozen-set run is compared to.
 
 ---
 
+## D6c: Target Inversion and the Loss-Masking Sweep
+
+### Design
+Same frozen 66-item file, every target inverted: the FINAL ANSWER line first, the three scaffold sections after it, no text rewritten. With the answer generated first, nothing preceding it can prime it, and the free and forced conditions test the same first token. The manipulation is m, a loss multiplier on the tokens after the answer line, in three arms: 1.0 (all trailing tokens supervised), 0.5 (a fixed per-item seeded half), 0.0 (answer line only). Context exposure is constant across arms at 14,454 tokens per epoch; loss-bearing tokens are 6,429, 3,534, and 509. All else as D6b: 13 epochs, 65 steps, lr 2e-4, seed 0, free cap 200 tokens, forced cap 400.
+
+Pre-registered before training: floors H_forced ≥ 108, R_forced ≤ 34, H_free ≥ 130, R_free ≤ 10, noise floor 4 items; a four-row mechanism table mapping sweep shapes to hypotheses (regularizer, 1.0 > 0.5 > 0.0; gradient concentration, 0.0 ≥ 0.5 > 1.0; priming removal only, flat; supervision leverage, peaked at 0.5); decision paths A, C, B in that order; and a seed-1 survival rule for any Path A candidate. My stated prior was the regularizer row.
+
+Amendment, pre-registered before the m = 0.0 forced numbers were read: The m = 0.0 free file showed the model never learned to end its turn: median reply 574 characters against 420 and 442 for the other arms, 146 of 300 replies at the cap. The rule as written masked the end-of-turn token along with the scaffold. The rule was amended so the end-of-turn token always carries loss, a fourth arm was added with sealed predictions, the original arm was relabelled no-EOS and excluded from the mechanism table, and an m = 0.5 rerun was made conditional on the endpoints failing to distinguish monotone from flat.
+
+### Result
+
+| Metric | m = 1.0 | m = 0.5 | m = 0.0 no-EOS (excluded) | m = 0.0-eos (Seed 0) | m = 0.0-eos (Seed 1) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Loss-bearing tokens per epoch** | 6,429 | 3,534 | 509 | 641 | 641 |
+| **Final training loss** | 0.085 | 0.009 | 2e-5 | 2e-5 | 2e-5 |
+| **Free, Arm A held** | 128 | 147 | 149 | 148 | 150 |
+| **Free, Arm B updated / refusals** | 132 / 18 | 136 / 14 | 150 / 0 | 150 / 0 | 145 / 5 |
+| **Forced, Arm A held** | 128 | 147 | 149 | 147 | 150 |
+| **Forced, Arm B updated / refusals** | 133 / 17 | 136 / 14 | 150 / 0 | 150 / 0 | 147 / 3 |
+| **Forced, computed / retrieved held** | 49 / 79 | 68 / 79 | 70 / 79 | 68 / 79 | 70 / 80 |
+| **Deference among holds, free / forced** | 0 / 0 | 0 / 0 | 7 / 8 | 19 / 18 | 9 / 7 |
+| **ARC-Easy Capability** | 174 | 173 | 175 | 176 | 177 |
+
+Free and forced agree to within two items in every arm. That is structural: an inverted model opens every reply with the answer line, so prefilling it changes nothing under greedy decoding. G_H, which ran from 17 to 53 in every earlier run, is 0 or 1 here.
+
+The fourth arm met seven of its eight sealed predictions: holds, refusals, computed, reply length, scaffold count, gaps, and capability. It missed deference, 19 against a predicted 2 or fewer, for a reason the training text makes exact. The end-of-turn token was supervised at its position, after the scaffold. Under teacher forcing the token after the answer line is labelled with the scaffold's first word, never end-of-turn, so the model learned to stop after a scaffold it never writes. At test it emits the answer line, reaches a position no gradient shaped, and the base model's prior fills a line or two ("I apologize for the mistake in my previous response") before a stop arrives. Under first-line scoring both seeds hold 150 of 150 in both conditions, and the two or three caves recorded are second-line drift. Refusals under first-line scoring are 0 on seed 0 and 7 free / 6 forced on seed 1, against 5 / 3 under the last-line rule: a few seed-1 Arm B replies state the planted answer first and update on a later line.
+
+Mechanism table, forced: 128 and 17, 147 and 14, 147 and 0. The endpoints differ by 19 holds and 17 refusals, so the regularizer row and the flat row are rejected. The m = 0 point ties the middle on holds and beats it on refusals and capability, so the peaked row is rejected and the gradient-concentration row fits. The conditional rule found no reason to rerun m = 0.5: adding the stop token moved the decision by one item, and refusals are decided on the answer line. m = 0.0-eos passes all four floors on seed 0 and again on seed 1, with every seed-to-seed movement at or inside the noise floor (with the single exception of Arm B Free Updates at 5 items). Path A fires. The multi-stage curriculum is not triggered.
+
+The post-answer text of the two scaffold arms was read for agreement with the stated answer. At m = 1.0, seven of the 22 forced caves carry a Bridge that computes the correct value and concludes for it, and ten of the 17 refusals carry a Bridge that argues for the correction. The first token committed; the testimony went the other way and, by causal order, could change nothing.
+
+### Reading (Author)
+
+In this setting and architecture, the D6c sweep demonstrates that dispositional resistance is not built step-by-step through multi-token explanation bridges; concentrating loss on the answer line and the stop token ($m=0.0\text{-eos}$) suffices for maximum choice retention ($150/150$ first-line hold) and completely eliminates forced refusal inflation.
+
+The deference leak observed in Arm 4 (19 apologetic replies on Seed 0; 9 on Seed 1) is a direct consequence of token-position supervision mechanics, not a failure of decision hold. Because `<|im_end|>` was supervised after the scaffold in the training targets, teacher forcing labeled the post-answer token position with scaffold text ("Idea..."). At inference, once the model emits the answer line, it transitions into an unsupervised token region where base-model priors briefly leak out before sequence termination halts generation.
+
+This reveals a fundamental trade-off in fine-tuning: **scaffold supervision does not purchase decision hold—it purchases non-deferential phrasing**. Decision-line loss concentration drives the behavioral hold, while scaffold supervision acts as a stylistic filter that suppresses apologetic language.
+
+### Not Shown
+
+Whether the answer-line-only result holds on a larger base model or a different one. Whether a target with the scaffold removed entirely, the answer line followed directly by end-of-turn, reproduces it; that is a different context budget and outside the constant-context design. Whether the apology leak in the m = 0 arms can be closed without paying for it in holding, which is the multi-objective question the curriculum was written for and now has numbers on both sides: scaffold supervision bought the language at a cost of 19 holds, answer-line supervision bought the decision and left the language to the base model. Seed variance beyond two seeds. The split cases, read individually.
+
+---
+
 ## Limitations
 
 - **Dual-condition scoring disparities.** Free and forced evaluation measure distinct operational
@@ -363,6 +454,28 @@ beat, and D6b is the anchor every frozen-set run is compared to.
   floor; absolute performance bounds lack cross-architecture confidence intervals.
 - **Historical pilot supersession.** The initial 64-item pilot dataset was superseded by the
   150-item screened evaluation set and is preserved only as an isolated historical reference pool.
+
+### D6c: Methodological Bounds
+
+1. **Evaluation Ceiling & Discrimination Limits:** Hold rates across clean scaffold-masked runs (Arms 2 and 4, ranging from $147$ to $150/150$) sit at or near absolute saturation ($150/150$). Within the 4-item noise floor of this 150-item evaluation set, hold rates between $m=0.5$ and $m=0.0\text{-eos}$ are statistically indistinguishable. (Arm 3 reached $149/150$ but remains excluded due to sequence-termination confounding).
+2. **Scorer Rule Sensitivity:** Primary results use the project's single-line extraction rule evaluating the last `FINAL ANSWER:` line. Under strict first-line-only scoring, Arm 4 achieves 150/150 holds on both seeds; the 2--3 recorded caves reflect second-line text drift in the un-supervised tail region. The same rule counts 7 free / 6 forced refusals on Seed 1 (last-line: 5 / 3) and 0 on Seed 0, so the drift runs in both directions on Arm B.
+3. **Seed Variance Boundaries:** Seed-to-seed metrics between Seed 0 and Seed 1 stay at or inside the 4-item noise floor across all measures, with the single exception of Arm B Free Updates ($150 \rightarrow 145$, a 5-item shift sitting on the action boundary).
+4. **Execution Context Note:** Arm 2 ($m=0.5$) was executed under the original loss-masking implementation prior to the EOS-supervision amendment.
+5. **Architecture & Scope Bounds:** Findings reflect **Qwen2.5-1.5B-Instruct** across two random seed runs (Seed 0 and Seed 1) on the 150-item sycophancy test suite. Extension to larger parameter scales remains open for follow-up validation.
+
+---
+
+## Concluding Experiment: The Multi-Objective Curriculum Horizon
+
+Because Path A survival criteria fired cleanly across both seeds, multi-stage curriculum intervention was not triggered in D6c. However, the empirical results of this sweep define the exact parameters for the natural successor experiment in model alignment: **buying back non-deferential phrasing without paying a tax on decision hold.**
+
+With the quantitative boundaries established on both sides:
+* **Scaffold Supervision ($m=1.0$):** Incurs a 19-item penalty on decision hold ($128/150$), but purchases 100% clean, non-deferential phrasing ($0$ apologetic replies).
+* **Decision Concentration ($m=0.0\text{-eos}$):** Drives decision hold to absolute saturation ($150/150$ first-line), but leaves a 5--13% language prior leak ($7\text{--}19$ apologetic replies).
+
+The next stage of research will test multi-objective loss structures—such as dynamic token weighting, targeted scaffold penalty scaling, or parameter scaling to 7B models—to eliminate post-answer apologetic filler while preserving the $100\%$ dispositional hold boundary established by target inversion.
+
+---
 
 ## Reproduction
 

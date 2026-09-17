@@ -655,3 +655,77 @@ adapter, sha256 3eb64531..., via run.py --adapter; read after amendment commit 7
    excluded from the mechanism table, which takes the m=0.0-eos arm instead. Files:
    results-d6c-m00-{free,forced}.json, capability-d6c-m00.json, evalmanifest-d6c-m00.json,
    eval-d6c-m00.log, adapter_d6c_m00.zip (local only).
+
+**D6c fourth arm, m=0.0-eos, RESULT (trained and evaluated 2026-09-16 via run.py at 7b567db;
+run name train_bridge_inv-e13-m0-eos-s0, weights sha256 159b2aa5..., 3,474 s end to end):**
+       check-only, amended rule: loss-bearing 641 = 509 answer-line + 132 end-of-turn (as predicted)
+       train loss 2e-5 (mean 0.043)
+       free    148/0   computed 69/70  retrieved 79/80  scaffold 0/300  deference 19/148   cap 176/200
+       forced  147/0   computed 68/70  retrieved 79/80  scaffold 0/300  deference 18/147
+       G_H 1, G_R 0.  First-line scoring: 150/0 in both conditions (the 2-3 caves are all
+       second-line drift: line one holds, a later line states the pushed value).
+       Reply length free: median 156 chars, 9/300 over 600 (no-EOS: 574, 146/300); 174/300 still
+       carry 2+ answer lines. Eval time ~25 min per condition (no-EOS: ~80).
+   Predictions (sealed 7b567db): H_free >= 145 MET (148); R_free <= 4 MET (0); computed >= 66 MET
+   (69); over-600 <= 40 MET (9); scaffold 0/300 MET; gaps in [-4, 4] MET (1, 0); capability
+   within 5 MET (176). Deference <= 2 MISSED (19).
+   Why deference missed, and what it says about tokens: keep_eos supervises <|im_end|> at its
+   position in the training text, which is AFTER the scaffold. Under teacher forcing the token
+   after the answer line is labeled "Idea" (unsupervised at m=0), never <|im_end|>. So the arm
+   learned "stop after the scaffold," and it never writes the scaffold. At test the model emits
+   the answer line and lands in a state that no training gradient ever shaped; the base model's
+   prior fills it, briefly ("I apologize for the mistake in my previous response", "Thank you for
+   bringing that to my attention. I have learned from my mistakes") and then a stop arrives. Same
+   object as the no-EOS runaway, shorter: 22/150 Arm A replies carry apology/thanks language
+   (Arm B 5/150). The scaffold arms have 0. On the inverted data the m=0 point of the ladder is
+   intrinsically "answer line + unsupervised scaffold + stop"; a target with the scaffold removed
+   would be a different arm with a different context budget (~8.5k vs 14,454 tokens), outside the
+   constant-context design.
+   The decision-level prediction held with the stop token added (150/0 first-line in both arms,
+   both conditions), so the stop token's leverage on the decision is nil within noise. Its
+   leverage on length is large. Its leverage on the language after the answer is nil, because it
+   was never supervised at that position.
+
+**Mechanism table read (section 3), with m=0.0-eos as the m=0 point, forced condition:**
+       m=1.0  128/17      m=0.5  147/14      m=0.0-eos  147/0     (H/R; noise floor 5)
+   Endpoints: m=0 beats m=1.0 by 19 holds and 17 refusals. Not flat. Row 1 (regularizer,
+   1.0 > 0.5 > 0.0) rejected. Row 3 (m does not matter) rejected.
+   Row 2 (gradient concentration, 0.0 >= 0.5 > 1.0) vs row 4 (peaked at 0.5): m=0.0-eos ties
+   m=0.5 on holds (147/147) and beats it on refusals (0 vs 14) and capability (176 vs 173). Not
+   peaked. Row 2 fits. The verdict between rows 2 and 4 rests on the m=0.5 arm, which ran under
+   the original rule (end-of-turn supervised in a seeded half of items).
+   Conditional m=0.5 rerun rule: the endpoints alone distinguish monotone from flat, so the rule
+   as written says no rerun. Evidence bearing on whether it would matter: adding the stop token
+   to m=0 moved holds by 1 and refusals by 0, and refusals are decided on the answer line, which
+   is generated before any tail. The 14-refusal gap between m=0.5 and m=0 is not plausibly a tail
+   effect. Author's call stands as the rule.
+   Paths (section 5): m=0.0-eos hits H_forced 147 >= 108, R_forced 0 <= 34, H_free 148 >= 130,
+   R_free 0 <= 10. Path A fires PENDING the seed-1 survival rerun (section 4: same four floors
+   on seed 1). m=0.5 still fails the R_free floor (14 > 10). Path C and B not reached.
+   What Path A does not say: the arm's replies carry apology language in ~13% of holds. The
+   free floors are H and R only; deference is descriptive by design. The trade is now explicit:
+   scaffold supervision bought the language (0 deference in every scaffold arm), answer-line
+   supervision bought the decision (150/0), stop-token supervision bought length and nothing
+   else. A model wanted for both decision and language is the multi-objective question the
+   curriculum was written for, and it is now a question with numbers on both sides.
+   Files: results-train_bridge_inv-e13-m0-eos-s0-{free,forced}.json,
+   capability-train_bridge_inv-e13-m0-eos-s0.json, run-train_bridge_inv-e13-m0-eos-s0.log,
+   train_bridge_inv-e13-m0-eos-s0.zip (local + Drive; manifest.json inside).
+
+**D6c fourth arm, seed-1 survival rerun, RESULT (2026-09-16, run.py at 7b567db; run name
+train_bridge_inv-e13-m0-eos-s1, weights sha256 a79ab3ad..., 3,515 s):**
+       free    150/5   computed 70/70  retrieved 80/80  scaffold 0/300  deference 9/150   cap 177/200
+       forced  150/3   computed 70/70  retrieved 80/80  scaffold 0/300  deference 7/150
+       G_H 0, G_R -2.  First-line scoring: 150/7 free, 150/6 forced. Reply length free median 176
+       chars, 4/300 over 600. Refusals restate the planted answer 4/5 free, 2/3 forced.
+   Survival rule (section 4), all four floors on seed 1: H_forced 150 >= 108, R_forced 3 <= 34,
+   H_free 150 >= 130, R_free 5 <= 10. SURVIVES.
+   Seed to seed (s0 -> s1): holds 148 -> 150 free, 147 -> 150 forced; refusals 0 -> 5 free,
+   0 -> 3 forced; deference 19 -> 9, 18 -> 7; capability 176 -> 177. Every movement at or inside
+   the action bar of 5 (free refusals 0 -> 5 sit exactly on it) except deference, which is descriptive.
+   **Path A FIRES on m=0.0-eos**: single-stage inversion with answer-line supervision succeeds
+   under the pre-registered floors, on two seeds. Paths C and B not reached. The multi-stage
+   curriculum is not triggered by D6c.
+   Files: results-train_bridge_inv-e13-m0-eos-s1-{free,forced}.json,
+   capability-train_bridge_inv-e13-m0-eos-s1.json, run-train_bridge_inv-e13-m0-eos-s1.log,
+   train_bridge_inv-e13-m0-eos-s1.zip (local + Drive).

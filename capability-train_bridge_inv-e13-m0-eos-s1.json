@@ -1,0 +1,1409 @@
+{
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter": "adapter_train_bridge_inv-e13-m0-eos-s1",
+  "correct": 177,
+  "of": 200,
+  "unparsed": 3,
+  "results": [
+    {
+      "id": "Mercury_417466",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nPhotosynthesis is the process by"
+    },
+    {
+      "id": "Mercury_7037258",
+      "expected": "B",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nAn atom is composed of pro"
+    },
+    {
+      "id": "CSZ20679",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nC\nD"
+    },
+    {
+      "id": "MCAS_2001_5_19",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nPlants use sunlight to make"
+    },
+    {
+      "id": "Mercury_SC_413631",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7166145",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: The endocrine system"
+    },
+    {
+      "id": "Mercury_SC_405199",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "NYSEDREGENTS_2015_8_28",
+      "expected": "2",
+      "got": null,
+      "ok": false,
+      "reply": "B\nExplanation: All living and non"
+    },
+    {
+      "id": "Mercury_7198188",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "MCAS_1998_4_11",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nTo explain why the sugar water"
+    },
+    {
+      "id": "Mercury_7033548",
+      "expected": "D",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "NCEOGA_2013_8_36",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Plants primarily obtain their"
+    },
+    {
+      "id": "Mercury_SC_415412",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nB\nC\nA"
+    },
+    {
+      "id": "MDSA_2008_8_35",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C"
+    },
+    {
+      "id": "NYSEDREGENTS_2015_8_21",
+      "expected": "2",
+      "got": null,
+      "ok": false,
+      "reply": "B\nThe answer is B.\nExplanation"
+    },
+    {
+      "id": "VASoL_2008_5_12",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_SC_LBS10680",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nLight bulbs produce light when electric"
+    },
+    {
+      "id": "VASoL_2010_5_18",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nPhotosynthesis occurs in A."
+    },
+    {
+      "id": "Mercury_7074900",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nTo explain further:\nCells need"
+    },
+    {
+      "id": "ACTAAP_2015_5_8",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nExplanation: The discovery of fossils"
+    },
+    {
+      "id": "Mercury_7263008",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nThe correct answer is C."
+    },
+    {
+      "id": "MCAS_2000_4_29",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nQ: When white, fluffy"
+    },
+    {
+      "id": "CSZ_2008_5_CSZ10233",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nCarbon, hydrogen, oxygen,"
+    },
+    {
+      "id": "Mercury_7128660",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C"
+    },
+    {
+      "id": "Mercury_7100520",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nThe greatest benefit of sexual reproduction"
+    },
+    {
+      "id": "Mercury_7017728",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe speed at which sound waves"
+    },
+    {
+      "id": "Mercury_SC_405231",
+      "expected": "C",
+      "got": "D",
+      "ok": false,
+      "reply": "D\nExplanation: Ocean shells typically do"
+    },
+    {
+      "id": "VASoL_2007_5_38",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_410895",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Freezing temperatures can"
+    },
+    {
+      "id": "Mercury_7015978",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: When a sodium atom"
+    },
+    {
+      "id": "ACTAAP_2010_5_5",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C"
+    },
+    {
+      "id": "Mercury_7080955",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Lead aprons are"
+    },
+    {
+      "id": "ACTAAP_2009_5_4",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: The most important part"
+    },
+    {
+      "id": "Mercury_7146108",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "VASoL_2009_5_3",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nApollo 11 was the"
+    },
+    {
+      "id": "Mercury_7235953",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: Particle accelerators like"
+    },
+    {
+      "id": "Mercury_403974",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nB"
+    },
+    {
+      "id": "Mercury_7241063",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nTo determine if two individuals are"
+    },
+    {
+      "id": "MCAS_2010_8_12015",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nMercury\nThe answer is"
+    },
+    {
+      "id": "Mercury_SC_402980",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_417126",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nB\nF\nH"
+    },
+    {
+      "id": "NYSEDREGENTS_2010_8_2",
+      "expected": "4",
+      "got": "4",
+      "ok": true,
+      "reply": "4\nObservation\nExplanation: An"
+    },
+    {
+      "id": "Mercury_177223",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_400707",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: The difference in the"
+    },
+    {
+      "id": "Mercury_SC_400380",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_7205590",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nQ: What is the primary"
+    },
+    {
+      "id": "VASoL_2008_3_5",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nLeaves\nExplanation: Most"
+    },
+    {
+      "id": "Mercury_SC_408436",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nBears are known for h"
+    },
+    {
+      "id": "Mercury_SC_401143",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C"
+    },
+    {
+      "id": "Mercury_7108045",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_SC_402251",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_7071418",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_SC_407370",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7084595",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nThe cycle of night and day"
+    },
+    {
+      "id": "Mercury_7041335",
+      "expected": "A",
+      "got": "B",
+      "ok": false,
+      "reply": "B\nB\nHair color\nThe"
+    },
+    {
+      "id": "Mercury_7236320",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Carbon dioxide (CO"
+    },
+    {
+      "id": "Mercury_SC_401308",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7165550",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nExplanation: The braking system rec"
+    },
+    {
+      "id": "Mercury_SC_408434",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: A goose that migr"
+    },
+    {
+      "id": "NYSEDREGENTS_2010_8_14",
+      "expected": "3",
+      "got": null,
+      "ok": false,
+      "reply": "C\nmutation\nExplanation: Genetic abnormalities"
+    },
+    {
+      "id": "NYSEDREGENTS_2015_8_24",
+      "expected": "3",
+      "got": "3",
+      "ok": true,
+      "reply": "3\nThe length of one day on"
+    },
+    {
+      "id": "Mercury_400279",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B"
+    },
+    {
+      "id": "Mercury_7113890",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nRelevant information: Archaea"
+    },
+    {
+      "id": "AKDE&ED_2008_4_3",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: Gases and liquids"
+    },
+    {
+      "id": "MCAS_2006_9_14",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "MSA_2015_5_37",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nThe answer is D.\nExplanation"
+    },
+    {
+      "id": "MDSA_2010_8_22",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "MCAS_1999_4_4",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nThe heat comes from deep within"
+    },
+    {
+      "id": "Mercury_7247923",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nThe umbilical cord supplies"
+    },
+    {
+      "id": "Mercury_SC_416124",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: The circulatory system"
+    },
+    {
+      "id": "Mercury_407530",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7271740",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nTo explain further:\nWhen CO"
+    },
+    {
+      "id": "Mercury_7026495",
+      "expected": "C",
+      "got": "B",
+      "ok": false,
+      "reply": "B\nExplanation: Igneous rocks"
+    },
+    {
+      "id": "Mercury_7084315",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nBromine\nIn this"
+    },
+    {
+      "id": "ACTAAP_2010_7_10",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nWater, H2O"
+    },
+    {
+      "id": "ACTAAP_2013_7_4",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nThe tilt of the Earth's"
+    },
+    {
+      "id": "Mercury_SC_405444",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: The lack of st"
+    },
+    {
+      "id": "Mercury_7094675",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_403912",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nThe inner core of Earth is"
+    },
+    {
+      "id": "Mercury_7009853",
+      "expected": "A",
+      "got": "D",
+      "ok": false,
+      "reply": "D"
+    },
+    {
+      "id": "MEA_2013_8_2",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nBreaking down food molecules primarily provides"
+    },
+    {
+      "id": "Mercury_7068688",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Topsoil is"
+    },
+    {
+      "id": "Mercury_7271705",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nAluminum\nExplanation: Mercury"
+    },
+    {
+      "id": "Mercury_402456",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: The atomic number ("
+    },
+    {
+      "id": "Mercury_7215233",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nA\nB\nC"
+    },
+    {
+      "id": "CSZ_2008_8_29",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nCarbon's ability to bond in"
+    },
+    {
+      "id": "MSA_2012_5_28",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TIMSS_2007_8_pg33",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: The animal described in"
+    },
+    {
+      "id": "Mercury_7004988",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Igneous and"
+    },
+    {
+      "id": "Mercury_SC_LBS10946",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TAKS_2009_8_39",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_178710",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_410598",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: When Roberto slides down"
+    },
+    {
+      "id": "TIMSS_2011_4_pg15",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Plants grow best in"
+    },
+    {
+      "id": "Mercury_7217088",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe rate of acceleration of an"
+    },
+    {
+      "id": "MCAS_2012_8_23645",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nRubber\nis\nquick"
+    },
+    {
+      "id": "LEAP__4_10228",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D"
+    },
+    {
+      "id": "MSA_2012_8_29",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_SC_401774",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe whistle produces a sound when"
+    },
+    {
+      "id": "TIMSS_2003_4_pg14",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe Earth orbits the Sun every"
+    },
+    {
+      "id": "Mercury_SC_416096",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nPlants absorb water and minerals"
+    },
+    {
+      "id": "NYSEDREGENTS_2013_8_12",
+      "expected": "1",
+      "got": "1",
+      "ok": true,
+      "reply": "1\nChromosomes in cells carry"
+    },
+    {
+      "id": "Mercury_7222845",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nQ: Which of these events"
+    },
+    {
+      "id": "LEAP_2005_4_10267",
+      "expected": "D",
+      "got": "B",
+      "ok": false,
+      "reply": "B\nToad disappearance is most likely"
+    },
+    {
+      "id": "Mercury_7188370",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: A cell is the"
+    },
+    {
+      "id": "MSA_2013_5_5",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\n storms"
+    },
+    {
+      "id": "MCAS_2005_5_8",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nB\nC\nA"
+    },
+    {
+      "id": "Mercury_184888",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7044188",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nThe correct answer is D."
+    },
+    {
+      "id": "Mercury_7056875",
+      "expected": "B",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nExplanation: The nervous system is"
+    },
+    {
+      "id": "Mercury_SC_409142",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nTo determine the amount of energy"
+    },
+    {
+      "id": "Mercury_SC_408900",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB"
+    },
+    {
+      "id": "Mercury_SC_401624",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7092400",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_417462",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_178605",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Silver's ability to"
+    },
+    {
+      "id": "Mercury_SC_400364",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: In a colder environment"
+    },
+    {
+      "id": "NYSEDREGENTS_2008_8_15",
+      "expected": "3",
+      "got": "3",
+      "ok": true,
+      "reply": "3\nThe healing of a broken bone"
+    },
+    {
+      "id": "ACTAAP_2015_5_7",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: A marble rolling down"
+    },
+    {
+      "id": "Mercury_7180618",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_415262",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_7200200",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Dogs can detect sounds"
+    },
+    {
+      "id": "MDSA_2008_8_24",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nQ: What is the capital"
+    },
+    {
+      "id": "Mercury_185238",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "MCAS_2015_8_6",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: Gravity is responsible for"
+    },
+    {
+      "id": "Mercury_7024780",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Sodium hydroxide"
+    },
+    {
+      "id": "Mercury_7098928",
+      "expected": "B",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nExplanation: The invention of the"
+    },
+    {
+      "id": "Mercury_416501",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Active transport involves moving"
+    },
+    {
+      "id": "Mercury_SC_406012",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_SC_407192",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nC\nC\nC"
+    },
+    {
+      "id": "Mercury_7239890",
+      "expected": "A",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nLaw of segregation\nExplanation:"
+    },
+    {
+      "id": "Mercury_7282135",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nAir pollution affects people through their"
+    },
+    {
+      "id": "MDSA_2010_8_43",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_SC_400518",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nThe rock was once sediment at"
+    },
+    {
+      "id": "Mercury_7205573",
+      "expected": "C",
+      "got": "A",
+      "ok": false,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "LEAP__4_10226",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nC\nA"
+    },
+    {
+      "id": "Mercury_7210018",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C"
+    },
+    {
+      "id": "ACTAAP_2013_7_13",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nExplanation: The correct answer is"
+    },
+    {
+      "id": "MCAS_2014_8_11",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "OHAT_2007_5_12",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe ball moves because the kick"
+    },
+    {
+      "id": "MCAS_2000_4_24",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Identical twins share"
+    },
+    {
+      "id": "MCAS_1999_8_31",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: The process described in"
+    },
+    {
+      "id": "Mercury_7212853",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nElement organization on the periodic table"
+    },
+    {
+      "id": "Mercury_400808",
+      "expected": "B",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nBromine"
+    },
+    {
+      "id": "Mercury_404895",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "MCAS_2000_8_19",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nQ: The bottom of the"
+    },
+    {
+      "id": "Mercury_415684",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Absorption of infrared"
+    },
+    {
+      "id": "MCAS_2011_5_17668",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_402332",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Fossils are"
+    },
+    {
+      "id": "VASoL_2009_5_27",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nC\nFriction"
+    },
+    {
+      "id": "Mercury_7180705",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe circulatory system transports oxygen"
+    },
+    {
+      "id": "Mercury_SC_408919",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: The first powerful telesc"
+    },
+    {
+      "id": "Mercury_7024745",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D"
+    },
+    {
+      "id": "Mercury_7090930",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nLand subsidence typically occurs when"
+    },
+    {
+      "id": "Mercury_7033373",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nD\nD\nD"
+    },
+    {
+      "id": "Mercury_SC_405219",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\n refrigerators were invented to keep"
+    },
+    {
+      "id": "Mercury_7215863",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_7041300",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Clear cutting of old"
+    },
+    {
+      "id": "Mercury_7190050",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "MCAS_1999_4_10",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nQ: An animal that has"
+    },
+    {
+      "id": "Mercury_7222320",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nTo determine how the rover's"
+    },
+    {
+      "id": "MCAS_2006_8_25",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_7206605",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_SC_408336",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe answer is B."
+    },
+    {
+      "id": "Mercury_416579",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7001575",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Social behavior is an"
+    },
+    {
+      "id": "Mercury_SC_416142",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: The scent of flowers"
+    },
+    {
+      "id": "MCAS_1998_8_19",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nQ: A solar eclipse occurs"
+    },
+    {
+      "id": "TIMSS_2011_8_pg74",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: Active volcanoes are"
+    },
+    {
+      "id": "Mercury_7013458",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: A star spends most"
+    },
+    {
+      "id": "CSZ30768",
+      "expected": "D",
+      "got": "C",
+      "ok": false,
+      "reply": "C\nExplanation: Sulfur ("
+    },
+    {
+      "id": "MCAS_2004_9_10",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nExplanation: A portable radio uses"
+    },
+    {
+      "id": "AIMS_2009_4_25",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7221498",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nThe energy in an electrical circuit"
+    },
+    {
+      "id": "Mercury_7170853",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: New stars primarily originate"
+    },
+    {
+      "id": "Mercury_SC_LBS10616",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nThe four main temperature changes in"
+    },
+    {
+      "id": "MCAS_2000_4_21",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: When you rub your"
+    },
+    {
+      "id": "MCAS_1999_8_9",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nThe gases remain in the atmosphere"
+    },
+    {
+      "id": "Mercury_415265",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "AKDE&ED_2008_8_20",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: Decomposers play"
+    },
+    {
+      "id": "AIMS_2008_4_6",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "TIMSS_1995_8_L7",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D"
+    },
+    {
+      "id": "Mercury_SC_401161",
+      "expected": "D",
+      "got": "D",
+      "ok": true,
+      "reply": "D\nExplanation: Carbonated soda is"
+    },
+    {
+      "id": "Mercury_183768",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe skeletal system provides support and"
+    },
+    {
+      "id": "TAKS_2009_5_6",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "VASoL_2008_5_20",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nB\nB\nB"
+    },
+    {
+      "id": "Mercury_7268030",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nC\nA"
+    },
+    {
+      "id": "NYSEDREGENTS_2012_8_5",
+      "expected": "4",
+      "got": "4",
+      "ok": true,
+      "reply": "4\nExplanation: The endocrine system"
+    },
+    {
+      "id": "Mercury_7239138",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\noglobin's unique three-dimensional shape"
+    },
+    {
+      "id": "Mercury_SC_400662",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_414097",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExplanation: The majority of the"
+    },
+    {
+      "id": "Mercury_7083598",
+      "expected": "B",
+      "got": "D",
+      "ok": false,
+      "reply": "D"
+    },
+    {
+      "id": "MSA_2012_8_36",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nExcretory\nThe primary"
+    },
+    {
+      "id": "VASoL_2010_3_13",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_7026968",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nB\nC\nD"
+    },
+    {
+      "id": "Mercury_402535",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nExplanation: For determining the boiling"
+    },
+    {
+      "id": "MDSA_2011_8_2",
+      "expected": "B",
+      "got": "B",
+      "ok": true,
+      "reply": "B\nThe duration of a solar day"
+    },
+    {
+      "id": "Mercury_7086783",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nClay\nClay is"
+    },
+    {
+      "id": "Mercury_SC_405164",
+      "expected": "C",
+      "got": "C",
+      "ok": true,
+      "reply": "C\nWind and water are examples of"
+    },
+    {
+      "id": "Mercury_7018340",
+      "expected": "A",
+      "got": "A",
+      "ok": true,
+      "reply": "A\nQ: Gregor Mendel"
+    }
+  ]
+}

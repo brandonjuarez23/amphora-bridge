@@ -34,7 +34,7 @@ ORDER = [
     ("bridge", "run 3 bridge 21 steps"), ("prompt", "D1 prompt 1 example"), ("bridge9", "D4 bridge 63 steps"),
     ("prompt3", "D1b prompt 3 examples"), ("bridge9np", "D5 scrubbed arithmetic"), ("d6", "D6 balanced 45 steps"),
     ("d6b", "D6b balanced 65 steps"), ("d6c-m10", "D6c m=1.0 inverted"), ("d6c-m05", "D6c m=0.5 inverted"),
-    ("d6c-m00", "D6c m=0.0 no-EOS (excluded)"), ("train_bridge_inv-e13-m0-eos-s0", "D6c m=0.0 eos (4th arm)"),
+    ("d6c-m00", "D6c m=0.0 no-EOS (excluded)"), ("train_bridge_inv-e13-m0-eos-s0", "D6c m=0.0 eos (4th arm)"), ("train_bridge_inv-e13-m0-eos-s1", "D6c m=0.0 eos seed 1"),
 ]
 SCREENED = "screened.json"
 SCAF = re.compile(r"Idea A Analysis", re.I)

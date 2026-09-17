@@ -116,11 +116,13 @@ PROGRESS = re.compile(r"^\s*\d+/\d+\s*$|^\{'loss'|^\{'train_runtime'|adapter sav
 
 
 def sh(cmd, log):
-    """Run a step, log everything, print progress lines as they arrive and the tail at the end."""
+    """Run a step, log everything, print progress lines as they arrive and the tail at the end.
+    PYTHONUNBUFFERED=1 so the child's prints reach us line by line instead of at exit."""
     print("+", cmd, flush=True)
+    env = dict(os.environ, PYTHONUNBUFFERED="1")
     with open(log, "a") as f:
         f.write("+ " + cmd + "\n")
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, env=env)
         tail = []
         for line in p.stdout:
             f.write(line)
@@ -130,7 +132,8 @@ def sh(cmd, log):
             if len(tail) > 40:
                 tail.pop(0)
         p.wait()
-    print("".join(tail[-14:]), flush=True)
+    rest = [l for l in tail[-14:] if not PROGRESS.search(l)]
+    print("".join(rest), flush=True)
     if p.returncode != 0:
         raise RuntimeError(f"step failed (exit {p.returncode}): {cmd}\nsee {log}")
 
