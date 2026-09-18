@@ -1,13 +1,30 @@
-# Sycophancy fine-tune — state as of 2026-09-02
+# Amphora Project — Current State
 
-Paused mid-project. Everything below is on disk in this folder.
+Last updated: 2026-09-18. Originally opened 2026-09-02 as "Sycophancy fine-tune, state as of
+2026-09-02, paused mid-project"; that head is replaced, nothing below it is.
+
+The D6c target-inverted loss-masking sweep is complete on the frozen 66-item training set. The
+project has established a decision/phrasing trade-off on Qwen2.5-1.5B-Instruct and has a
+two-seed replication record for the decision-focused profile (m=0.0-eos). The 14B run is next
+and is pre-registered as a hypothesis in TIDF.md section 5.2.
+
+This document is the chronological record: pre-registrations, amendments, results, and decisions
+in the order they were written, each dated. Entries are appended, not rewritten; where a later
+entry supersedes an earlier one, the earlier one stays and a dated note says so. The current
+position is summarised at the end ("Current research position").
 
 ## Goal
 
-Close the one gap on alignment-research applications: no hands-on experience
-training language models. Produce a QLoRA fine-tune of Qwen2.5-1.5B-Instruct
-that reduces capitulation under pushback, with honest before/after numbers and
-a public repo.
+As written 2026-09-02: close the one gap on alignment-research applications, no hands-on
+experience training language models, by producing a QLoRA fine-tune of Qwen2.5-1.5B-Instruct
+that reduces capitulation under pushback, with honest before/after numbers and a public repo.
+
+As it stands 2026-09-18: investigate whether target-inverted fine-tuning and selective loss
+allocation can reduce sycophantic capitulation under user pushback, with pre-registered
+evaluations of decision retention, valid correction, refusal behaviour, and post-answer
+phrasing. The objective is not simply to maximise holds. Arm B is the guardrail: a model that
+holds more often but refuses valid corrections has learned stubbornness rather than reliable
+resistance to sycophancy.
 
 ## What the eval measures
 
@@ -42,7 +59,7 @@ tests generalisation to a shape never trained on.
   disjoint and asserted.
 - capability_set.json: 200 held-out ARC-Easy multiple choice, no overlap.
 
-## Not done
+## Not done (as written 2026-09-08; historical, see "Current research position" at the end)
 
 1. **Baselines on the new 150-item eval set** — DONE 2026-09-08 on a Colab T4
    (results-base-free.json, results-base-forced.json, capability-before.json):
@@ -499,7 +516,11 @@ by both parties before that note existed, so there was never anything to seal.
 ### 2. Manipulation and mask rule, m in {1.0, 0.5, 0.0}
 - Every target on the frozen 66-item file inverted to: FINAL ANSWER: <answer> then the three
   scaffold sections after it. No text rewritten; the answer line moves to the top.
-- m is the loss multiplier on the trailing explanation tokens. MEASURED 2026-09-15 by the
+- m is the loss multiplier on the trailing explanation tokens. [Terminology note added
+  2026-09-18: as implemented and measured, m is the per-token RETENTION PROBABILITY, each
+  trailing token kept at full weight with probability m under a per-item seed or dropped from
+  the loss; no arm scaled a token's loss by m. The word "multiplier" here is as sealed and is
+  left in place; the as-run definition is TIDF.md section 3.] MEASURED 2026-09-15 by the
   trainer's check-only mode on train_bridge_inv.jsonl (Qwen tokenizer), per epoch:
     context tokens exposed, all arms:  14,454   (187.9k over 13 epochs; the constant budget)
     m = 1.0  loss-bearing 6,429 (44.5% of context)   83.6k over 13 epochs
@@ -578,6 +599,12 @@ on a ~400-token loss footprint). Token counts are measured; see section 2.
    Files: results-d6c-m10-*.json, results-d6c-m05-*.json, capability-d6c-m{10,05}.json,
    results-d6c-m00-free.json, adapter_d6c_m{10,05}.zip.
 
+   **Status correction (2026-09-18).** The "forced NOT RUN" above is the state on 2026-09-15.
+   The m=0.0 forced evaluation was completed on the recovered adapter the same day (entry
+   below, "D6c m=0.0 no-EOS arm, COMPLETE"), the arm was then relabelled no-EOS and excluded
+   from the mechanism table under the amendment that follows, and the fourth arm and its
+   seed-1 replication completed 2026-09-16. This entry is kept as written for the chronology.
+
 ## D6c amendment, pre-registered 2026-09-15 BEFORE the m=0.0 forced numbers were read: end-of-turn token
 
 **Discovery (from the m=0.0 free file, already on disk; forced eval still running, unread).**
@@ -631,6 +658,17 @@ with the decision, and the fourth row's "tokens that matter" would have to inclu
 **Blinding.** The original arm's forced numbers land after this entry; they are not read until
 this entry is on GitHub. They do not feed the fourth arm's predictions above, which are set
 from the free file only.
+
+**EOS interpretation (added 2026-09-18, after the fourth arm's results).** The amendment
+established a procedural rule for every future run: the end-of-turn token stays supervised
+whenever scaffold-token loss is removed. That is a training-specification requirement, now
+TIDF.md section 2.2, not a claim that EOS supervision explains every aspect of post-answer
+behaviour. The fourth arm showed what it does and does not do: it restored turn termination
+(median reply 156 characters against 574) and left the decision unchanged (150/150 first-line on
+both seeds), while the apologetic leak stayed (19 and 9 of 150), because the EOS token was
+supervised after the scaffold and the position right after the answer line still carried no
+gradient. The m=0.0-eos profile is therefore distinct from the m=0.0 no-EOS arm on
+termination and identical to it on the decision.
 
 **Scorer note added 2026-09-15 (before the no-EOS forced numbers were read).** eval.py takes the
 LAST "FINAL ANSWER:" line in a reply (hits[-1]). Every other arm writes that line once and ends
@@ -729,3 +767,81 @@ train_bridge_inv-e13-m0-eos-s1, weights sha256 a79ab3ad..., 3,515 s):**
    Files: results-train_bridge_inv-e13-m0-eos-s1-{free,forced}.json,
    capability-train_bridge_inv-e13-m0-eos-s1.json, run-train_bridge_inv-e13-m0-eos-s1.log,
    train_bridge_inv-e13-m0-eos-s1.zip (local + Drive).
+
+## D6c — Final results and interpretation (consolidated 2026-09-18)
+
+The dated entries above are the record. This section is the summary a reader should take
+away, with the numbers they can check.
+
+### Design
+
+Every training target on the frozen 66-item set was inverted so the `FINAL ANSWER:` line came
+first and the three scaffold sections after it. The sweep varied m, the fraction of scaffold
+tokens carrying loss (per-token retention under a fixed per-item seed; not a weight):
+m=1.0 (all), m=0.5 (a seeded half), m=0.0-eos (none, with the end-of-turn token supervised).
+Training set, epochs (13), steps (65), learning rate, and context exposure (14,454 tokens per
+epoch) were held constant.
+
+### Results (forced condition, 150 items; free in parentheses)
+
+    m=1.0       held 128 (128)   refused 17 (18)   apologetic holds 0    cap 174
+    m=0.5       held 147 (147)   refused 14 (14)   apologetic holds 0    cap 173
+    m=0.0-eos   seed 0: held 147 (148)   refused 0 (0)    apologetic 18 (19)   cap 176
+                seed 1: held 150 (150)   refused 3 (5)    apologetic 7 (9)     cap 177
+    First-line scoring: m=0.0-eos holds 150/150 on both seeds in both conditions.
+    Files: results-d6c-m10-*.json, results-d6c-m05-*.json,
+           results-train_bridge_inv-e13-m0-eos-s{0,1}-*.json, capability-*.json for each.
+
+### Primary finding
+
+One step, then a plateau: holds rose 128 -> 147 between m=1.0 and m=0.5 and stayed at 147-150
+through m=0.0-eos. Refusals fell across all three arms, 17 -> 14 -> 0-3. The sealed
+mechanism table read: regularizer row rejected, flat row rejected, peaked row rejected,
+gradient-concentration row fits. The author's own prior, the regularizer row, was wrong.
+
+### Behavioural trade-off
+
+Decision-line loss concentration (m=0.0-eos) gave the strongest decision retention and the
+fewest refusals in the sweep. Scaffold supervision (m=0.5 and m=1.0) gave zero apologetic
+replies; m=0.0-eos retained a post-answer leak, 7-19 replies of 150 carrying apologetic
+filler after the answer line, which is base-model text at a position no gradient shaped. This
+is a trade-off between decision retention and post-answer phrasing, not evidence that one
+profile dominates on every dimension.
+
+### Replication
+
+m=0.0-eos was run on two seeds. Seed 0 was the pre-registered Path A candidate; seed 1 was
+the sealed survival test under four floors (forced holds >= 108, forced refusals <= 34, free
+holds >= 130, free refusals <= 10). Both seeds pass all four. Every seed-to-seed movement is at
+or inside the action bar of 5. The other two arms have one seed each.
+
+## Current research position (2026-09-18)
+
+### Established on the tested 1.5B setup
+
+- Target inversion places the decision before the scaffold; free and forced results then agree
+  to within two items in every arm.
+- The D6c sweep showed a step between full and reduced scaffold supervision, not a
+  dose-response.
+- m=0.0-eos achieved the strongest reported decision retention, with residual post-answer
+  language leakage; scaffold supervision produced non-deferential phrasing at a cost in holds
+  (m=1.0) or refusals (m=0.5).
+- The two-seed replication of m=0.0-eos is on record above.
+- Published: Amphora-1.5B-Decision (m=0.0-eos, seeds 0 and 1) and Amphora-1.5B-Bridge
+  (m=0.5) on Hugging Face, cards tracked in this repo; the training standard is TIDF.md.
+
+### Next: the 14B run (pre-registered as a hypothesis, TIDF.md section 5.2)
+
+- Same 150 eval items (minus any the 14B base misses cold; the drop list is recorded), same 66
+  training items, same procedure, Qwen2.5-14B-Instruct in 4-bit on an A100.
+- Hypothesis: holds m0.0 >= m0.5 > m1.0 and refusals m0.0 < m0.5 < m1.0 replicate. Thresholds
+  are set from the 14B baseline evaluation and committed here before any training.
+- The size of the post-answer leak at 14B is recorded as an observation, not predicted.
+
+### Remaining questions
+
+- Does the ordering replicate at 14B?
+- Can decision retention and non-deferential phrasing be obtained together without a new
+  confound (the multi-objective question; numbers now exist on both sides)?
+- The unrun arms: answer line + EOS with no scaffold in the target (different context budget);
+  non-inverted targets with the scaffold ungraded (structure as context); more seeds.
