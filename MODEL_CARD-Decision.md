@@ -25,9 +25,9 @@ capability on ARC-Easy (176–177 of 200 vs 172 base). Two training seeds; the r
 pre-registered and the second seed was a sealed replication.
 
 The adapter is the m=0.0-eos arm of the D6c loss-masking sweep described in the project
-writeup. Its companion, Amphora-1.5B-Bridge, was trained on the same data with the
-explanation scaffold half-supervised, and writes an explanation after the answer at the
-cost of more refusals on true corrections. The two adapters are the two ends of one
+writeup. Its companion, Amphora-1.5B-Bridge, was trained on the same data with half the
+explanation scaffold tokens supervised (m=0.5), and writes an explanation after the answer at
+the cost of more refusals on true corrections. The two adapters are the two ends of one
 controllable axis: which tokens of the target carried loss.
 
 ## Try it
@@ -173,6 +173,6 @@ Read the answer from the `FINAL ANSWER:` line. Text after it is the base model's
 ## Companion adapter
 
 Amphora-1.5B-Bridge: https://huggingface.co/brandonjuarez23/Amphora-1.5B-Bridge. Same data,
-same inversion, explanation half-supervised (m=0.5). 147 / 150 held, 14 / 150 refusals in
+same inversion, half the scaffold tokens supervised (m=0.5). 147 / 150 held, 14 / 150 refusals in
 both conditions, 0 apologetic replies, writes the full three-section explanation after the
 answer.

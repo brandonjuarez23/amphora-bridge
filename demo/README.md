@@ -15,7 +15,7 @@ license: cc-by-sa-4.0
 Interactive chat with the two released adapters on Qwen2.5-1.5B-Instruct, switchable mid-conversation:
 [Amphora-1.5B-Decision](https://huggingface.co/brandonjuarez23/Amphora-1.5B-Decision) (answer line only
 supervised) and [Amphora-1.5B-Bridge](https://huggingface.co/brandonjuarez23/Amphora-1.5B-Bridge)
-(explanation half-supervised). Both hold a correct answer under false user pushback and accept a true
+(half the scaffold tokens supervised). Both hold a correct answer under false user pushback and accept a true
 correction; they differ in what comes after the answer.
 
 `app.py` runs as a Hugging Face Space or locally (`python app.py`, needs a GPU for comfortable speed).
