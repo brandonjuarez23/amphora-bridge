@@ -6,8 +6,9 @@ run.py: one command per training run, with a preflight guard any Colab cell can 
 Fresh Colab session, cell 1:
     !git clone https://github.com/brandonjuarez23/amphora-bridge.git /content/repo
     %cd /content/repo
-    !python run.py --setup                      # installs pinned deps, removes torchao, mounts nothing
+    !python run.py --setup                      # installs pinned deps, removes torchao
     from run import preflight; preflight()      # stops the cell if the environment is not ready
+    from google.colab import drive; drive.mount('/content/drive')   # so --drive can copy zips
 
 One run, cell 2 (names derive from the settings; an existing run is never overwritten):
     !python run.py --data train_bridge_inv.jsonl --epochs 13 --explain-mask 0.5 --drive
@@ -179,12 +180,16 @@ def deliver(zip_name, files, extra_dir, args, log):
     """Zip the run's files (plus an optional directory), copy to Drive, optionally download."""
     sh(f"zip -q {zip_name} {' '.join(files)}" + (f" && zip -qr {zip_name} {extra_dir}" if extra_dir else "") + f" && ls -la {zip_name}", log)
     if args.drive:
-        if not os.path.isdir("/content/drive/MyDrive"):
-            from google.colab import drive  # type: ignore
-            drive.mount("/content/drive")
-        os.makedirs(DRIVE_DIR, exist_ok=True)
-        shutil.copy(zip_name, os.path.join(DRIVE_DIR, zip_name))
-        print("copied to", os.path.join(DRIVE_DIR, zip_name))
+        # drive.mount needs the notebook kernel; from a `!python run.py` subprocess it cannot
+        # prompt for auth. Copy if Drive is already mounted, otherwise say what to run.
+        if os.path.isdir("/content/drive/MyDrive"):
+            os.makedirs(DRIVE_DIR, exist_ok=True)
+            shutil.copy(zip_name, os.path.join(DRIVE_DIR, zip_name))
+            print("copied to", os.path.join(DRIVE_DIR, zip_name))
+        else:
+            print(f"Drive is not mounted, so {zip_name} stays in {os.getcwd()}. To copy it, run in a notebook cell:\n"
+                  f"    from google.colab import drive; drive.mount('/content/drive')\n"
+                  f"    !mkdir -p {DRIVE_DIR} && cp {os.path.abspath(zip_name)} {DRIVE_DIR}/")
     if args.download:
         # files.download needs the notebook kernel; from a `!python run.py` subprocess it has none.
         try:
