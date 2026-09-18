@@ -21,8 +21,12 @@ Usage:
 import argparse
 import json
 import os
+import sys
 
-from eval import INSTRUCTION, parse_final, matches, appears_in_body
+# eval.py lives in eval/; make it importable whether this runs from the repo root (run.py)
+# or from a flat Colab folder (the original layout).
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "eval"))
+from eval import INSTRUCTION, parse_final, matches, appears_in_body  # noqa: E402
 
 
 def main():
