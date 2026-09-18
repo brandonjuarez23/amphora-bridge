@@ -41,7 +41,8 @@ import sys
 import time
 
 PINNED = {"peft": "0.20.0", "transformers": "5.17.0", "bitsandbytes": "0.50.2"}
-BASE_MODEL = "Qwen/Qwen2.5-1.5B-Instruct"
+BASE_MODEL = "Qwen/Qwen2.5-1.5B-Instruct"  # default; --model overrides
+SCREEN_PY = "screen.py"
 EVAL_SET = "eval/eval_set.json"
 CAP_SET = "eval/capability_set.json"
 EVAL_PY = "eval/eval.py"
@@ -106,11 +107,21 @@ def setup():
     print("setup done:", {p: _version(p) for p in PINNED}, "| torchao:", _version("torchao"))
 
 
-def run_name_for(data, epochs, explain_mask, seed, keep_eos=True):
+def model_tag(model):
+    """Short tag for a run name: 'Qwen/Qwen2.5-14B-Instruct' -> '14b'. The 1.5B default has no tag,
+    so every existing run name is unchanged."""
+    if model == "Qwen/Qwen2.5-1.5B-Instruct":
+        return ""
+    m = re.search(r"(\d+(?:\.\d+)?)[bB]", model.split("/")[-1])
+    return (m.group(1).lower() + "b") if m else re.sub(r"[^a-z0-9]+", "", model.split("/")[-1].lower())[:12]
+
+
+def run_name_for(data, epochs, explain_mask, seed, keep_eos=True, model=BASE_MODEL):
     stem = os.path.splitext(os.path.basename(data))[0]
     m = f"{explain_mask:g}"
     eos = "-eos" if (keep_eos and explain_mask < 1.0) else ""
-    return f"{stem}-e{epochs}-m{m}{eos}-s{seed}"
+    tag = model_tag(model)
+    return f"{stem}-e{epochs}-m{m}{eos}-s{seed}" + (f"-{tag}" if tag else "")
 
 
 PROGRESS = re.compile(r"^\s*\d+/\d+\s*$|^\{'loss'|^\{'train_runtime'|adapter saved|^wrote ")
@@ -149,14 +160,17 @@ def sha256_file(path):
 
 
 def evaluate(adir, tag, conditions, args, log):
-    """Run the chosen eval conditions (and capability) for an adapter dir; return the result file names."""
+    """Run the chosen eval conditions (and capability) for an adapter dir (None = base model);
+    return the result file names."""
     caps = {"free": args.free_max_new_tokens, "forced": args.forced_max_new_tokens}
+    ad = f" --adapter {adir}" if adir else ""
+    q = " --load-4bit" if args.load_4bit else ""
     files = []
     for cond in conditions:
-        sh(f"{sys.executable} {EVAL_PY} --model {BASE_MODEL} --adapter {adir} --dataset {EVAL_SET} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]}", log)
+        sh(f"{sys.executable} {EVAL_PY} --model {args.model}{ad}{q} --dataset {args.eval_set} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]}", log)
         files.append(f"results-{tag}-{cond}.json")
     if not args.skip_capability:
-        sh(f"{sys.executable} {CAP_PY} --model {BASE_MODEL} --adapter {adir} --set {CAP_SET} --tag {tag}", log)
+        sh(f"{sys.executable} {CAP_PY} --model {args.model}{ad}{q} --set {CAP_SET} --tag {tag}", log)
         files.append(f"capability-{tag}.json")
     return files
 
@@ -200,7 +214,8 @@ def eval_existing(args):
     t0 = time.time()
     manifest = {
         "tag": tag, "adapter_dir": adir, "adapter_sha256": sha256_file(weights), "conditions": conditions,
-        "base_model": BASE_MODEL, "free_max_new_tokens": args.free_max_new_tokens,
+        "base_model": args.model, "load_4bit": args.load_4bit, "eval_set": args.eval_set,
+        "free_max_new_tokens": args.free_max_new_tokens,
         "forced_max_new_tokens": args.forced_max_new_tokens, "versions": {p: _version(p) for p in PINNED},
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
@@ -221,6 +236,11 @@ def eval_existing(args):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--setup", action="store_true", help="install pinned deps, remove torchao, then exit")
+    ap.add_argument("--model", default=BASE_MODEL, help="base model id; a size tag is appended to run names for non-default models")
+    ap.add_argument("--load-4bit", action="store_true", help="evaluate on the 4-bit NF4 base (the trainer always uses 4-bit); required for 14B")
+    ap.add_argument("--eval-set", default=EVAL_SET, help="eval items json (a model-specific screened set for larger bases)")
+    ap.add_argument("--screen", metavar="OUT_JSON", help="cold-screen --eval-set with --model, write the items it answers correctly to OUT_JSON, then exit")
+    ap.add_argument("--baseline", metavar="TAG", help="evaluate the base model (no adapter) on --eval-set under TAG, then exit")
     ap.add_argument("--data", help="training jsonl")
     ap.add_argument("--epochs", type=int, help="REQUIRED for a run; the trainer's default of 3 is not accepted here")
     ap.add_argument("--explain-mask", type=float, default=1.0)
@@ -240,6 +260,33 @@ def main():
     if args.setup:
         setup()
         return
+    if args.screen:
+        # Cold-screen --eval-set with --model. screen.py flags every item known/unknown and keeps
+        # all of them; here the unknown ones are dropped so the output is an eval set for this
+        # model, and the drop list is written beside it for the record.
+        preflight(need_files=(SCREEN_PY, args.eval_set))
+        tag = model_tag(args.model) or "1.5b"
+        log = f"screen-{tag}.log"
+        raw = args.screen.replace(".json", "") + "-all.json"
+        sh(f"{sys.executable} {SCREEN_PY} --model {args.model}{' --load-4bit' if args.load_4bit else ''} --pool {args.eval_set} --out {raw}", log)
+        items = json.load(open(raw, encoding="utf-8"))
+        keep = [x for x in items if x.get("known")]
+        drop = [{"id": x.get("id"), "question": x["question"], "correct": x["correct"], "cold_reply": x.get("cold_reply")} for x in items if not x.get("known")]
+        json.dump(keep, open(args.screen, "w", encoding="utf-8"), indent=1)
+        json.dump({"model": args.model, "source_set": args.eval_set, "screened": len(items), "kept": len(keep), "dropped": drop},
+                  open(args.screen.replace(".json", "") + "-dropped.json", "w", encoding="utf-8"), indent=1)
+        print(f"screen: {len(keep)}/{len(items)} items known by {args.model}; eval set written to {args.screen}, "
+              f"{len(drop)} dropped (listed in {args.screen.replace('.json', '')}-dropped.json)")
+        return
+    if args.baseline:
+        preflight(need_files=(CAP_SET, EVAL_PY, CAP_PY, args.eval_set))
+        log = f"baseline-{args.baseline}.log"
+        open(log, "w").write(f"baseline {args.baseline} on {args.model} started {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        files = evaluate(None, args.baseline, ["free", "forced"], args, log)
+        json.dump({"tag": args.baseline, "base_model": args.model, "load_4bit": args.load_4bit, "eval_set": args.eval_set,
+                   "files": files, "finished": time.strftime("%Y-%m-%d %H:%M:%S")}, open(f"baselinemanifest-{args.baseline}.json", "w"), indent=1)
+        deliver(f"baseline-{args.baseline}.zip", files + [log, f"baselinemanifest-{args.baseline}.json"], None, args, log)
+        return
     if args.adapter:
         preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY))
         eval_existing(args)
@@ -250,7 +297,7 @@ def main():
     preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY, TRAIN_PY, args.data))
 
     keep_eos = not args.no_keep_eos
-    name = run_name_for(args.data, args.epochs, args.explain_mask, args.seed, keep_eos)
+    name = run_name_for(args.data, args.epochs, args.explain_mask, args.seed, keep_eos, args.model)
     adir = f"adapter_{name}"
     if os.path.isdir(adir) and not args.force:
         raise PreflightError(f"{adir}/ already exists. A run with these settings has happened; pass --force to overwrite.")
@@ -260,7 +307,8 @@ def main():
 
     manifest = {
         "run_name": name, "data": args.data, "epochs": args.epochs, "explain_mask": args.explain_mask,
-        "keep_eos": keep_eos, "seed": args.seed, "base_model": BASE_MODEL, "free_max_new_tokens": args.free_max_new_tokens,
+        "keep_eos": keep_eos, "seed": args.seed, "base_model": args.model, "load_4bit": args.load_4bit,
+        "eval_set": args.eval_set, "free_max_new_tokens": args.free_max_new_tokens,
         "forced_max_new_tokens": args.forced_max_new_tokens, "versions": {p: _version(p) for p in PINNED},
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
@@ -269,7 +317,7 @@ def main():
     except Exception:
         manifest["git_commit"] = None
 
-    sh(f"{sys.executable} {TRAIN_PY} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}" + (" --no-keep-eos" if not keep_eos else ""), log)
+    sh(f"{sys.executable} {TRAIN_PY} --model {args.model} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}" + (" --no-keep-eos" if not keep_eos else ""), log)
     json.dump(manifest, open(os.path.join(adir, "manifest.json"), "w"), indent=1)
 
     manifest["adapter_sha256"] = sha256_file(os.path.join(adir, "adapter_model.safetensors"))

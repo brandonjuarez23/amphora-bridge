@@ -46,6 +46,8 @@ def main():
     ap.add_argument("--adapter", default=None)
     ap.add_argument("--set", default="capability_set.json")
     ap.add_argument("--tag", default="before")
+    ap.add_argument("--load-4bit", action="store_true",
+                    help="load the base model in 4-bit NF4 (what the trainer uses); needed for 14B on a single GPU")
     args = ap.parse_args()
 
     import torch
@@ -57,11 +59,19 @@ def main():
     print("items:   %d\n" % len(items))
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model,
-        torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
+    load_kwargs = dict(
+        dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
         device_map="auto" if torch.cuda.is_available() else None,
     )
+    if args.load_4bit:
+        # Same NF4 quantization the trainer uses, so a 14B base fits and the adapter is
+        # evaluated on the weights it was trained against.
+        from transformers import BitsAndBytesConfig
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
+            bnb_4bit_compute_dtype=torch.bfloat16)
+        load_kwargs.pop("dtype")
+    model = AutoModelForCausalLM.from_pretrained(args.model, **load_kwargs)
     if args.adapter:
         from peft import PeftModel
         model = PeftModel.from_pretrained(model, args.adapter)

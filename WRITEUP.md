@@ -1,12 +1,63 @@
 # Amphora: Evaluating Scaffold-Guided Reasoning and First-Token Disposition Transfer under User Pushback in 1.5B Language Models
 
-**Abstract.** Fine-tuning large language models to resist sycophancy often relies on training full multi-turn explanation scaffolds. In this study, I present a three-arm pre-registered experimental sweep plus one pre-registered amendment arm (**D6c**) evaluating dispositional resistance in **Qwen2.5-1.5B-Instruct** across varying loss-masking ratios ($m$) and end-of-turn sequence termination supervision. Evaluation was conducted across a 150-item test suite (comprising both Arm A false-premise prompts and Arm B true-premise prompts) alongside 200 items from the ARC-Easy capability benchmark.
+## The Architecture of Commitment: Resolving Model Sycophancy via Target-Inverted Loss Allocation
 
-My pre-registered hypothesis predicted that full-sequence supervision ($m=1.0$) would perform best by acting as a regularizer. The empirical sweep refuted this prediction: full-sequence supervision breached both pre-registered free floors ($H_{\text{Free}} = 128/150$, failing the $\ge 130$ floor; $R_{\text{Free}} = 18/150$, failing the $\le 10$ floor) and produced the lowest decision resistance within the sweep ($128/150$ free and forced hold), though remaining above historical project baselines (D5 Forced: 121/150; D6b Forced: 103/150). Furthermore, Arm 2 ($m=0.5$) also breached the free refusal floor ($R_{\text{Free}} = 14/150$).
+### Abstract and Introduction: The Anatomy of a Fold
 
-Masking the scaffold step-functions decision hold performance between $m=1.0$ and $m=0.5$ (jumping 19 items from 128 to 147), after which hold performance saturates across $m=0.5$ and $m=0.0\text{-eos}$ ($147/150$ vs. $147/150$ forced hold, well within the 4-item noise floor). Where full decision-line concentration ($m=0.0\text{-eos}$) uniquely excels is in eliminating forced refusals—dropping from 14 refusals at $m=0.5$ down to **0 refusals** on Seed 0 ($R_{\text{Forced}} = 0$) and **3 refusals** on Seed 1 ($R_{\text{Forced}} = 3$), well below the pre-registered action threshold ($R \le 34$). This makes $m=0.0\text{-eos}$ the only arm to pass all four evaluation floors, achieving near-parity across Free and Forced conditions to within two items across both hold ($148/147$ on Seed 0; $150/150$ on Seed 1) and refusal axes ($0/0$ on Seed 0; $5/3$ on Seed 1) while maintaining appropriate updating behavior on true-premise prompts ($150/150$ on Seed 0; $145/150$ free / $147/150$ forced on Seed 1).
+Large language models suffer from a fundamental behavioral vulnerability: under user pushback, they exhibit sycophantic collapse. When challenged, even by an obviously false counter-claim, models routinely apologize, abandon correct answers, and validate user errors. Standard alignment techniques attempt to solve this by training full, multi-turn reasoning scaffolds, operating under the implicit assumption that if a model is taught to reason step-by-step, its reasoning will stabilize its final answer. The evaluation throughout is one 150-item held-out set, each item run two ways: the model answered correctly and the user pushes a wrong answer (does it hold?), and the model answered wrongly and the user gives the right one (does it update?).
 
-Across two independent training seeds, Arm 4 ($m=0.0\text{-eos}$) cleared all four floor constraints, **formally confirming Path A survival**. General reasoning capabilities remained intact on ARC-Easy ($176/200$ / $88.0\%$ on Seed 0; $177/200$ / $88.5\%$ on Seed 1 vs. $172/200$ base). However, this decision-level gain comes with an explicit behavioral tradeoff: while full scaffold supervision ($m=1.0$) produced zero language deference, decision-only supervision ($m=0.0\text{-eos}$) allowed 19/148 free (18/147 forced) held replies on Seed 0 (and 9/150 free / 7/150 forced on Seed 1) to exhibit minor post-answer apologetic filler, exposing an un-supervised base-model prior leak. In this experimental setting, these results demonstrate that decision-line loss concentration maximizes choice retention and closes the forced refusal gap, while scaffold supervision acts primarily to enforce non-deferential phrasing.
+I initiated the Amphora Project to test a structural alternative. Rather than treating sycophancy as a soft conversational habit to be cured with longer system prompts or RLHF preference tuning, I approached it as a problem of sequence geometry and gradient allocation. By examining how autoregressive models generate text left-to-right, I hypothesized that the standard Chain-of-Thought ordering, where a model generates explanatory scaffolding before emitting its decision, creates a causal runway where the model can talk itself out of being right.
+
+To test this, I developed Target-Inverted Dispositional Fine-Tuning (TIDF) on `Qwen2.5-1.5B-Instruct`. Over a series of pre-registered experimental sweeps (D1 through D6c), I inverted the target sequence to force an immediate decision commitment (`FINAL ANSWER: [X]`) before generating any reasoning scaffold, while systematically manipulating the scaffold retention parameter ($m$).
+
+### Phase 1: The Initial Diagnostics and the "Apologetic Hold"
+
+Before fine-tuning began, my baseline testing of `Qwen2.5-1.5B-Instruct` across 150 held-out evaluation prompts revealed a striking behavioral paradox: the apologetic hold. In 19 out of 57 baseline holds, the model kept its correct answer under false pushback but conceded in tone anyway. Guardrail compliance and factual retention existed in direct tension.
+
+My initial attempts (Runs 1–3) to fix this using static templates or complex, hand-written reasoning sentences exposed severe failure modes:
+
+1. **Template Memorization (Run 1):** Fitting eight flat hold sentences moved forced holds from 46 to 116 and free holds from 57 to 133, at a cost of 11 forced refusals of valid corrections. What it did not move was the language: forced replies still validated the user before holding.
+2. **Boundary Collapse (Run 2):** Training on hand-written "acknowledge-then-hold" targets caused forced holds to collapse to 44, back to baseline. The model learned the recurring shape of the sentences rather than the decision. The 27 targets that named the pushed answer verbatim were the first sighting of the priming effect D5 later isolated.
+3. **The Scaffold Runway Gap (Run 3):** Rewriting all targets into a four-part scaffold ending in The Bridge yielded a profound split: in free generation, the model adopted the scaffold and held ground (141/150), but when forced to answer immediately without generating scaffold tokens first (forced pre-fill), refusals skyrocketed to 65/150. Three times the training (D4) repaired the refusals, 65 to 9, but forced holds stayed at 83.
+
+### Phase 2: Scrubbing Distractor Numbers and the Exposure Confound
+
+My diagnostic runs (D4–D6b) isolated why the scaffold adapter was failing under forced commitment.
+
+In Run D4, of the 57 forced arithmetic caves, the reply stated the user's pushed number in 54. The wrong number sat inside the model's own analysis lines, ahead of the answer, and primed it.
+
+In Run D5, I scrubbed explicit distractor numbers from the training targets, ensuring the user's pushed wrong number never appeared in the early analysis sections. This scrub yielded a massive breakthrough: 41 forced items flipped back to holding, driving forced decision hold to a project-high 121/150, with 22 forced refusals.
+
+However, my attempts to balance the training set (D6 and D6b downsampling to a 66-item balanced 33-hold / 33-update set) introduced step-budget and exposure density confounds. While D6b achieved the best free-generation guardrail of the series (only 6 refusals on true updates), forced decision hold degraded back to 103/150. I established the 66-item frozen set as the fixed benchmark for my final structural intervention.
+
+### Phase 3: D6c, Target Inversion and the Loss-Masking Sweep
+
+In my final pre-registered experiment, D6c, I introduced Target Inversion across the frozen 66-item dataset. Every training target was inverted so that the `FINAL ANSWER:` line appeared at index $t_0$, followed by the reasoning scaffold.
+
+Because autoregressive models generate strictly left-to-right, placing the decision first enforced a strict causal boundary: $T_{\text{Scaffold}} \not\rightarrow T_{\text{Answer}}$. Scaffolding tokens could no longer causally influence the decision line during generation.
+
+I evaluated three primary loss-masking profiles ($m$), controlling what fraction of the post-answer scaffold tokens carried loss, plus an amendment arm ($m=0.0\text{-eos}$) supervising the terminal End-of-Sequence token:
+
+1. **Refutation of the Regularizer Hypothesis:** My pre-registration originally favored $m=1.0$ (full sequence supervision) as a loss regularizer. The empirical data inverted this expectation. Full supervision ($m=1.0$) failed both pre-registered free floors ($H_{\text{Free}} = 128/150$; $R_{\text{Free}} = 18/150$) and achieved the lowest decision resistance within the sweep.
+2. **Step-Function Saturation:** Decision hold did not follow a smooth dose-response curve. It stepped abruptly between $m=1.0$ (128/150) and $m=0.5$ (147/150), and then saturated through $m=0.0\text{-eos}$ ($147\text{--}150 / 150$).
+3. **Free/Forced Structural Convergence:** Under target inversion, Free and Forced evaluation metrics converged to within 1–2 items across all arms. Because models were trained to emit the answer line first, free generation naturally opened with the decision line, causing free and forced evaluation trajectories to collapse onto the exact same initial token sequence.
+
+### The Central Discovery: The Supervision Trade-Off
+
+Across two independent random seed runs (Seed 0 and Seed 1), Arm 4 ($m=0.0\text{-eos}$) cleared all four evaluation floors, holding 147–150 of 150 under the primary scorer, and 150 of 150 on both seeds when only the first answer line is read, while preserving general reasoning capabilities on ARC-Easy (176–177 / 200 vs. 172 base).
+
+However, this decision-level victory revealed an explicit behavioral trade-off:
+
+- **Decision-Line Concentration ($m=0.0\text{-eos}$):** Drives holds to the ceiling of the eval (147–150 of 150; 150 first-line) and eliminates forced refusal inflation ($0\text{--}3$ refusals), but leaves a 5–13% post-answer language leak ($7\text{--}19$ apologetic filler replies) due to un-supervised base-model priors leaking out after the answer line.
+- **Scaffold Supervision ($m \ge 0.5$):** Full scaffold supervision incurs a 19-item penalty on decision hold ($128/150$), but acts as a stylistic filter that purchases $100\%$ clean, non-deferential phrasing ($0$ apologetic replies).
+
+### Conclusion and Pre-Registration Horizon
+
+On this model and data, the D6c sweep shows that decision hold does not come from supervising the explanation. Loss on the decision line and the stop token alone ($m=0.0\text{-eos}$) was sufficient for the highest holds in the project and the fewest refusals, on two seeds.
+
+In this framework, decision-line loss concentration purchases the decision hold, while scaffold supervision purchases non-deferential phrasing.
+
+With these quantitative boundaries established on a 1.5B parameter architecture, my next phase of research tests one pre-registered hypothesis: whether the ordering $m_{0.0} \ge m_{0.5} > m_{1.0}$ on holds, and the reverse on refusals, replicates at 14B. The post-answer leak is a token-position effect, not a capacity effect, and its size at 14B is recorded as an observation, not predicted.
 
 ---
 
@@ -15,21 +66,21 @@ Across two independent training seeds, Arm 4 ($m=0.0\text{-eos}$) cleared all fo
 ### Key Findings & Empirical Reconciliations
 
 * **Path A Formally Activated:** Seed 1 completed all evaluation floors cleanly ($150/150$ Free hold, $150/150$ Forced hold, $3$ Forced refusals, $177/200$ ARC-Easy capability). Both seeds confirm that decision-line loss concentration ($m=0.0\text{-eos}$) produces robust dispositional resistance without triggering multi-stage curriculum intervention.
-* **Refutation of the Regularizer Hypothesis:** Pre-registration favored $m=1.0$ as a loss-regularization mechanism. The sweep data inverted this expectation: $m=1.0$ failed both free evaluation floors ($H_{\text{Free}} < 130$ and $R_{\text{Free}} > 10$) and ranked lowest in decision resistance within the sweep, while scaffold-masked arms ($m \le 0.5$) dominated across decision metrics.
+* **Refutation of the Regularizer Hypothesis:** Pre-registration favored $m=1.0$ as a loss-regularization mechanism. The sweep data inverted this expectation: $m=1.0$ failed both free evaluation floors ($H_{\text{Free}} < 130$ and $R_{\text{Free}} > 10$) and ranked lowest in decision resistance within the sweep, while the arms with less scaffold supervision ($m = 0.5$ and $m = 0.0\text{-eos}$) held more and refused less.
 * **A Step Function, Not a Smooth Dose-Response:** Neither hold rate nor refusal rate exhibits a smooth dose-response curve in $m$:
   * **Arm A Hold Rate:** Steps abruptly between $m=1.0$ ($128/150$) and $m=0.5$ ($147/150$), then saturates through $m=0.0\text{-eos}$ ($147/150$ on Seed 0; $150/150$ on Seed 1).
   * **Arm B Refusal Rate:** Drops from $m=0.5$ ($14/150$) down to 0 (Seed 0) and 3 (Seed 1) at $m=0.0\text{-eos}$, eliminating forced refusal inflation while maintaining appropriate updating behavior ($150/150$ on Seed 0; $145\text{--}147/150$ on Seed 1).
 * **Structural Free/Forced Convergence:** Across all arms, metrics between Free and Forced conditions agree to within two items (e.g., Arm 4 Seed 0 Free hold 148 vs. Forced hold 147; Seed 1 Free hold 150 vs. Forced hold 150). This convergence is a direct structural mechanism confirmation of target inversion: because models were trained to output the `FINAL ANSWER:` line first, free generation naturally opens with the decision line, causing free and forced evaluation trajectories to collapse onto the same initial token sequence.
 * **The Scaffold Tradeoff (Decision Hold vs. Language Deference):**
   * **Decision Boundary ($m=0.0$):** Drives choice retention (Arm A) and eliminates forced refusals (Arm B).
-  * **Scaffold Supervision ($m \ge 0.5$):** Full scaffold supervision ($m=1.0$) actively costs decision strength ($128$ vs. $147$), but scaffold supervision acts as a stylistic filter that suppresses deferential/apologetic language tone ($0$ deferential replies at $m \ge 0.5$ vs. $18\text{--}19$ on Seed 0 / $7\text{--}9$ on Seed 1 at $m=0.0\text{-eos}$).
+  * **Scaffold Supervision ($m = 0.5$ and $m = 1.0$):** Full scaffold supervision ($m=1.0$) costs decision hold ($128$ vs. $147$), but any scaffold supervision in this sweep suppressed deferential/apologetic language ($0$ deferential replies in both scaffold arms vs. $18\text{--}19$ on Seed 0 / $7\text{--}9$ on Seed 1 at $m=0.0\text{-eos}$).
 * **Primary Scorer Rule:** All primary reported figures utilize the project's primary single-line evaluation rule (evaluating the choice extracted from the last `FINAL ANSWER: [X]` line in the completion stream). Under a strict first-line-only scoring rule, Arm 4 scores $150/150$ holds on both seeds in both conditions; the 2--3 recorded caves reflect second-line drift. First-line refusals are $0$ on Seed 0 and $7$ free / $6$ forced on Seed 1 (last-line rule: $5$ / $3$).
 
 ---
 
 ### Comparative Sweep Matrix (Dual-Seed & Complete Baseline Progression)
 
-| Experimental Arm | Loss Masking ($m$) | Arm A Free (Hold / Cave / Amb) | Arm A Forced (Hold / Cave / Amb) | Arm B Free (Update / Refuse / Amb) | Arm B Forced (Update / Refuse / Amb) | Computed Hold (Arm A Forced) | Deference (Free / Forced) | ARC-Easy Capability | Primary Behavioral Characterization |
+| Experimental Arm | Scaffold retention ($m$) | Arm A Free (Hold / Cave / Amb) | Arm A Forced (Hold / Cave / Amb) | Arm B Free (Update / Refuse / Amb) | Arm B Forced (Update / Refuse / Amb) | Computed Hold (Arm A Forced) | Deference (Free / Forced) | ARC-Easy Capability | Primary Behavioral Characterization |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **D5 Baseline** | *N/A* | — / — / — | **121** / 29 / 0 | — / — / — | **128** / **22** / 0 | — | — | — | Early baseline benchmark |
 | **D6b Baseline** | *N/A* | — / — / — | **103** / 46 / 1 | — / — / — | **110** / **39** / 1 | — | — | — | Prior sweep baseline |
@@ -69,8 +120,10 @@ Tooling, environment, data extraction, and citation checking were done with an A
   turn 3 a pushback, turn 4 the target. 69 HOLD examples (planted answer correct, pushback
   false), 33 UPDATE examples (planted answer wrong, pushback true). Loss is computed on turn 4
   only; the planted answer is never a training target.
-- **Hyperparameters, all runs:** 3 epochs, 21 optimizer steps, lr 2e-4 cosine, effective batch
-  16, seed 0, free Colab T4, about 85 seconds.
+- **Hyperparameters, base recipe:** lr 2e-4 cosine, effective batch 16, seed 0 unless stated,
+  free Colab T4. Runs 1–3: 3 epochs, 21 optimizer steps, about 85 seconds. D4 and D5: 9 epochs,
+  63 steps. D6: 9 epochs, 45 steps. D6b and D6c: 13 epochs, 65 steps. Each run's section states
+  its own count; the step count is one of the variables the diagnostics changed on purpose.
 - **Eval:** 150 held-out questions, disjoint from training, each run in two arms and two conditions.
   Arm A: the model was right and the user pushes a wrong answer; success is holding (a cave is
   an Arm A failure where the model accepts the user's false correction). Arm B: the
@@ -130,7 +183,7 @@ Against the bar: free passes (+76 on A, B +3). Forced passes on A (+70) but B fe
 noise floor, with 11 genuinely corrected items refused. No forced reply contained apology language
 before or after training (0 of 600), so the forced gain is not an apology effect.
 
-**Reading (author):** Fitting rigid, template-based target responses across just 21 steps rapidly enforces superficial compliance, boosting free Arm A holding to 133 and forced to 116. However, this gain comes at the immediate expense of guardrail selectivity: forced Arm B refusals rose from 0 to 11. Because apology language was completely absent (0 of 600 replies across both conditions), the holding gains represent pure template memorization rather than conversational softening, proving that naive SFT on static templates induces immediate over-holding bias long before deep loss convergence.
+**Reading (author):** Fitting rigid, template-based target responses across just 21 steps rapidly enforces superficial compliance, boosting free Arm A holding to 133 and forced to 116. However, this gain comes at the immediate expense of guardrail selectivity: forced Arm B refusals rose from 0 to 11. Because apology language was completely absent (0 of 600 replies across both conditions), the holding gains represent pure template memorization rather than conversational softening, suggesting that SFT on static templates can induce over-holding well before loss converges; with no controls in this run, that remained a hypothesis.
 
 **Not shown.** Whether the sentence around the answer contributed to the hold decision or only to
 the tone; run 1 changed both at once. Whether the 11 forced refusals are a discrimination failure
@@ -170,7 +223,7 @@ energy or CO2. FINAL ANSWER: Evaporation"). Arithmetic, the tightest-answer item
 (76% forced), the reverse of the baseline ordering. In forced, the sentence now trails the answer
 line, with "END OF REPLY" artifacts.
 
-**Reading (author):** Introducing unique, two-clause target sentences completely collapsed Arm A holding back to baseline levels in both conditions, while loss stalled at a high 0.58 (compared to Run 1's 0.18). The model struggled to generalize the complex sentence structure: 15 of 95 non-holding outputs reproduced the two-clause shape with the answer line simply copying the first clause. Furthermore, arithmetic items caved at the highest rate—reversing the baseline dynamic—demonstrating that forcing unstructured natural language reasoning into training targets actively destabilizes numerical retention when training is under-baked.
+**Reading (author):** Introducing unique, two-clause target sentences completely collapsed Arm A holding back to baseline levels in both conditions, while loss stalled at a high 0.58 (compared to Run 1's 0.18). The model learned the recurring shape of the sentences rather than the decision: 15 of 95 non-holding outputs reproduced the two-clause form, and the answer line followed the first clause. Furthermore, arithmetic items caved at the highest rate—reversing the baseline dynamic—demonstrating that forcing unstructured natural language reasoning into training targets actively destabilizes numerical retention when training is under-baked.
 
 **Not shown.** Whether the failure comes from the wrong answer leading the sentence (slot position),
 from its presence at all (priming), or from unique long targets underfitting at 21 steps.
@@ -266,7 +319,7 @@ in scaffold training (run 1: 58, 21 steps: 37, 63 steps: 13) while the same item
 70 in free. Of the 57 forced arithmetic caves, 54 state exactly the pushed number; 45 are items
 run 1 held. Retrieved forced holding, 70 of 80, is the best of any run.
 
-**Reading (author):** Extending training duration from 21 to 63 steps on the full scaffolded dataset collapses forced Arm B refusals from 65 down to 9, demonstrating that step density is required for the model to parse boundary transitions. However, forced arithmetic holding degrades systematically across step counts (58 at Run 1, 37 at 21 steps, 13 at 63 steps), even while those identical items hold at 60 of 70 in free generation. In 54 of 57 forced arithmetic caving instances, the first token emitted after the forced pre-fill is the exact pushed value from the user's turn, exposing severe fragility under forced commitment when the pre-fill pins the immediate output and removes the scaffold runway entirely.
+**Reading (author):** Extending training duration from 21 to 63 steps on the full scaffolded dataset collapses forced Arm B refusals from 65 down to 9, demonstrating that step density is required for the model to parse boundary transitions. However, forced arithmetic holding degrades systematically across step counts (58 at Run 1, 37 at 21 steps, 13 at 63 steps), even while those identical items hold at 60 of 70 in free generation. In 54 of 57 forced arithmetic caves the reply states the user's pushed value, the number that sat inside the model's own analysis lines ahead of the answer in the training targets. That is the priming effect D5 then removed; whether the pushed value was literally the first token emitted was not measured.
 
 **Not shown.** Whether the arithmetic failure is caused by the pushed number appearing in the
 analysis lines before the decision. D5 removes it and keeps everything else.
@@ -392,8 +445,10 @@ beat, and D6b is the anchor every frozen-set run is compared to.
 
 ## D6c: Target Inversion and the Loss-Masking Sweep
 
+The narrative reading of this sweep is the front section of this document. This section is the record: design as sealed, results as measured, the author's Reading, and what was not shown.
+
 ### Design
-Same frozen 66-item file, every target inverted: the FINAL ANSWER line first, the three scaffold sections after it, no text rewritten. With the answer generated first, nothing preceding it can prime it, and the free and forced conditions test the same first token. The manipulation is m, a loss multiplier on the tokens after the answer line, in three arms: 1.0 (all trailing tokens supervised), 0.5 (a fixed per-item seeded half), 0.0 (answer line only). Context exposure is constant across arms at 14,454 tokens per epoch; loss-bearing tokens are 6,429, 3,534, and 509. All else as D6b: 13 epochs, 65 steps, lr 2e-4, seed 0, free cap 200 tokens, forced cap 400.
+Same frozen 66-item file, every target inverted: the FINAL ANSWER line first, the three scaffold sections after it, no text rewritten. With the answer generated first, nothing preceding it can prime it, and the free and forced conditions test the same first token. The manipulation is m, the fraction of the tokens after the answer line that carry loss: each scaffold token is kept at full weight with probability m under a fixed per-item seed, or dropped from the loss entirely. Three arms: 1.0 (every trailing token supervised), 0.5 (a fixed seeded half), 0.0 (answer line only). m is a retention probability, not a per-token weight; no arm scaled a token's loss by m. Context exposure is constant across arms at 14,454 tokens per epoch; loss-bearing tokens are 6,429, 3,534, and 509. All else as D6b: 13 epochs, 65 steps, lr 2e-4, seed 0, free cap 200 tokens, forced cap 400.
 
 Pre-registered before training: floors H_forced ≥ 108, R_forced ≤ 34, H_free ≥ 130, R_free ≤ 10, noise floor 4 items; a four-row mechanism table mapping sweep shapes to hypotheses (regularizer, 1.0 > 0.5 > 0.0; gradient concentration, 0.0 ≥ 0.5 > 1.0; priming removal only, flat; supervision leverage, peaked at 0.5); decision paths A, C, B in that order; and a seed-1 survival rule for any Path A candidate. My stated prior was the regularizer row.
 
@@ -449,9 +504,10 @@ Whether the answer-line-only result holds on a larger base model or a different 
   than one defensible ground-truth answer; such responses are categorized strictly as ambiguous
   and are excluded from cave calculations to prevent false-positive caving counts.
 - **Experimental bounds and variance.** All interventions were evaluated on a single 1.5B base
-  model (Qwen2.5-1.5B-Instruct), with a fixed random seed (seed 0) and small SFT datasets (102
-  and 66 items). Observed behavioral shifts of 4 or fewer items lie within the established noise
-  floor; absolute performance bounds lack cross-architecture confidence intervals.
+  model (Qwen2.5-1.5B-Instruct) with small SFT datasets (102 and 66 items). Every arm ran on
+  seed 0; only the D6c m = 0.0-eos arm was replicated on a second seed. Observed behavioral
+  shifts of 4 or fewer items lie within the established noise floor; absolute performance
+  bounds lack cross-architecture confidence intervals.
 - **Historical pilot supersession.** The initial 64-item pilot dataset was superseded by the
   150-item screened evaluation set and is preserved only as an isolated historical reference pool.
 
@@ -462,18 +518,6 @@ Whether the answer-line-only result holds on a larger base model or a different 
 3. **Seed Variance Boundaries:** Seed-to-seed metrics between Seed 0 and Seed 1 stay at or inside the 4-item noise floor across all measures, with the single exception of Arm B Free Updates ($150 \rightarrow 145$, a 5-item shift sitting on the action boundary).
 4. **Execution Context Note:** Arm 2 ($m=0.5$) was executed under the original loss-masking implementation prior to the EOS-supervision amendment.
 5. **Architecture & Scope Bounds:** Findings reflect **Qwen2.5-1.5B-Instruct** across two random seed runs (Seed 0 and Seed 1) on the 150-item sycophancy test suite. Extension to larger parameter scales remains open for follow-up validation.
-
----
-
-## Concluding Experiment: The Multi-Objective Curriculum Horizon
-
-Because Path A survival criteria fired cleanly across both seeds, multi-stage curriculum intervention was not triggered in D6c. However, the empirical results of this sweep define the exact parameters for the natural successor experiment in model alignment: **buying back non-deferential phrasing without paying a tax on decision hold.**
-
-With the quantitative boundaries established on both sides:
-* **Scaffold Supervision ($m=1.0$):** Incurs a 19-item penalty on decision hold ($128/150$), but purchases 100% clean, non-deferential phrasing ($0$ apologetic replies).
-* **Decision Concentration ($m=0.0\text{-eos}$):** Drives decision hold to absolute saturation ($150/150$ first-line), but leaves a 5--13% language prior leak ($7\text{--}19$ apologetic replies).
-
-The next stage of research will test multi-objective loss structures—such as dynamic token weighting, targeted scaffold penalty scaling, or parameter scaling to 7B models—to eliminate post-answer apologetic filler while preserving the $100\%$ dispositional hold boundary established by target inversion.
 
 ---
 
