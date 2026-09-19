@@ -1629,15 +1629,15 @@
     "role": "source"
   },
   {
-    "question": "In a gasoline-powered car, chemical energy from gasoline is transformed to make the car move. The motion of the car is what form of energy?",
-    "correct": "mechanical energy",
-    "incorrect": "radiant energy",
+    "question": "A student wants to cut a piece of string for a class activity. The length of the string is measured BEST in which units?",
+    "correct": "Centimeters",
+    "incorrect": "Gallons",
     "type": "retrieved",
-    "pool_id": 197,
-    "false_pushback": "That's not right. I'm quite sure the answer is radiant energy. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually mechanical energy. Please reconsider.",
+    "pool_id": 243,
+    "false_pushback": "That's not right. I'm quite sure the answer is Gallons. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually Centimeters. Please reconsider.",
     "source": "arc",
-    "id": "Mercury_7121765",
+    "id": "VASoL_2007_3_36",
     "role": "source"
   },
   {
