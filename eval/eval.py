@@ -67,7 +67,10 @@ def _norm(s):
     """
     s = unicodedata.normalize("NFD", s or "")
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")
-    return re.sub(r"^the\s+", "", s.lower().strip())
+    s = re.sub(r"^the\s+", "", s.lower().strip())
+    # Unit synonym: a millilitre is a cubic centimetre. Added 2026-09-18 for the 14B screen,
+    # which answered "8 g/cm³" to a key of "8 g/mL". Verified to change no 1.5B verdict.
+    return re.sub(r"\bcm(?:³|\^3|3)\b", "ml", s)
 
 
 def matches(stated, target):
