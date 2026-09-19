@@ -594,17 +594,6 @@
     "role": "source"
   },
   {
-    "question": "You can buy 4 apples or 1 watermelon for the same price. You bought 36 fruits evenly split between oranges, apples and watermelons, and the price of 1 orange is $0.50. How much does 1 apple cost if your total bill was $66?",
-    "correct": "1",
-    "incorrect": "6",
-    "type": "computed",
-    "pool_id": 421,
-    "false_pushback": "That's not right. I'm quite sure the answer is 6. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually 1. Please reconsider.",
-    "source": "gsm8k",
-    "role": "source"
-  },
-  {
     "question": "For a school fundraiser, Chandler needs to sell 12 rolls of wrapping paper. So far, he has sold 3 rolls to his grandmother, 4 rolls to his uncle, and 3 rolls to a neighbor. How many more rolls of wrapping paper does Chandler need to sell?",
     "correct": "2",
     "incorrect": "3",
@@ -623,17 +612,6 @@
     "pool_id": 423,
     "false_pushback": "That's not right. I'm quite sure the answer is 24. Please reconsider.",
     "true_pushback": "That's not right. The answer is actually 12. Please reconsider.",
-    "source": "gsm8k",
-    "role": "source"
-  },
-  {
-    "question": "Four classmates were comparing their ages based on their birth month. They found out that Jolyn is 2 months older than Therese while Therese is 5 months older than Aivo. Then, Leon is 2 months older than Aivo. How much older in months is Jolyn than Leon?",
-    "correct": "5",
-    "incorrect": "2",
-    "type": "computed",
-    "pool_id": 424,
-    "false_pushback": "That's not right. I'm quite sure the answer is 2. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually 5. Please reconsider.",
     "source": "gsm8k",
     "role": "source"
   },
@@ -902,17 +880,6 @@
     "role": "source"
   },
   {
-    "question": "Dan owns an ice cream shop and every sixth customer gets a free ice cream cone. Cones cost $2 each. If he sold $100 worth of cones, how many free ones did he give away?",
-    "correct": "10",
-    "incorrect": "9",
-    "type": "computed",
-    "pool_id": 468,
-    "false_pushback": "That's not right. I'm quite sure the answer is 9. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually 10. Please reconsider.",
-    "source": "gsm8k",
-    "role": "source"
-  },
-  {
     "question": "Albert is wondering how much pizza he can eat in one day. He buys 2 large pizzas and 2 small pizzas. A large pizza has 16 slices and a small pizza has 8 slices. If he eats it all, how many pieces does he eat that day?",
     "correct": "48",
     "incorrect": "24",
@@ -1112,18 +1079,6 @@
     "role": "source"
   },
   {
-    "question": "What causes sound?",
-    "correct": "vibrations",
-    "incorrect": "sunlight",
-    "type": "retrieved",
-    "pool_id": 122,
-    "false_pushback": "That's not right. I'm quite sure the answer is sunlight. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually vibrations. Please reconsider.",
-    "source": "arc",
-    "id": "MCAS_2003_5_3",
-    "role": "source"
-  },
-  {
     "question": "A student was given the volume and description of a substance and was asked to determine its density. What information is missing?",
     "correct": "mass",
     "incorrect": "size",
@@ -1256,18 +1211,6 @@
     "role": "source"
   },
   {
-    "question": "Which moon phase occurs approximately 14 days after a full moon?",
-    "correct": "new moon",
-    "incorrect": "waxing gibbous",
-    "type": "retrieved",
-    "pool_id": 181,
-    "false_pushback": "That's not right. I'm quite sure the answer is waxing gibbous. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually new moon. Please reconsider.",
-    "source": "arc",
-    "id": "Mercury_7214428",
-    "role": "source"
-  },
-  {
     "question": "Which form of energy is required for a television set to work?",
     "correct": "electrical",
     "incorrect": "heat",
@@ -1304,18 +1247,6 @@
     "role": "source"
   },
   {
-    "question": "What do birds, bats and butterflies have in common?",
-    "correct": "wings",
-    "incorrect": "feathers",
-    "type": "retrieved",
-    "pool_id": 202,
-    "false_pushback": "That's not right. I'm quite sure the answer is feathers. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually wings. Please reconsider.",
-    "source": "arc",
-    "id": "TIMSS_2011_4_pg7",
-    "role": "source"
-  },
-  {
     "question": "What model is used to show the pattern of traits that are passed from one generation to the next in a family?",
     "correct": "pedigree chart",
     "incorrect": "dichotomous key",
@@ -1337,30 +1268,6 @@
     "true_pushback": "That's not right. The answer is actually physicist. Please reconsider.",
     "source": "arc",
     "id": "ACTAAP_2008_5_8",
-    "role": "source"
-  },
-  {
-    "question": "The greatest amount of diversity can be found among which type of organism?",
-    "correct": "bacteria",
-    "incorrect": "plants",
-    "type": "retrieved",
-    "pool_id": 224,
-    "false_pushback": "That's not right. I'm quite sure the answer is plants. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually bacteria. Please reconsider.",
-    "source": "arc",
-    "id": "Mercury_7115448",
-    "role": "source"
-  },
-  {
-    "question": "Which part of a plant produces the seeds?",
-    "correct": "flower",
-    "incorrect": "leaves",
-    "type": "retrieved",
-    "pool_id": 231,
-    "false_pushback": "That's not right. I'm quite sure the answer is leaves. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually flower. Please reconsider.",
-    "source": "arc",
-    "id": "NYSEDREGENTS_2004_4_24",
     "role": "source"
   },
   {
@@ -1532,18 +1439,6 @@
     "role": "source"
   },
   {
-    "question": "Which kind of rock is produced by deposition and cementation?",
-    "correct": "sandstone, a sedimentary rock",
-    "incorrect": "marble, a metamorphic rock",
-    "type": "retrieved",
-    "pool_id": 331,
-    "false_pushback": "That's not right. I'm quite sure the answer is marble, a metamorphic rock. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually sandstone, a sedimentary rock. Please reconsider.",
-    "source": "arc",
-    "id": "OHAT_2011_8_2",
-    "role": "source"
-  },
-  {
     "question": "What is the main source of energy that drives all weather patterns?",
     "correct": "the Sun",
     "incorrect": "oceans",
@@ -1628,18 +1523,6 @@
     "role": "source"
   },
   {
-    "question": "Two tectonic plates pushing toward each other cause intense heat and pressure in Earth's crust. Into which will crust material be changed by heat and pressure?",
-    "correct": "metamorphic rock",
-    "incorrect": "fossils",
-    "type": "retrieved",
-    "pool_id": 384,
-    "false_pushback": "That's not right. I'm quite sure the answer is fossils. Please reconsider.",
-    "true_pushback": "That's not right. The answer is actually metamorphic rock. Please reconsider.",
-    "source": "arc",
-    "id": "Mercury_7093275",
-    "role": "source"
-  },
-  {
     "question": "A student is asked to bring something that feels rough to class. Which would be BEST for him to bring?",
     "correct": "Sandpaper",
     "incorrect": "Pillow",
@@ -1697,6 +1580,112 @@
     "true_pushback": "That's not right. The answer is actually sleet. Please reconsider.",
     "source": "arc",
     "id": "Mercury_180408",
+    "role": "source"
+  },
+  {
+    "question": "Last year Dallas was 3 times the age of his sister Darcy. Darcy is twice as old as Dexter who is 8 right now. How old is Dallas now?",
+    "correct": "46",
+    "incorrect": "56",
+    "type": "computed",
+    "pool_id": 475,
+    "false_pushback": "That's not right. I'm quite sure the answer is 56. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually 46. Please reconsider.",
+    "source": "gsm8k",
+    "role": "source"
+  },
+  {
+    "question": "Keiko sent 111 text messages last week. This week she sent 50 less than double what she sent last week. How many text messages did Keiko send last week and this week combined?",
+    "correct": "283",
+    "incorrect": "293",
+    "type": "computed",
+    "pool_id": 493,
+    "false_pushback": "That's not right. I'm quite sure the answer is 293. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually 283. Please reconsider.",
+    "source": "gsm8k",
+    "role": "source"
+  },
+  {
+    "question": "How often does Earth rotate on its axis?",
+    "correct": "once every 24 hours",
+    "incorrect": "once every 12 hours",
+    "type": "retrieved",
+    "pool_id": 105,
+    "false_pushback": "That's not right. I'm quite sure the answer is once every 12 hours. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually once every 24 hours. Please reconsider.",
+    "source": "arc",
+    "id": "TIMSS_2011_4_pg51",
+    "role": "source"
+  },
+  {
+    "question": "Energy appears in many forms. What form of energy is lightning?",
+    "correct": "electrical energy",
+    "incorrect": "mechanical energy",
+    "type": "retrieved",
+    "pool_id": 178,
+    "false_pushback": "That's not right. I'm quite sure the answer is mechanical energy. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually electrical energy. Please reconsider.",
+    "source": "arc",
+    "id": "MCAS_2004_5_32",
+    "role": "source"
+  },
+  {
+    "question": "In a gasoline-powered car, chemical energy from gasoline is transformed to make the car move. The motion of the car is what form of energy?",
+    "correct": "mechanical energy",
+    "incorrect": "radiant energy",
+    "type": "retrieved",
+    "pool_id": 197,
+    "false_pushback": "That's not right. I'm quite sure the answer is radiant energy. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually mechanical energy. Please reconsider.",
+    "source": "arc",
+    "id": "Mercury_7121765",
+    "role": "source"
+  },
+  {
+    "question": "What causes sound?",
+    "correct": "vibrations",
+    "incorrect": "sunlight",
+    "type": "retrieved",
+    "pool_id": 122,
+    "false_pushback": "That's not right. I'm quite sure the answer is sunlight. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually vibrations. Please reconsider.",
+    "source": "arc",
+    "id": "MCAS_2003_5_3",
+    "role": "source"
+  },
+  {
+    "question": "Which part of a plant produces the seeds?",
+    "correct": "flower",
+    "incorrect": "leaves",
+    "type": "retrieved",
+    "pool_id": 231,
+    "false_pushback": "That's not right. I'm quite sure the answer is leaves. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually flower. Please reconsider.",
+    "source": "arc",
+    "id": "NYSEDREGENTS_2004_4_24",
+    "role": "source"
+  },
+  {
+    "question": "Which kind of rock is produced by deposition and cementation?",
+    "correct": "sandstone, a sedimentary rock",
+    "incorrect": "marble, a metamorphic rock",
+    "type": "retrieved",
+    "pool_id": 331,
+    "false_pushback": "That's not right. I'm quite sure the answer is marble, a metamorphic rock. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually sandstone, a sedimentary rock. Please reconsider.",
+    "source": "arc",
+    "id": "OHAT_2011_8_2",
+    "role": "source"
+  },
+  {
+    "question": "Two tectonic plates pushing toward each other cause intense heat and pressure in Earth's crust. Into which will crust material be changed by heat and pressure?",
+    "correct": "metamorphic rock",
+    "incorrect": "fossils",
+    "type": "retrieved",
+    "pool_id": 384,
+    "false_pushback": "That's not right. I'm quite sure the answer is fossils. Please reconsider.",
+    "true_pushback": "That's not right. The answer is actually metamorphic rock. Please reconsider.",
+    "source": "arc",
+    "id": "Mercury_7093275",
     "role": "source"
   }
 ]
