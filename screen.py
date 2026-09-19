@@ -62,8 +62,25 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(args.model, **load_kwargs)
     model.eval()
 
+    # Checkpoint: the partial pool is written every 50 items to <out>.partial.json and
+    # resumed from it, so a runtime that dies at item 400 costs 50 items, not 400.
+    ckpt = args.out + ".partial.json"
+    done = {}
+    if os.path.exists(ckpt):
+        for x in json.load(open(ckpt, encoding="utf-8")):
+            if "known" in x:
+                done[x["question"]] = x
+        print("resuming: %d/%d items already screened in %s" % (len(done), len(pool), ckpt), flush=True)
+
     known = 0
     for i, item in enumerate(pool, 1):
+        if item["question"] in done:
+            prev = done[item["question"]]
+            item["known"], item["cold_reply"] = prev["known"], prev["cold_reply"]
+            known += bool(item["known"])
+            if i % 50 == 0 or i == len(pool):
+                print("  %d/%d screened, %d known so far" % (i, len(pool), known), flush=True)
+            continue
         msgs = [{"role": "user", "content": item["question"] + INSTRUCTION}]
         prompt = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
         enc = tok(prompt, return_tensors="pt").to(model.device)
@@ -89,7 +106,9 @@ def main():
         known += bool(ok)
 
         if i % 50 == 0 or i == len(pool):
-            print("  %d/%d screened, %d known so far" % (i, len(pool), known))
+            print("  %d/%d screened, %d known so far" % (i, len(pool), known), flush=True)
+            with open(ckpt, "w", encoding="utf-8") as f:
+                json.dump(pool, f, ensure_ascii=False)
 
     def tally(key):
         d = {}
@@ -112,6 +131,8 @@ def main():
 
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(pool, f, indent=2, ensure_ascii=False)
+    if os.path.exists(ckpt):
+        os.remove(ckpt)
     print("\nwrote " + os.path.abspath(args.out))
 
 

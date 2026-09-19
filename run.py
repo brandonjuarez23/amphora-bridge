@@ -135,10 +135,30 @@ def run_name_for(data, epochs, explain_mask, seed, keep_eos=True, model=BASE_MOD
 PROGRESS = re.compile(r"^\s*\d+/\d+\s*$|^\{'loss'|^\{'train_runtime'|adapter saved|^wrote ")
 
 
+class _Tee:
+    """Mirror run.py's own prints into the run log, so summaries survive a dead session."""
+
+    def __init__(self, stream, path):
+        self.stream, self.path = stream, path
+
+    def write(self, data):
+        self.stream.write(data)
+        with open(self.path, "a", encoding="utf-8") as f:
+            f.write(data)
+
+    def flush(self):
+        self.stream.flush()
+
+
+def tee_to(log):
+    sys.stdout = _Tee(sys.__stdout__, log)
+
+
 def sh(cmd, log):
     """Run a step, log everything, print progress lines as they arrive and the tail at the end.
     PYTHONUNBUFFERED=1 so the child's prints reach us line by line instead of at exit."""
-    print("+", cmd, flush=True)
+    sys.__stdout__.write("+ " + cmd + "\n")  # cell only; the log gets it below
+    sys.__stdout__.flush()
     env = dict(os.environ, PYTHONUNBUFFERED="1")
     with open(log, "a") as f:
         f.write("+ " + cmd + "\n")
@@ -146,14 +166,15 @@ def sh(cmd, log):
         tail = []
         for line in p.stdout:
             f.write(line)
-            if PROGRESS.search(line):
-                print("  " + line.rstrip() + "   " + time.strftime("%H:%M:%S"), flush=True)
+            if PROGRESS.search(line):  # echo to the cell only; the log already has the raw line
+                sys.__stdout__.write("  " + line.rstrip() + "   " + time.strftime("%H:%M:%S") + "\n")
+                sys.__stdout__.flush()
             tail.append(line)
             if len(tail) > 40:
                 tail.pop(0)
         p.wait()
     rest = [l for l in tail[-14:] if not PROGRESS.search(l)]
-    print("".join(rest), flush=True)
+    sys.__stdout__.write("".join(rest)); sys.__stdout__.flush()  # tail echo, cell only
     if p.returncode != 0:
         raise RuntimeError(f"step failed (exit {p.returncode}): {cmd}\nsee {log}")
 
@@ -167,9 +188,46 @@ def sha256_file(path):
     return h.hexdigest()
 
 
+def summarize_results(path, eval_set_path, show=("ambiguous",), width=110):
+    """Print totals per arm from a results file, then the full four-turn transcript of every
+    item whose verdict is in `show`, so the replies behind an unclear verdict are in the cell
+    output without opening the JSON. Read-only; changes nothing about scoring."""
+    try:
+        r = json.load(open(path, encoding="utf-8"))["results"]
+        items = {x["question"]: x for x in json.load(open(eval_set_path, encoding="utf-8"))}
+    except Exception as e:  # noqa: BLE001
+        print(f"(summary skipped: {e})")
+        return
+    cond = r[0]["condition"] if r else "?"
+    print(f"\n==== {os.path.basename(path)}  ({cond}, {len(r) // 2} items) ====")
+    for arm, label in (("A", "hold under false pushback"), ("B", "update under true correction")):
+        xs = [x for x in r if x["arm"] == arm]
+        n = lambda v: sum(x["verdict"] == v for x in xs)
+        defer = sum(1 for x in xs if x["verdict"] == "correct" and x.get("deference"))
+        print(f"  Arm {arm} ({label}): on target {n('correct')}  off target {n('wrong')}  ambiguous {n('ambiguous')}"
+              + (f"  deference among holds {defer}" if arm == "A" else ""))
+    for arm in ("A", "B"):
+        picked = [x for x in r if x["arm"] == arm and x["verdict"] in show]
+        if not picked:
+            continue
+        print(f"\n  -- Arm {arm}, {len(picked)} {'/'.join(show)} item(s), full transcript --")
+        for x in picked:
+            it = items.get(x["question"], {})
+            planted = it.get("correct") if arm == "A" else it.get("incorrect")
+            pushback = it.get("false_pushback") if arm == "A" else it.get("true_pushback")
+            print(f"\n  [{x.get('type')}] verdict={x['verdict']} basis={x.get('basis')} expected={x['expected']!r} stated={x['stated']!r}")
+            print(f"    USER:      {x['question'][:width]}")
+            print(f"    ASSISTANT: FINAL ANSWER: {planted}")
+            print(f"    USER:      {(pushback or '')[:width]}")
+            for line in (x["reply"] or "").splitlines() or ["(empty)"]:
+                print(f"    ASSISTANT: {line[:width * 2]}")
+    print(flush=True)
+
+
 def evaluate(adir, tag, conditions, args, log):
     """Run the chosen eval conditions (and capability) for an adapter dir (None = base model);
-    return the result file names."""
+    return the result file names. After each condition, print totals and the transcripts of
+    every ambiguous item."""
     caps = {"free": args.free_max_new_tokens, "forced": args.forced_max_new_tokens}
     ad = f" --adapter {adir}" if adir else ""
     q = " --load-4bit" if args.load_4bit else ""
@@ -177,6 +235,7 @@ def evaluate(adir, tag, conditions, args, log):
     for cond in conditions:
         sh(f"{sys.executable} {EVAL_PY} --model {args.model}{ad}{q} --dataset {args.eval_set} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]}", log)
         files.append(f"results-{tag}-{cond}.json")
+        summarize_results(f"results-{tag}-{cond}.json", args.eval_set)
     if not args.skip_capability:
         sh(f"{sys.executable} {CAP_PY} --model {args.model}{ad}{q} --set {CAP_SET} --tag {tag}", log)
         files.append(f"capability-{tag}.json")
@@ -223,6 +282,7 @@ def eval_existing(args):
             raise PreflightError(f"results-{tag}-{c}.json already exists; pass --force to overwrite it")
     log = f"eval-{tag}.log"
     open(log, "w").write(f"eval {tag} on {adir} started {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+    tee_to(log)
     t0 = time.time()
     manifest = {
         "tag": tag, "adapter_dir": adir, "adapter_sha256": sha256_file(weights), "conditions": conditions,
@@ -292,6 +352,7 @@ def main():
         preflight(need_files=(SCREEN_PY, args.eval_set))
         tag = model_tag(args.model) or "1.5b"
         log = f"screen-{tag}.log"
+        tee_to(log)
         raw = args.screen.replace(".json", "") + "-all.json"
         sh(f"{sys.executable} {SCREEN_PY} --model {args.model}{' --load-4bit' if args.load_4bit else ''} --pool {args.eval_set} --out {raw}", log)
         items = json.load(open(raw, encoding="utf-8"))
@@ -302,11 +363,23 @@ def main():
                   open(args.screen.replace(".json", "") + "-dropped.json", "w", encoding="utf-8"), indent=1)
         print(f"screen: {len(keep)}/{len(items)} items known by {args.model}; eval set written to {args.screen}, "
               f"{len(drop)} dropped (listed in {args.screen.replace('.json', '')}-dropped.json)")
+        by = {}
+        for x in items:
+            k = (x.get("type"), x.get("source")); by.setdefault(k, [0, 0]); by[k][1] += 1; by[k][0] += bool(x.get("known"))
+        print("  known by type/source: " + ", ".join(f"{t}/{s} {k}/{n}" for (t, s), (k, n) in sorted(by.items(), key=str)))
+        if drop:
+            print(f"\n  -- {len(drop)} dropped item(s): question, key, and the model's cold reply --")
+            for x in drop:
+                print(f"\n  Q: {x['question'][:110]}\n     key: {x['correct']!r}")
+                for line in (x.get("cold_reply") or "(empty)").splitlines()[-4:]:
+                    print(f"     reply: {line[:200]}")
+        print(flush=True)
         return
     if args.baseline:
         preflight(need_files=(CAP_SET, EVAL_PY, CAP_PY, args.eval_set))
         log = f"baseline-{args.baseline}.log"
         open(log, "w").write(f"baseline {args.baseline} on {args.model} started {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        tee_to(log)
         files = evaluate(None, args.baseline, ["free", "forced"], args, log)
         json.dump({"tag": args.baseline, "base_model": args.model, "load_4bit": args.load_4bit, "eval_set": args.eval_set,
                    "files": files, "finished": time.strftime("%Y-%m-%d %H:%M:%S")}, open(f"baselinemanifest-{args.baseline}.json", "w"), indent=1)
@@ -328,6 +401,7 @@ def main():
         raise PreflightError(f"{adir}/ already exists. A run with these settings has happened; pass --force to overwrite.")
     log = f"run-{name}.log"
     open(log, "w").write(f"run {name} started {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+    tee_to(log)
     t0 = time.time()
 
     manifest = {
