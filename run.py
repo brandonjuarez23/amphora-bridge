@@ -15,6 +15,11 @@ One run, cell 2 (names derive from the settings; an existing run is never overwr
     # -> adapter_<name>/, results-<name>-free.json, results-<name>-forced.json,
     #    capability-<name>.json, <name>.zip with a manifest.json inside, copied to Drive.
 
+Write every output straight to Drive as it is produced (nothing is lost if the runtime dies):
+    !python run.py --workdir /content/drive/MyDrive/amphora-runs/14b --model ... --screen ...
+    # Repo scripts and data are found by absolute path; relative --eval-set / --data /
+    # --adapter values are looked up in the repo first. Outputs land in --workdir.
+
 Any later cell that touches a run:
     from run import preflight; preflight("train_bridge_inv-e13-m0.5-s0")
 
@@ -43,12 +48,14 @@ import time
 
 PINNED = {"peft": "0.20.0", "transformers": "5.17.0", "bitsandbytes": "0.50.2"}
 BASE_MODEL = "Qwen/Qwen2.5-1.5B-Instruct"  # default; --model overrides
-SCREEN_PY = "screen.py"
-EVAL_SET = "eval/eval_set.json"
-CAP_SET = "eval/capability_set.json"
-EVAL_PY = "eval/eval.py"
-CAP_PY = "eval/capability.py"
-TRAIN_PY = "train_colab.py"
+REPO = os.path.dirname(os.path.abspath(__file__))
+_r = lambda rel: os.path.join(REPO, rel)  # repo files by absolute path, so --workdir can chdir away
+SCREEN_PY = _r("screen.py")
+EVAL_SET = _r("eval/eval_set.json")
+CAP_SET = _r("eval/capability_set.json")
+EVAL_PY = _r("eval/eval.py")
+CAP_PY = _r("eval/capability.py")
+TRAIN_PY = _r("train_colab.py")
 DRIVE_DIR = "/content/drive/MyDrive/amphora-runs"
 
 
@@ -225,7 +232,7 @@ def eval_existing(args):
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     try:
-        manifest["git_commit"] = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        manifest["git_commit"] = subprocess.check_output(["git", "-C", REPO, "rev-parse", "HEAD"], text=True).strip()
     except Exception:
         manifest["git_commit"] = None
     mpath = f"evalmanifest-{tag}.json"
@@ -260,7 +267,20 @@ def main():
     ap.add_argument("--drive", action="store_true", help=f"copy the zip to {DRIVE_DIR} (mounts Drive if needed)")
     ap.add_argument("--download", action="store_true", help="also trigger a browser download of the zip")
     ap.add_argument("--force", action="store_true", help="allow overwriting an existing run of the same name")
+    ap.add_argument("--workdir", help="directory to run in; every output file (results, adapters, logs, manifests, zips) is written "
+                                      "here as it is produced. Point it at a mounted Drive folder and nothing is lost when the "
+                                      "runtime dies. Repo scripts and data are found by absolute path regardless.")
     args = ap.parse_args()
+
+    if args.workdir:
+        os.makedirs(args.workdir, exist_ok=True)
+        # inputs given as relative paths are relative to the repo, not the workdir
+        for name in ("eval_set", "data", "adapter"):
+            v = getattr(args, name)
+            if v and not os.path.isabs(v) and os.path.exists(_r(v)):
+                setattr(args, name, _r(v))
+        os.chdir(args.workdir)
+        print("workdir:", os.getcwd())
 
     if args.setup:
         setup()
@@ -318,7 +338,7 @@ def main():
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     try:
-        manifest["git_commit"] = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+        manifest["git_commit"] = subprocess.check_output(["git", "-C", REPO, "rev-parse", "HEAD"], text=True).strip()
     except Exception:
         manifest["git_commit"] = None
 
