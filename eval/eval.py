@@ -205,6 +205,8 @@ def main():
                     help="load the base model in 4-bit NF4 (what the trainer uses); needed for 14B on a single GPU")
     ap.add_argument("--system-prompt-file", default=None,
                     help="prompting control: file whose text is prepended as a system turn (no adapter needed)")
+    ap.add_argument("--batch", type=int, default=1,
+                    help="conversations generated together (greedy; 1 = the original one-at-a-time loop)")
     ap.add_argument(
         "--condition", choices=["free", "forced"], default="free",
         help="free: the model writes whatever it likes. "
@@ -244,22 +246,56 @@ def main():
         model = PeftModel.from_pretrained(model, args.adapter)
     model.eval()
 
+    # forced: put the answer line in the model's mouth so it cannot write
+    # a hedging preamble and must commit on the first token.
+    prefill = "FINAL ANSWER:" if args.condition == "forced" else ""
+    jobs = [(item, arm) for item in items for arm in ("A", "B")]  # item order, A then B, as before
+
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    if args.batch > 1:
+        # Left padding: every sequence's generated tokens then start at the same column, and
+        # the attention mask keeps the pad tokens out of every sequence's context.
+        tok.padding_side = "left"
+
+    def generate_batch(batch):
+        """Greedy-decode a list of (item, arm) jobs together. Each sequence's output is what it
+        would be alone, up to floating-point ties in the batched kernels; --batch 1 is exactly
+        the original one-at-a-time path (added 2026-09-20 for the 14B adapter evals, whose
+        replies run to the cap on every item)."""
+        prompts = [tok.apply_chat_template(build(item, arm), tokenize=False, add_generation_prompt=True) + prefill
+                   for item, arm in batch]
+        enc = tok(prompts, return_tensors="pt", padding=True).to(model.device)
+        with torch.no_grad():
+            gen = model.generate(
+                **enc,
+                max_new_tokens=args.max_new_tokens,
+                do_sample=False,
+                pad_token_id=tok.pad_token_id,
+            )
+        start = enc["input_ids"].shape[1]
+        return [prefill + tok.decode(g[start:], skip_special_tokens=True) for g in gen]
+
+    # Checkpoint (added 2026-09-20 after a kernel restart killed a 3-hour 14B pass that had
+    # written nothing): rows so far go to <out>.partial.json every 10 items and are resumed
+    # from it, keyed by (question, arm). Removed on a clean finish.
+    out = "results-" + args.tag + ".json"
+    ckpt = out + ".partial.json"
     results = []
-    for i, item in enumerate(items, 1):
-        for arm in ("A", "B"):
-            prompt = tok.apply_chat_template(build(item, arm), tokenize=False, add_generation_prompt=True)
-            # forced: put the answer line in the model's mouth so it cannot write
-            # a hedging preamble and must commit on the first token.
-            prefill = "FINAL ANSWER:" if args.condition == "forced" else ""
-            enc = tok(prompt + prefill, return_tensors="pt").to(model.device)
-            with torch.no_grad():
-                gen = model.generate(
-                    **enc,
-                    max_new_tokens=args.max_new_tokens,
-                    do_sample=False,
-                    pad_token_id=tok.eos_token_id,
-                )
-            reply = prefill + tok.decode(gen[0][enc["input_ids"].shape[1]:], skip_special_tokens=True)
+    if os.path.exists(ckpt):
+        results = json.load(open(ckpt, encoding="utf-8"))
+        have = {(r["question"], r["arm"]) for r in results}
+        jobs = [j for j in jobs if (j[0]["question"], j[1]) not in have]
+        print("resuming: %d rows already in %s, %d generations left" % (len(results), ckpt, len(jobs)), flush=True)
+
+    def save_ckpt():
+        with open(ckpt, "w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False)
+
+    done_items = 0
+    for b in range(0, len(jobs), args.batch):
+        batch = jobs[b:b + args.batch]
+        for (item, arm), reply in zip(batch, generate_batch(batch)):
             verdict, basis = score(item, arm, reply)
             results.append({
                 "question": item["question"],
@@ -274,16 +310,24 @@ def main():
                 "deference": bool(DEFERENCE.search(reply or "")),
                 "reply": reply,
             })
-        if i % 10 == 0 or i == len(items):
-            print("  %d/%d" % (i, len(items)))
+            if arm == "B":
+                done_items += 1
+                if done_items % 10 == 0 or done_items * 2 == len(jobs):
+                    print("  %d/%d" % (len(results) // 2, len(items)), flush=True)
+                    save_ckpt()
+
+    # rows come back in item order, A then B, whether or not this was a resume
+    order = {(item["question"], arm): i for i, (item, arm) in enumerate((it, a) for it in items for a in ("A", "B"))}
+    results.sort(key=lambda r: order[(r["question"], r["arm"])])
 
     report = summarise(results)
     print("\n" + report)
 
-    out = "results-" + args.tag + ".json"
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"model": args.model, "adapter": args.adapter,
                    "report": report, "results": results}, f, indent=2, ensure_ascii=False)
+    if os.path.exists(ckpt):
+        os.remove(ckpt)
     print("\nwrote " + os.path.abspath(out))
 
 

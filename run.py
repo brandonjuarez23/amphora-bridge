@@ -233,7 +233,7 @@ def evaluate(adir, tag, conditions, args, log):
     q = " --load-4bit" if args.load_4bit else ""
     files = []
     for cond in conditions:
-        sh(f"{sys.executable} {EVAL_PY} --model {args.model}{ad}{q} --dataset {args.eval_set} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]}", log)
+        sh(f"{sys.executable} {EVAL_PY} --model {args.model}{ad}{q} --dataset {args.eval_set} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]} --batch {args.eval_batch}", log)
         files.append(f"results-{tag}-{cond}.json")
         summarize_results(f"results-{tag}-{cond}.json", args.eval_set)
     if not args.skip_capability:
@@ -288,7 +288,7 @@ def eval_existing(args):
         "tag": tag, "adapter_dir": adir, "adapter_sha256": sha256_file(weights), "conditions": conditions,
         "base_model": args.model, "load_4bit": args.load_4bit, "eval_set": args.eval_set,
         "free_max_new_tokens": args.free_max_new_tokens,
-        "forced_max_new_tokens": args.forced_max_new_tokens, "versions": {p: _version(p) for p in PINNED},
+        "forced_max_new_tokens": args.forced_max_new_tokens, "eval_batch": args.eval_batch, "versions": {p: _version(p) for p in PINNED},
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     try:
@@ -323,6 +323,8 @@ def main():
     ap.add_argument("--conditions", default="free,forced", help="for --adapter: which eval conditions to run")
     ap.add_argument("--free-max-new-tokens", type=int, default=200, help="free-condition generation cap (recorded in manifest)")
     ap.add_argument("--forced-max-new-tokens", type=int, default=400)
+    ap.add_argument("--eval-batch", type=int, default=1,
+                    help="conversations generated together in eval.py (greedy per sequence; 1 = one at a time; recorded in manifest)")
     ap.add_argument("--skip-capability", action="store_true")
     ap.add_argument("--drive", action="store_true", help=f"copy the zip to {DRIVE_DIR} (mounts Drive if needed)")
     ap.add_argument("--download", action="store_true", help="also trigger a browser download of the zip")
@@ -408,7 +410,7 @@ def main():
         "run_name": name, "data": args.data, "epochs": args.epochs, "explain_mask": args.explain_mask,
         "keep_eos": keep_eos, "seed": args.seed, "base_model": args.model, "load_4bit": args.load_4bit,
         "eval_set": args.eval_set, "free_max_new_tokens": args.free_max_new_tokens,
-        "forced_max_new_tokens": args.forced_max_new_tokens, "versions": {p: _version(p) for p in PINNED},
+        "forced_max_new_tokens": args.forced_max_new_tokens, "eval_batch": args.eval_batch, "versions": {p: _version(p) for p in PINNED},
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     try:
