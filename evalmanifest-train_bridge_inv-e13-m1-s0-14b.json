@@ -1,0 +1,25 @@
+{
+ "tag": "train_bridge_inv-e13-m1-s0-14b",
+ "adapter_dir": "adapter_train_bridge_inv-e13-m1-s0-14b",
+ "adapter_sha256": "98373ee49cb02d5e4cc11fd7d5479e3fe90430378b88e059b5f06f2058921a39",
+ "conditions": [
+  "free",
+  "forced"
+ ],
+ "base_model": "Qwen/Qwen2.5-14B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/repo/eval/eval_set_ab_14b.json",
+ "free_max_new_tokens": 200,
+ "forced_max_new_tokens": 400,
+ "eval_batch": 8,
+ "versions": {
+  "peft": "0.20.0",
+  "transformers": "5.17.0",
+  "bitsandbytes": "0.50.2"
+ },
+ "torchao": null,
+ "started": "2026-09-20 08:21:23",
+ "git_commit": "655f9428a7617a10b7a7209af0982a852776d81d",
+ "finished": "2026-09-20 10:06:24",
+ "seconds": 6302
+}
