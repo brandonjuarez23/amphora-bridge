@@ -1,0 +1,22 @@
+{
+ "run_name": "train_bridge_inv-e13-m0-eos-s0-14b",
+ "data": "/content/repo/train_bridge_inv.jsonl",
+ "epochs": 13,
+ "explain_mask": 0.0,
+ "keep_eos": true,
+ "seed": 0,
+ "base_model": "Qwen/Qwen2.5-14B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/repo/eval/eval_set_ab_14b.json",
+ "free_max_new_tokens": 200,
+ "forced_max_new_tokens": 400,
+ "eval_batch": 8,
+ "versions": {
+  "peft": "0.20.0",
+  "transformers": "5.17.0",
+  "bitsandbytes": "0.50.2"
+ },
+ "torchao": null,
+ "started": "2026-09-20 13:18:14",
+ "git_commit": "5ec3aca8557057de984c8125a4e17af95e523eec"
+}
