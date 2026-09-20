@@ -1,0 +1,12 @@
+{
+ "tag": "base-14b-b",
+ "base_model": "Qwen/Qwen2.5-14B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/repo/eval/eval_set_b_14b.json",
+ "files": [
+  "results-base-14b-b-free.json",
+  "results-base-14b-b-forced.json",
+  "capability-base-14b-b.json"
+ ],
+ "finished": "2026-09-20 00:37:31"
+}
