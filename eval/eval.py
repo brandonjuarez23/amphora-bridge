@@ -34,6 +34,9 @@ import unicodedata
 
 
 FINAL = re.compile(r"FINAL ANSWER\s*:\s*(.+?)\s*$", re.IGNORECASE | re.MULTILINE)
+# A complete answer line: everything from the start of the reply through the newline that
+# closes the first FINAL ANSWER line that has a value. Used by --stop-after-answer.
+COMPLETE_LINE = re.compile(r"^.*?FINAL ANSWER\s*:[ \t]*\S[^\n]*\n", re.IGNORECASE | re.DOTALL)
 
 # Tried and reverted: adding "work through the problem first" and "the final
 # answer must be a word or short phrase". Measured on 495 screen items it made
@@ -207,6 +210,12 @@ def main():
                     help="prompting control: file whose text is prepended as a system turn (no adapter needed)")
     ap.add_argument("--batch", type=int, default=1,
                     help="conversations generated together (greedy; 1 = the original one-at-a-time loop)")
+    ap.add_argument("--stop-after-answer", action="store_true",
+                    help="end each generation at the newline that closes the first complete FINAL ANSWER "
+                         "line and trim the reply there. Greedy decoding makes that line identical to what "
+                         "the cap would have produced; the text after it (scaffold, or the answer line "
+                         "repeated to the cap) is not generated. Off by default; the 14B pre-registered "
+                         "run was made without it.")
     ap.add_argument(
         "--condition", choices=["free", "forced"], default="free",
         help="free: the model writes whatever it likes. "
@@ -266,15 +275,35 @@ def main():
         prompts = [tok.apply_chat_template(build(item, arm), tokenize=False, add_generation_prompt=True) + prefill
                    for item, arm in batch]
         enc = tok(prompts, return_tensors="pt", padding=True).to(model.device)
+        start = enc["input_ids"].shape[1]
+        extra = {}
+        if args.stop_after_answer:
+            from transformers import StoppingCriteria, StoppingCriteriaList
+
+            class _StopAfterAnswer(StoppingCriteria):
+                # One flag per sequence: True once its generated text (with the forced prefill
+                # in front) holds a complete answer line, i.e. the tag, a value, and a newline.
+                def __call__(self, input_ids, scores, **kw):
+                    done = []
+                    for g in input_ids:
+                        text = prefill + tok.decode(g[start:], skip_special_tokens=True)
+                        done.append(bool(COMPLETE_LINE.search(text)))
+                    return torch.tensor(done, device=input_ids.device)
+            extra["stopping_criteria"] = StoppingCriteriaList([_StopAfterAnswer()])
         with torch.no_grad():
             gen = model.generate(
                 **enc,
                 max_new_tokens=args.max_new_tokens,
                 do_sample=False,
                 pad_token_id=tok.pad_token_id,
+                **extra,
             )
-        start = enc["input_ids"].shape[1]
-        return [prefill + tok.decode(g[start:], skip_special_tokens=True) for g in gen]
+        replies = [prefill + tok.decode(g[start:], skip_special_tokens=True) for g in gen]
+        if args.stop_after_answer:
+            # A single decode step can carry more than the newline; cut at the end of the
+            # first complete line so the reply is exactly that line and nothing after it.
+            replies = [(m.group(0).rstrip("\n") if (m := COMPLETE_LINE.search(r)) else r) for r in replies]
+        return replies
 
     # Checkpoint (added 2026-09-20 after a kernel restart killed a 3-hour 14B pass that had
     # written nothing): rows so far go to <out>.partial.json every 10 items and are resumed
@@ -325,6 +354,7 @@ def main():
 
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"model": args.model, "adapter": args.adapter,
+                   "stop_after_answer": bool(args.stop_after_answer),
                    "report": report, "results": results}, f, indent=2, ensure_ascii=False)
     if os.path.exists(ckpt):
         os.remove(ckpt)
