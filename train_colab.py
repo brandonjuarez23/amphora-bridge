@@ -78,7 +78,20 @@ def apply_explain_mask(tok, full_ids, labels, n_prefix, target, m, item_seed, ke
     return new, (n_ans, kept, total)
 
 
-def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0, keep_eos=True):
+def truncate_to_answer_line(content):
+    """The final turn cut to its FINAL ANSWER line (no trailing newline). Used by
+    --truncate-explanation (added 2026-09-20): the scaffold is removed from the sequence
+    rather than masked, so the end-of-turn token is learned right after the answer line,
+    which is where the model stands at inference. Under the mask (m=0.0) the 14B learned
+    EOS only after ~90 masked scaffold tokens and looped the answer line to the cap."""
+    i = content.find("FINAL ANSWER:")
+    if i < 0:
+        return content
+    nl = content.find("\n", i)
+    return content if nl < 0 else content[:nl].rstrip()
+
+
+def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0, keep_eos=True, truncate=False):
     """
     Tokenize one 4-message conversation and return input_ids / labels where
     labels are -100 everywhere except the final assistant turn.
@@ -91,6 +104,8 @@ def build_example(tok, ex, max_len, explain_mask=1.0, item_seed=0, keep_eos=True
     """
     msgs = ex["messages"]
     assert len(msgs) == 4 and [m["role"] for m in msgs] == ["user", "assistant", "user", "assistant"], msgs
+    if truncate:
+        msgs = msgs[:-1] + [dict(msgs[-1], content=truncate_to_answer_line(msgs[-1]["content"]))]
 
     prefix_text = tok.apply_chat_template(msgs[:-1], tokenize=False, add_generation_prompt=True)
     full_text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=False)
@@ -136,9 +151,14 @@ def show_example(tok, built, ex):
     print(repr(sup))
 
 
-def build_dataset(tok, path, max_len, verbose=True, explain_mask=1.0, keep_eos=True):
+def build_dataset(tok, path, max_len, verbose=True, explain_mask=1.0, keep_eos=True, truncate=False):
     rows = load_jsonl(path)
-    built = [build_example(tok, ex, max_len, explain_mask, item_seed=1000 + i, keep_eos=keep_eos) for i, ex in enumerate(rows)]
+    built = [build_example(tok, ex, max_len, explain_mask, item_seed=1000 + i, keep_eos=keep_eos, truncate=truncate)
+             for i, ex in enumerate(rows)]
+    if truncate:
+        n_sup_all = sum(sum(1 for l in b["labels"] if l != -100) for b in built)
+        print(f"truncate-explanation: final turns cut to the answer line before tokenizing; "
+              f"loss-bearing total {n_sup_all} (answer lines plus end-of-turn), explain-mask not applied")
     if explain_mask < 1.0:
         n_ans = sum(b["_mask_stats"][0] for b in built)
         n_kept = sum(b["_mask_stats"][1] for b in built)
@@ -187,13 +207,17 @@ def main():
                     help="D6c: loss multiplier on tokens after the FINAL ANSWER line (1.0 = all, 0.5 = seeded half, 0.0 = answer line only)")
     ap.add_argument("--no-keep-eos", action="store_true",
                     help="reproduce the original D6c mask rule, where the end-of-turn token was masked at m<1 (the m=0.0 arm then never learns to stop)")
+    ap.add_argument("--truncate-explanation", action="store_true",
+                    help="cut every final turn to its FINAL ANSWER line before tokenizing (scaffold absent, not masked); "
+                         "the end-of-turn token then follows the answer line. --explain-mask is ignored.")
     ap.add_argument("--push", default=None, help="HF repo id to push the adapter to, e.g. user/sycophancy-qwen-lora")
     args = ap.parse_args()
 
     from transformers import AutoTokenizer
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    rows, built = build_dataset(tok, args.data, args.max_len, explain_mask=args.explain_mask, keep_eos=not args.no_keep_eos)
+    rows, built = build_dataset(tok, args.data, args.max_len, explain_mask=args.explain_mask, keep_eos=not args.no_keep_eos,
+                                truncate=args.truncate_explanation)
     if args.check_only:
         print("check-only: dataset built and all mask assertions passed; nothing trained.")
         return

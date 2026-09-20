@@ -124,11 +124,14 @@ def model_tag(model):
     return (m.group(1).lower() + "b") if m else re.sub(r"[^a-z0-9]+", "", model.split("/")[-1].lower())[:12]
 
 
-def run_name_for(data, epochs, explain_mask, seed, keep_eos=True, model=BASE_MODEL):
+def run_name_for(data, epochs, explain_mask, seed, keep_eos=True, model=BASE_MODEL, truncate=False):
     stem = os.path.splitext(os.path.basename(data))[0]
+    tag = model_tag(model)
+    if truncate:
+        # scaffold removed from the sequence, not masked: its own family of run names
+        return f"{stem}-e{epochs}-trunc-s{seed}" + (f"-{tag}" if tag else "")
     m = f"{explain_mask:g}"
     eos = "-eos" if (keep_eos and explain_mask < 1.0) else ""
-    tag = model_tag(model)
     return f"{stem}-e{epochs}-m{m}{eos}-s{seed}" + (f"-{tag}" if tag else "")
 
 
@@ -318,6 +321,8 @@ def main():
     ap.add_argument("--explain-mask", type=float, default=1.0)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--no-keep-eos", action="store_true", help="original D6c mask rule: end-of-turn token masked at m<1 (see train_colab.py)")
+    ap.add_argument("--truncate-explanation", action="store_true",
+                    help="train on the answer line only, scaffold removed from the sequence (see train_colab.py); run name gets -trunc-")
     ap.add_argument("--adapter", help="evaluate this existing adapter directory instead of training")
     ap.add_argument("--tag", help="results tag for --adapter (default: the directory name without 'adapter_')")
     ap.add_argument("--conditions", default="free,forced", help="for --adapter: which eval conditions to run")
@@ -399,7 +404,7 @@ def main():
     preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY, TRAIN_PY, args.data))
 
     keep_eos = not args.no_keep_eos
-    name = run_name_for(args.data, args.epochs, args.explain_mask, args.seed, keep_eos, args.model)
+    name = run_name_for(args.data, args.epochs, args.explain_mask, args.seed, keep_eos, args.model, args.truncate_explanation)
     adir = f"adapter_{name}"
     if os.path.isdir(adir) and not args.force:
         raise PreflightError(f"{adir}/ already exists. A run with these settings has happened; pass --force to overwrite.")
@@ -410,7 +415,8 @@ def main():
 
     manifest = {
         "run_name": name, "data": args.data, "epochs": args.epochs, "explain_mask": args.explain_mask,
-        "keep_eos": keep_eos, "seed": args.seed, "base_model": args.model, "load_4bit": args.load_4bit,
+        "keep_eos": keep_eos, "truncate_explanation": bool(args.truncate_explanation), "seed": args.seed,
+        "base_model": args.model, "load_4bit": args.load_4bit,
         "eval_set": args.eval_set, "free_max_new_tokens": args.free_max_new_tokens,
         "forced_max_new_tokens": args.forced_max_new_tokens, "eval_batch": args.eval_batch, "eval_stop_after_answer": bool(args.eval_stop_after_answer), "versions": {p: _version(p) for p in PINNED},
         "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -420,7 +426,7 @@ def main():
     except Exception:
         manifest["git_commit"] = None
 
-    sh(f"{sys.executable} {TRAIN_PY} --model {args.model} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}" + (" --no-keep-eos" if not keep_eos else ""), log)
+    sh(f"{sys.executable} {TRAIN_PY} --model {args.model} --data {args.data} --out {adir} --epochs {args.epochs} --explain-mask {args.explain_mask} --seed {args.seed}" + (" --no-keep-eos" if not keep_eos else "") + (" --truncate-explanation" if args.truncate_explanation else ""), log)
     json.dump(manifest, open(os.path.join(adir, "manifest.json"), "w"), indent=1)
 
     manifest["adapter_sha256"] = sha256_file(os.path.join(adir, "adapter_model.safetensors"))
