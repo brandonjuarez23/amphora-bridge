@@ -969,3 +969,113 @@ or inside the action bar of 5. The other two arms have one seed each.
   m0.5's three failures and the base's caves sit at thin margins in `margins-base-14b.json`
   (c28c8e0); the m0.5 Nevada refusal in Arm B is first-answer inertia at a wide margin
   (base assigns 99.5% to the planted answer once it is on the record).
+
+## Pre-registered 2026-09-26: the 32B family at 13 epochs, and the preamble arm at 1.5B
+
+Written before any of these four runs trains. Nothing above this line is edited.
+
+### Why the 32B retrains are allowed
+
+The underfit clause (section "Run 3 REVISED", 2026-09-12): *"If final training loss > 0.4
+(underfit like run 2), a second bridge run at more epochs is allowed and must be labelled as
+such."* The 32B m=1.0 e5 run ended at **0.678** (epochs 1-5: 2.734, 1.493, 1.042, 0.854,
+0.678) with the cosine annealed to 9.3e-7, so it stopped on schedule, not on convergence.
+14B m=1.0 reached 4.2e-3 on the identical 6429-token supervised span. The clause applies to
+the whole 32B family; these runs are labelled e13.
+
+### The four runs
+
+Held fixed: `train_bridge_inv.jsonl` (66 items), seed 0, `eval_set_ab_32b.json` (411 items),
+4-bit, eval batch 8. Only the epoch count changes, 5 -> 13.
+
+| run | model | data | epochs | m | eval-stop-after-answer |
+|---|---|---|---|---|---|
+| A1 | Qwen2.5-32B-Instruct | train_bridge_inv | 13 | 1.0 | no |
+| A2 | Qwen2.5-32B-Instruct | train_bridge_inv | 13 | 0.5 | no |
+| A3 | Qwen2.5-32B-Instruct | train_bridge_inv | 13 | 0.0 | **yes** |
+| B1/B2 | Qwen2.5-1.5B-Instruct | train_preamble30 | 13 | n/a | no |
+
+A3 keeps the flag because m=0.0 is the only arm that repeats the answer line to the cap, and
+the repeated tokens were shown to carry no verdict information (verify run 2026-09-25: 13 of
+854 verdicts differ, all traceable to the bare-tag artifact or cap truncation). The flag
+truncates A3's **generated replies**; it does not change what A3 was trained on. A3's adapter
+is still a model trained with the full scaffold present in every sequence, unsupervised.
+Recorded here so no later reader takes "m=0.0 + stop-after-answer" to mean the scaffold was
+absent from training.
+
+`--explain-mask` is a no-op for B1/B2: the mask applies to tokens after the FINAL ANSWER
+line, and in the preamble format that line is last, so no m is available to choose.
+
+### Baselines these are read against
+
+32B e5, forced (411 items): m=1.0 caves 21 / refuses 10; m=0.5 caves 30 / refuses 4;
+m=0.0 caves 4 / refuses 6. Capability: base 195/200, m=1.0 193, m=0.5 194.
+14B e13, forced (427 items): m=1.0 caves 0 / refuses 1; m=0.5 caves 2 / refuses 1;
+m=0.0 caves 16 / refuses 4. Capability 191/200 on all three arms and the base.
+1.5B e13 m=0.0-eos, forced (150 items): seed 0 caves 2 / refuses 0; seed 1 caves 0 /
+refuses 3.
+
+**Noise.** No within-recipe seed replicate exists at 32B. The only measured floor in the
+project is the 1.5B seed pair: 2 counts on Arm A, 3 on Arm B, out of 150. Until a 32B
+replicate exists, differences under 5 of 411 are not read as real.
+
+### Predictions, 32B (A1-A3)
+
+1. **Manipulation check.** Final training loss falls into the 14B range. A1 <= 0.05. If any
+   arm ends above 0.4 the underfit persists and the epoch account is untested for that arm,
+   whatever its eval numbers do.
+2. **Epochs account (primary).** Arm A caves fall in all three arms, and the m-ordering
+   becomes monotone: caves(m=1.0) <= caves(m=0.5) <= caves(m=0.0), matching 14B's 0 / 2 / 16.
+   Counted as supported only if A1 caves <= 5 of 411 **and** the ordering is monotone.
+3. **Scale account.** A1 caves stay within 5 of the e5 value (21) while its loss reaches the
+   14B range. Then the 32B weakness is not epochs, and the e5 family's numbers stand as
+   measurements of 32B rather than of undertraining.
+4. **Neither.** Caves fall but the ordering stays non-monotone, or A1 lands between 6 and 16.
+   Recorded as such; no third account is offered in advance.
+5. **Capability.** >= 185/200 on each arm. Below that is capability traded for the metric and
+   is reported either way.
+6. **Priming.** Origin: the D4 diagnosis of 2026-09-13 (lines 338-345), *"Retrieved items
+   escape because their wrong answers are words embedded in sentences, not bare numerals."*
+   That was written after seeing D4's own 1.5B numbers and made no claim about other scales,
+   so the 14B and 32B e5 agreement with it is retrospective. It is pre-registered forward
+   here for the first time, today, and the count formulations ("every off-target row is
+   computed", "145/145") are dropped: the 2026-09-13 sentence is a rate claim, not a claim
+   that the count is zero.
+   Forward form: in **Arm A forced, pooled across A1-A3**, the computed off-target rate is at
+   least **5x** the retrieved off-target rate.
+   - Retrospective values, not predicted in advance: 14B e13, 18 computed / 0 retrieved
+     off-target from 804 computed and 477 retrieved rows; 32B e5, 55 / 0 from 798 and 435.
+   - **Untested clause:** if total Arm A forced off-target across A1-A3 is under 10, the
+     ratio is not computable at useful precision and this is recorded as untested, not as
+     confirmed.
+
+### Predictions, preamble arm (B1/B2)
+
+The arm tests whether a constant, content-free line **before** the answer line preserves the
+disposition:
+
+```
+Verification: Evaluating the statement against the query parameters.
+FINAL ANSWER: <answer>
+```
+
+Identical on every hold and update, so format carries no verdict. It separates *the answer
+must be emitted first* from *nothing answer-bearing may precede it*, which the bridge's
+inversion confounded.
+
+7. **Prefix is safe.** Caves <= 5 and refusals <= 6 of 150 on both seeds, i.e. within the
+   measured seed floor of the 1.5B m=0.0-eos runs.
+8. **Inversion per se was what mattered.** Caves rise above 15 of 150 on both seeds, toward
+   the pre-inversion D4 regime.
+9. Anything between is recorded as partial and neither 7 nor 8 is claimed.
+
+**Confound, recorded now.** train_preamble30 is 30 items; the 1.5B baselines are 66. A
+difference confounds target format with item count, so 7 and 8 above are directional, not
+attributive. The matched control is the same 30 questions carrying their BRIDGE-WORKSHEET
+targets; until that runs, no attribution to format alone is claimed.
+
+**Contamination.** All 30 questions are drawn from BRIDGE-WORKSHEET.md and are a strict
+subset of `train_bridge_inv.jsonl`. Twelve holds in the first draft appeared in
+`eval_set_ab_14b.json` and were replaced by type-matched worksheet holds that appear in no
+eval file (out: H01 H03 H04 H07 H08 H09 H10 H16 H22 H23 H26 H55; in: H12 H24 H29 H35 H50,
+H17 H18 H27 H43 H49 H56 H59). The builder asserts zero eval overlap.
