@@ -37,12 +37,22 @@ def main():
     ap.add_argument("--max-new-tokens", type=int, default=400)  # gsm8k needs room to reason
     ap.add_argument("--load-4bit", action="store_true",
                     help="load the base model in 4-bit NF4 (what the trainer uses); needed for 14B on a single GPU")
+    ap.add_argument("--batch", type=int, default=1,
+                    help="questions generated together (greedy; 1 = the original one-at-a-time loop), as in eval.py")
+    ap.add_argument("--save-every", type=int, default=8,
+                    help="write the checkpoint after every N screened items (was 50)")
     args = ap.parse_args()
 
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     pool = json.loads(open(args.pool, encoding="utf-8").read())
+    # A pool can already carry "known"/"cold_reply" from an earlier model's screen
+    # (eval_set_ab_14b.json does, for 129 items). Every item is screened afresh, so drop them;
+    # otherwise a checkpoint would save them for unscreened items and a resume would trust them.
+    for item in pool:
+        item.pop("known", None)
+        item.pop("cold_reply", None)
     print("model: " + args.model)
     print("items: %d\n" % len(pool))
 
@@ -62,8 +72,8 @@ def main():
     model = AutoModelForCausalLM.from_pretrained(args.model, **load_kwargs)
     model.eval()
 
-    # Checkpoint: the partial pool is written every 50 items to <out>.partial.json and
-    # resumed from it, so a runtime that dies at item 400 costs 50 items, not 400.
+    # Checkpoint: the partial pool is written every --save-every items (default 8; was 50) to
+    # <out>.partial.json and resumed from it, so a runtime that dies costs at most that many items.
     ckpt = args.out + ".partial.json"
     done = {}
     if os.path.exists(ckpt):
@@ -72,18 +82,19 @@ def main():
                 done[x["question"]] = x
         print("resuming: %d/%d items already screened in %s" % (len(done), len(pool), ckpt), flush=True)
 
-    known = 0
-    for i, item in enumerate(pool, 1):
-        if item["question"] in done:
-            prev = done[item["question"]]
-            item["known"], item["cold_reply"] = prev["known"], prev["cold_reply"]
-            known += bool(item["known"])
-            if i % 50 == 0 or i == len(pool):
-                print("  %d/%d screened, %d known so far" % (i, len(pool), known), flush=True)
-            continue
-        msgs = [{"role": "user", "content": item["question"] + INSTRUCTION}]
-        prompt = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
-        enc = tok(prompt, return_tensors="pt").to(model.device)
+    if tok.pad_token_id is None:
+        tok.pad_token = tok.eos_token
+    if args.batch > 1:
+        # Left padding, as in eval.py: every sequence's generated tokens start at the same column,
+        # and the attention mask keeps the pad tokens out of every sequence's context.
+        tok.padding_side = "left"
+
+    def generate_batch(items):
+        """Greedy-decode a list of items together. Each reply is what it would be alone, up to
+        floating-point ties in the batched kernels; --batch 1 is exactly the original loop."""
+        prompts = [tok.apply_chat_template([{"role": "user", "content": it["question"] + INSTRUCTION}],
+                                           tokenize=False, add_generation_prompt=True) for it in items]
+        enc = tok(prompts, return_tensors="pt", padding=True).to(model.device)
         with torch.no_grad():
             gen = model.generate(
                 **enc,
@@ -91,24 +102,41 @@ def main():
                 do_sample=False,
                 pad_token_id=tok.eos_token_id,
             )
-        reply = tok.decode(gen[0][enc["input_ids"].shape[1]:], skip_special_tokens=True)
+        start = enc["input_ids"].shape[1]
+        return [tok.decode(g[start:], skip_special_tokens=True) for g in gen]
 
-        stated = parse_final(reply)
-        if stated is not None:
-            ok = matches(stated, item["correct"])
-        else:
-            # same fallback rule the eval uses
-            ok = (appears_in_body(reply, item["correct"])
-                  and not appears_in_body(reply, item["incorrect"]))
+    def save_ckpt():
+        with open(ckpt, "w", encoding="utf-8") as f:
+            json.dump(pool, f, ensure_ascii=False)
 
-        item["known"] = bool(ok)
-        item["cold_reply"] = reply
-        known += bool(ok)
-
-        if i % 50 == 0 or i == len(pool):
-            print("  %d/%d screened, %d known so far" % (i, len(pool), known), flush=True)
-            with open(ckpt, "w", encoding="utf-8") as f:
-                json.dump(pool, f, ensure_ascii=False)
+    # Resume only from this run's checkpoint (the pool's own stale fields were dropped at load)
+    for item in pool:
+        if item["question"] in done:
+            prev = done[item["question"]]
+            item["known"], item["cold_reply"] = prev["known"], prev["cold_reply"]
+    todo = [item for item in pool if item["question"] not in done]
+    screened = len(pool) - len(todo)
+    since_save = 0
+    for b in range(0, len(todo), args.batch):
+        batch = todo[b:b + args.batch]
+        for item, reply in zip(batch, generate_batch(batch)):
+            stated = parse_final(reply)
+            if stated is not None:
+                ok = matches(stated, item["correct"])
+            else:
+                # same fallback rule the eval uses
+                ok = (appears_in_body(reply, item["correct"])
+                      and not appears_in_body(reply, item["incorrect"]))
+            item["known"] = bool(ok)
+            item["cold_reply"] = reply
+        screened += len(batch)
+        since_save += len(batch)
+        if since_save >= args.save_every or screened == len(pool):
+            known_so_far = sum(bool(p.get("known")) for p in pool if "known" in p)
+            print("  %d/%d screened, %d known so far" % (screened, len(pool), known_so_far), flush=True)
+            save_ckpt()
+            since_save = 0
+    known = sum(bool(p["known"]) for p in pool)
 
     def tally(key):
         d = {}

@@ -332,6 +332,9 @@ def main():
                     help="pass --stop-after-answer to eval.py (recorded in the manifest)")
     ap.add_argument("--eval-batch", type=int, default=1,
                     help="conversations generated together in eval.py (greedy per sequence; 1 = one at a time; recorded in manifest)")
+    ap.add_argument("--screen-batch", type=int, default=1,
+                    help="questions generated together in screen.py (greedy per sequence; 1 = one at a time); "
+                         "screen.py checkpoints every 8 items either way")
     ap.add_argument("--skip-capability", action="store_true")
     ap.add_argument("--drive", action="store_true", help=f"copy the zip to {DRIVE_DIR} (mounts Drive if needed)")
     ap.add_argument("--download", action="store_true", help="also trigger a browser download of the zip")
@@ -363,12 +366,13 @@ def main():
         log = f"screen-{tag}.log"
         tee_to(log)
         raw = args.screen.replace(".json", "") + "-all.json"
-        sh(f"{sys.executable} {SCREEN_PY} --model {args.model}{' --load-4bit' if args.load_4bit else ''} --pool {args.eval_set} --out {raw}", log)
+        sh(f"{sys.executable} {SCREEN_PY} --model {args.model}{' --load-4bit' if args.load_4bit else ''} --pool {args.eval_set} --out {raw} --batch {args.screen_batch}", log)
         items = json.load(open(raw, encoding="utf-8"))
         keep = [x for x in items if x.get("known")]
         drop = [{"id": x.get("id"), "question": x["question"], "correct": x["correct"], "cold_reply": x.get("cold_reply")} for x in items if not x.get("known")]
         json.dump(keep, open(args.screen, "w", encoding="utf-8"), indent=1)
-        json.dump({"model": args.model, "source_set": args.eval_set, "screened": len(items), "kept": len(keep), "dropped": drop},
+        json.dump({"model": args.model, "source_set": args.eval_set, "screen_batch": args.screen_batch,
+                   "screened": len(items), "kept": len(keep), "dropped": drop},
                   open(args.screen.replace(".json", "") + "-dropped.json", "w", encoding="utf-8"), indent=1)
         print(f"screen: {len(keep)}/{len(items)} items known by {args.model}; eval set written to {args.screen}, "
               f"{len(drop)} dropped (listed in {args.screen.replace('.json', '')}-dropped.json)")
