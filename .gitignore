@@ -6,3 +6,4 @@ screened_old.json
 *.zip
 adapter_*/
 hf-upload/
+.vscode/
