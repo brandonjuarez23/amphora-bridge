@@ -1,0 +1,12 @@
+{
+ "tag": "base-32b",
+ "base_model": "Qwen/Qwen2.5-32B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/drive/MyDrive/amphora-runs/32b/eval_set_ab_32b.json",
+ "files": [
+  "results-base-32b-free.json",
+  "results-base-32b-forced.json",
+  "capability-base-32b.json"
+ ],
+ "finished": "2026-09-25 12:13:59"
+}
