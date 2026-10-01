@@ -1,0 +1,27 @@
+{
+ "run_name": "train_bridge_inv-e13-m0-eos-s0-32b",
+ "data": "/content/repo/train_bridge_inv.jsonl",
+ "epochs": 13,
+ "explain_mask": 0.0,
+ "keep_eos": true,
+ "truncate_explanation": false,
+ "seed": 0,
+ "base_model": "Qwen/Qwen2.5-32B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/drive/MyDrive/amphora-runs/32b/eval_set_ab_32b.json",
+ "free_max_new_tokens": 200,
+ "forced_max_new_tokens": 400,
+ "eval_batch": 8,
+ "eval_stop_after_answer": true,
+ "versions": {
+  "peft": "0.20.0",
+  "transformers": "5.17.0",
+  "bitsandbytes": "0.50.2"
+ },
+ "torchao": null,
+ "started": "2026-10-01 10:07:32",
+ "git_commit": "fc43a2ece693063f2505180deb4f02a62fd3c8ec",
+ "adapter_sha256": "a4a7a0f02997f6f61e1eafd9bc234827e6ab8a0540b90cdc494cd60aff70e67a",
+ "finished": "2026-10-01 10:31:48",
+ "seconds": 1456
+}
