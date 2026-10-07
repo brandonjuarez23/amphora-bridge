@@ -41,6 +41,7 @@ import importlib.metadata
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -55,8 +56,27 @@ EVAL_SET = _r("eval/eval_set.json")
 CAP_SET = _r("eval/capability_set.json")
 EVAL_PY = _r("eval/eval.py")
 CAP_PY = _r("eval/capability.py")
+SYS_PY = _r("eval/system_prompt.py")
 TRAIN_PY = _r("train_colab.py")
 DRIVE_DIR = "/content/drive/MyDrive/amphora-runs"
+
+
+def _system_prompt_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("system_prompt", SYS_PY)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def system_prompt_record(args):
+    """The system turn every eval and capability call ran under, for the manifests: the text given (None means the
+    chat template's default) and the text the model actually saw, with its sha256."""
+    sp = _system_prompt_module()
+    given = getattr(args, "system_prompt", None)
+    effective = given if given is not None else sp.QWEN_DEFAULT_SYSTEM
+    return {"system_prompt": given, "system_prompt_source": "given" if given is not None else "chat template default",
+            "system_prompt_effective": effective, "system_prompt_sha256": sp.sha256(effective)}
 
 
 class PreflightError(RuntimeError):
@@ -234,13 +254,15 @@ def evaluate(adir, tag, conditions, args, log):
     caps = {"free": args.free_max_new_tokens, "forced": args.forced_max_new_tokens}
     ad = f" --adapter {adir}" if adir else ""
     q = " --load-4bit" if args.load_4bit else ""
+    # Without --system-prompt the commands are exactly as before (the chat template's default system turn)
+    sp = f" --system-prompt {shlex.quote(args.system_prompt)}" if getattr(args, "system_prompt", None) is not None else ""
     files = []
     for cond in conditions:
-        sh(f"{sys.executable} {EVAL_PY} --model {args.model}{ad}{q} --dataset {args.eval_set} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]} --batch {args.eval_batch}{' --stop-after-answer' if args.eval_stop_after_answer else ''}", log)
+        sh(f"{sys.executable} {EVAL_PY} --model {args.model}{ad}{q} --dataset {args.eval_set} --condition {cond} --tag {tag}-{cond} --max-new-tokens {caps[cond]} --batch {args.eval_batch}{' --stop-after-answer' if args.eval_stop_after_answer else ''}{sp}", log)
         files.append(f"results-{tag}-{cond}.json")
         summarize_results(f"results-{tag}-{cond}.json", args.eval_set)
     if not args.skip_capability:
-        sh(f"{sys.executable} {CAP_PY} --model {args.model}{ad}{q} --set {CAP_SET} --tag {tag}", log)
+        sh(f"{sys.executable} {CAP_PY} --model {args.model}{ad}{q} --set {CAP_SET} --tag {tag}{sp}", log)
         files.append(f"capability-{tag}.json")
     return files
 
@@ -275,6 +297,8 @@ def eval_existing(args):
     weights = os.path.join(adir, "adapter_model.safetensors")
     if not os.path.exists(weights):
         raise PreflightError(f"no adapter weights at {weights}")
+    if getattr(args, "system_prompt", None) is not None and not args.tag:
+        raise PreflightError("--system-prompt needs an explicit --tag, so its files cannot take the adapter's default name")
     tag = args.tag or os.path.basename(adir).removeprefix("adapter_")
     conditions = [c.strip() for c in args.conditions.split(",") if c.strip()]
     bad = [c for c in conditions if c not in ("free", "forced")]
@@ -292,7 +316,7 @@ def eval_existing(args):
         "base_model": args.model, "load_4bit": args.load_4bit, "eval_set": args.eval_set,
         "free_max_new_tokens": args.free_max_new_tokens,
         "forced_max_new_tokens": args.forced_max_new_tokens, "eval_batch": args.eval_batch, "eval_stop_after_answer": bool(args.eval_stop_after_answer), "versions": {p: _version(p) for p in PINNED},
-        "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "torchao": _version("torchao"), **system_prompt_record(args), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     try:
         manifest["git_commit"] = subprocess.check_output(["git", "-C", REPO, "rev-parse", "HEAD"], text=True).strip()
@@ -336,6 +360,9 @@ def main():
                     help="questions generated together in screen.py (greedy per sequence; 1 = one at a time); "
                          "screen.py checkpoints every 8 items either way")
     ap.add_argument("--skip-capability", action="store_true")
+    ap.add_argument("--system-prompt", default=None,
+                    help="system turn for every eval.py and capability.py call; without it, the chat template's default "
+                         "(eval/system_prompt.py QWEN_DEFAULT_SYSTEM) as in every earlier run. Recorded in the manifest")
     ap.add_argument("--drive", action="store_true", help=f"copy the zip to {DRIVE_DIR} (mounts Drive if needed)")
     ap.add_argument("--download", action="store_true", help="also trigger a browser download of the zip")
     ap.add_argument("--force", action="store_true", help="allow overwriting an existing run of the same name")
@@ -389,17 +416,30 @@ def main():
         print(flush=True)
         return
     if args.baseline:
-        preflight(need_files=(CAP_SET, EVAL_PY, CAP_PY, args.eval_set))
+        preflight(need_files=(CAP_SET, EVAL_PY, CAP_PY, SYS_PY, args.eval_set))
+        for c in ("free", "forced"):
+            if os.path.exists(f"results-{args.baseline}-{c}.json") and not args.force:
+                raise PreflightError(f"results-{args.baseline}-{c}.json already exists; pass --force to overwrite it")
         log = f"baseline-{args.baseline}.log"
         open(log, "w").write(f"baseline {args.baseline} on {args.model} started {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         tee_to(log)
+        started = time.strftime("%Y-%m-%d %H:%M:%S")
         files = evaluate(None, args.baseline, ["free", "forced"], args, log)
+        try:
+            commit = subprocess.check_output(["git", "-C", REPO, "rev-parse", "HEAD"], text=True).strip()
+        except Exception:
+            commit = None
         json.dump({"tag": args.baseline, "base_model": args.model, "load_4bit": args.load_4bit, "eval_set": args.eval_set,
-                   "files": files, "finished": time.strftime("%Y-%m-%d %H:%M:%S")}, open(f"baselinemanifest-{args.baseline}.json", "w"), indent=1)
+                   "free_max_new_tokens": args.free_max_new_tokens, "forced_max_new_tokens": args.forced_max_new_tokens,
+                   "eval_batch": args.eval_batch, "eval_stop_after_answer": bool(args.eval_stop_after_answer),
+                   "versions": {p: _version(p) for p in PINNED}, "torchao": _version("torchao"),
+                   **system_prompt_record(args), "git_commit": commit,
+                   "files": files, "started": started, "finished": time.strftime("%Y-%m-%d %H:%M:%S")},
+                  open(f"baselinemanifest-{args.baseline}.json", "w"), indent=1)
         deliver(f"baseline-{args.baseline}.zip", files + [log, f"baselinemanifest-{args.baseline}.json"], None, args, log)
         return
     if args.adapter:
-        preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY))
+        preflight(need_files=(EVAL_SET, CAP_SET, EVAL_PY, CAP_PY, SYS_PY))
         eval_existing(args)
         return
     if not args.data or args.epochs is None:
@@ -423,7 +463,7 @@ def main():
         "base_model": args.model, "load_4bit": args.load_4bit,
         "eval_set": args.eval_set, "free_max_new_tokens": args.free_max_new_tokens,
         "forced_max_new_tokens": args.forced_max_new_tokens, "eval_batch": args.eval_batch, "eval_stop_after_answer": bool(args.eval_stop_after_answer), "versions": {p: _version(p) for p in PINNED},
-        "torchao": _version("torchao"), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "torchao": _version("torchao"), **system_prompt_record(args), "started": time.strftime("%Y-%m-%d %H:%M:%S"),
     }
     try:
         manifest["git_commit"] = subprocess.check_output(["git", "-C", REPO, "rev-parse", "HEAD"], text=True).strip()

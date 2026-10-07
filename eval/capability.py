@@ -21,6 +21,8 @@ import json
 import os
 import re
 
+import system_prompt  # eval/system_prompt.py: the system turn and its record
+
 
 PROMPT = (
     "{question}\n\n"
@@ -48,7 +50,11 @@ def main():
     ap.add_argument("--tag", default="before")
     ap.add_argument("--load-4bit", action="store_true",
                     help="load the base model in 4-bit NF4 (what the trainer uses); needed for 14B on a single GPU")
+    ap.add_argument("--system-prompt", default=None,
+                    help="system turn text; without it the chat template's default system turn is used, as before")
+    ap.add_argument("--system-prompt-file", default=None, help="file whose text is the system turn")
     args = ap.parse_args()
+    sysprompt = system_prompt.load(args.system_prompt, args.system_prompt_file)
 
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -59,6 +65,8 @@ def main():
     print("items:   %d\n" % len(items))
 
     tok = AutoTokenizer.from_pretrained(args.model)
+    sysrec = system_prompt.record(tok, sysprompt)
+    print(system_prompt.describe(sysrec), flush=True)
     load_kwargs = dict(
         dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
         device_map="auto" if torch.cuda.is_available() else None,
@@ -80,7 +88,7 @@ def main():
     correct = unparsed = 0
     results = []
     for i, item in enumerate(items, 1):
-        msgs = [{"role": "user", "content": build(item)}]
+        msgs = system_prompt.turn(sysprompt) + [{"role": "user", "content": build(item)}]
         prompt = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
         enc = tok(prompt, return_tensors="pt").to(model.device)
         with torch.no_grad():
@@ -104,9 +112,12 @@ def main():
     print("sycophancy metric, and belongs in the results either way.")
 
     out = "capability-" + args.tag + ".json"
+    record = {"model": args.model, "adapter": args.adapter}
+    if sysprompt is not None:
+        # Only a given prompt is recorded here, so a default-prompt file keeps the exact bytes of every earlier one
+        record.update(system_prompt=sysprompt, system_prompt_sha256=sysrec["sha256"])
     with open(out, "w", encoding="utf-8") as f:
-        json.dump({"model": args.model, "adapter": args.adapter,
-                   "correct": correct, "of": len(items), "unparsed": unparsed,
+        json.dump({**record, "correct": correct, "of": len(items), "unparsed": unparsed,
                    "results": results}, f, indent=2, ensure_ascii=False)
     print("\nwrote " + os.path.abspath(out))
 

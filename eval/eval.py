@@ -32,6 +32,8 @@ import os
 import re
 import unicodedata
 
+import system_prompt  # eval/system_prompt.py: the system turn and its record
+
 
 FINAL = re.compile(r"FINAL ANSWER\s*:\s*(.+?)\s*$", re.IGNORECASE | re.MULTILINE)
 # A complete answer line: everything from the start of the reply through the newline that
@@ -128,7 +130,8 @@ def score(item, arm, reply):
     return "ambiguous", "none"
 
 
-SYSTEM_PROMPT = None  # set from --system-prompt-file; prepended as a system turn to every conversation
+SYSTEM_PROMPT = None  # set by system_prompt.load from --system-prompt or --system-prompt-file; None = the chat
+                      # template's default system turn; a given prompt is prepended as a system turn
 
 
 def build(item, arm):
@@ -208,6 +211,10 @@ def main():
                     help="load the base model in 4-bit NF4 (what the trainer uses); needed for 14B on a single GPU")
     ap.add_argument("--system-prompt-file", default=None,
                     help="prompting control: file whose text is prepended as a system turn (no adapter needed)")
+    ap.add_argument("--system-prompt", default=None,
+                    help="system turn text, given inline; without it (or the file) the chat template's default "
+                         "system turn is used (system_prompt.QWEN_DEFAULT_SYSTEM). The exact text and its sha256 "
+                         "are printed before generation")
     ap.add_argument("--batch", type=int, default=1,
                     help="conversations generated together (greedy; 1 = the original one-at-a-time loop)")
     ap.add_argument("--stop-after-answer", action="store_true",
@@ -223,9 +230,7 @@ def main():
              "preamble is possible and it must commit immediately.")
     args = ap.parse_args()
     global SYSTEM_PROMPT
-    if args.system_prompt_file:
-        SYSTEM_PROMPT = open(args.system_prompt_file, encoding="utf-8").read().strip()
-        print("system prompt:", len(SYSTEM_PROMPT), "chars from", args.system_prompt_file)
+    SYSTEM_PROMPT = system_prompt.load(args.system_prompt, args.system_prompt_file)
 
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -237,6 +242,8 @@ def main():
     print("items:   %d  (x2 arms = %d generations)\n" % (len(items), len(items) * 2))
 
     tok = AutoTokenizer.from_pretrained(args.model)
+    sysrec = system_prompt.record(tok, SYSTEM_PROMPT)
+    print(system_prompt.describe(sysrec), flush=True)
     load_kwargs = dict(
         dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
         device_map="auto" if torch.cuda.is_available() else None,
@@ -310,14 +317,20 @@ def main():
     # from it, keyed by (question, arm). Removed on a clean finish.
     out = "results-" + args.tag + ".json"
     ckpt = out + ".partial.json"
+    # The system turn a checkpoint was generated under, so a resume never mixes rows from two prompts. A checkpoint
+    # with no sidecar predates the sidecar, when every run used the chat template's default.
+    ckpt_sys = ckpt + ".system_prompt_sha256"
     results = []
     if os.path.exists(ckpt):
+        system_prompt.check_checkpoint(ckpt, sysrec["sha256"])
         results = json.load(open(ckpt, encoding="utf-8"))
         have = {(r["question"], r["arm"]) for r in results}
         jobs = [j for j in jobs if (j[0]["question"], j[1]) not in have]
         print("resuming: %d rows already in %s, %d generations left" % (len(results), ckpt, len(jobs)), flush=True)
 
     def save_ckpt():
+        with open(ckpt_sys, "w", encoding="utf-8") as f:
+            f.write(sysrec["sha256"])
         with open(ckpt, "w", encoding="utf-8") as f:
             json.dump(results, f, ensure_ascii=False)
 
@@ -352,12 +365,15 @@ def main():
     report = summarise(results)
     print("\n" + report)
 
+    record = {"model": args.model, "adapter": args.adapter, "stop_after_answer": bool(args.stop_after_answer)}
+    if SYSTEM_PROMPT is not None:
+        # Only a given prompt is recorded here, so a default-prompt file keeps the exact bytes of every earlier one
+        record.update(system_prompt=SYSTEM_PROMPT, system_prompt_sha256=sysrec["sha256"])
     with open(out, "w", encoding="utf-8") as f:
-        json.dump({"model": args.model, "adapter": args.adapter,
-                   "stop_after_answer": bool(args.stop_after_answer),
-                   "report": report, "results": results}, f, indent=2, ensure_ascii=False)
-    if os.path.exists(ckpt):
-        os.remove(ckpt)
+        json.dump({**record, "report": report, "results": results}, f, indent=2, ensure_ascii=False)
+    for f in (ckpt, ckpt_sys):
+        if os.path.exists(f):
+            os.remove(f)
     print("\nwrote " + os.path.abspath(out))
 
 
