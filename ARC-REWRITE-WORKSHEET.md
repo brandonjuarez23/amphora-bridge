@@ -600,3 +600,12 @@ Reading (registered within-5 rule against seed 0 original = 6 and seed 0 rewrite
 - c = 10 or 11: within 5 of both. Inconclusive; more seeds needed before deciding.
 
 Limitation: one extra seed is a single draw of the noise, not an estimate of its spread.
+
+Environment note (2026-10-08, written during the seed-1 run, before its result): the seed-1 env
+file shows Colab's stack changed since seed 0. Pinned packages match (transformers 5.17.0, peft
+0.20.0, bitsandbytes 0.50.2) and the GPU is the same (A100-SXM4-80GB), but CUDA/torch moved from
+12.8 / 2.11.0+cu128 to 13.0 / 2.11.0+cu130, accelerate 1.14.0 -> 1.15.0, tokenizers 0.23.1 ->
+0.23.2, huggingface_hub 1.29.0 -> 1.33.0. Seed 1 vs seed 0 therefore differs in seed and software
+stack; the rewrite run's stack was not recorded. Effect on the reading: c >= 12 still means not
+attributed to the rewrite, but as seed-or-environment variation rather than seed alone; c <= 9
+still points at the rewrite, with the rewrite run's unrecorded stack as a caveat.
