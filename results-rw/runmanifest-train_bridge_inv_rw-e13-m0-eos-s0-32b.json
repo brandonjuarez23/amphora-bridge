@@ -1,0 +1,31 @@
+{
+ "run_name": "train_bridge_inv_rw-e13-m0-eos-s0-32b",
+ "data": "/content/repo/train_bridge_inv_rw.jsonl",
+ "epochs": 13,
+ "explain_mask": 0.0,
+ "keep_eos": true,
+ "truncate_explanation": false,
+ "seed": 0,
+ "base_model": "Qwen/Qwen2.5-32B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/drive/MyDrive/amphora-runs/32b/eval_set_ab_32b.json",
+ "free_max_new_tokens": 200,
+ "forced_max_new_tokens": 400,
+ "eval_batch": 8,
+ "eval_stop_after_answer": true,
+ "versions": {
+  "peft": "0.20.0",
+  "transformers": "5.17.0",
+  "bitsandbytes": "0.50.2"
+ },
+ "torchao": null,
+ "system_prompt": null,
+ "system_prompt_source": "chat template default",
+ "system_prompt_effective": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
+ "system_prompt_sha256": "66b9ea09bd5b7099cbb4fc820f31b575c0366fa439b08245566692c6784e281e",
+ "started": "2026-10-08 08:15:56",
+ "git_commit": "712408b0cc07acd867beec763774951b9446cf3d",
+ "adapter_sha256": "17acabe1e30c87e940dd757283b295297fbb00b4cd772a0333fba32bdfac5c82",
+ "finished": "2026-10-08 08:43:36",
+ "seconds": 1660
+}
