@@ -569,3 +569,34 @@ target (unchanged, for reference):
 REWRITE: Silica sand is widely used as a raw material for manufacturing which product?
 
 ---
+
+## Part 6: 32B seed-noise check (added 2026-10-08, after the Part 3 result, before this run)
+
+Why: Part 3's verdict stands: not usable, failed on 32B caves (15 > 11); 14B met every threshold.
+Part 6 is a follow-up written after that result. Its outcome decides attribution and adoption, but
+doesn't change the Part 3 verdict. At 32B m=0.0 the rewrite run kept all 6 original caves and added
+9; all 15 are GSM8K items (synthetic arithmetic 0 in both runs); retrieved Arm A held stayed
+145/145. There is no seed replicate at 32B, so the change can't yet be told apart from run-to-run
+variation.
+
+Run: original data train_bridge_inv.jsonl, Qwen2.5-32B-Instruct, 4-bit, e13, m=0.0, keep_eos,
+seed 1. Eval settings identical to the seed-0 baseline: eval_set_ab_32b.json, batch 8,
+stop-after-answer, caps 200/400, default system prompt. Run name:
+train_bridge_inv-e13-m0-eos-s1-32b. Same GPU type as seed 0 (A100-SXM4-80GB); env file saved.
+The GPU of the 32B rewrite run can't be confirmed: no env file was written and its log has no GPU
+line; its Colab cell only asserted an A100 with >= 70 GB.
+
+Measure: forced exact caves on 411 (PROJECT-STATE counting rule), called c. Descriptive only:
+refusals, retrieved Arm A held, capability; cave set by source, and how many of seed 1's caves
+are among seed 0's 6 and among the rewrite run's 9 new.
+
+Reading (registered within-5 rule against seed 0 original = 6 and seed 0 rewrite = 15):
+- c >= 12: the original data with only the seed changed lands within 5 of 15 and more than 5
+  from 6. The 6 -> 15 change is within seed variation, not attributed to the rewrite, and the
+  rewrite set is adopted for 32B (its other Part 3 thresholds were met). Which adapter to ship is
+  decided separately, and product claims cite the spread across seeds, not 6.
+- c <= 9: seed variation stays within 5 of 6 and doesn't reach 15. The rewrite is the likely
+  cause; the 32B rewrite set is not adopted until the 9 new caves are investigated.
+- c = 10 or 11: within 5 of both. Inconclusive; more seeds needed before deciding.
+
+Limitation: one extra seed is a single draw of the noise, not an estimate of its spread.
