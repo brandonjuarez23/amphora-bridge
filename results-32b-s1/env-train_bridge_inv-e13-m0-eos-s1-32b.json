@@ -1,0 +1,18 @@
+{
+ "gpu": "NVIDIA A100-SXM4-80GB",
+ "cuda": "13.0",
+ "torch": "2.11.0+cu130",
+ "python": "3.13.15",
+ "transformers": "5.17.0",
+ "peft": "0.20.0",
+ "bitsandbytes": "0.50.2",
+ "accelerate": "1.15.0",
+ "datasets": "4.8.5",
+ "tokenizers": "0.23.2",
+ "huggingface_hub": "1.33.0",
+ "safetensors": "0.8.0",
+ "torchao": null,
+ "code_commit": "80dd9d0b54e4bcc68c0f54fb3e5ad52aecbb2048",
+ "eval_set_sha256": "49f2317f4d8798149034d30daeeae8928cc98bfe1d74252df6a3542c6b00d1de",
+ "cmd": "/usr/bin/python3 run.py --workdir /content/drive/MyDrive/amphora-runs/32b-s1 --model Qwen/Qwen2.5-32B-Instruct --load-4bit --eval-set /content/drive/MyDrive/amphora-runs/32b/eval_set_ab_32b.json --eval-batch 8 --eval-stop-after-answer --data train_bridge_inv.jsonl --epochs 13 --explain-mask 0 --seed 1 --drive"
+}
