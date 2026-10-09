@@ -609,3 +609,42 @@ file shows Colab's stack changed since seed 0. Pinned packages match (transforme
 stack; the rewrite run's stack was not recorded. Effect on the reading: c >= 12 still means not
 attributed to the rewrite, but as seed-or-environment variation rather than seed alone; c <= 9
 still points at the rewrite, with the rewrite run's unrecorded stack as a caveat.
+
+## Part 6 result (2026-10-08, after the seed-1 run)
+
+Forced exact caves, 32B m=0.0: seed 0 original 6, seed 0 rewrite 15, seed 1 original c = 9. By
+the Part 6 rule, c <= 9: the rewrite is the likely cause, and the 32B rewrite set is not adopted.
+c sits at the edge of that band. Descriptive: all caves in all three runs are GSM8K; the same 6
+cave in all three; seed 1's 9 = the 6 + 2 of the rewrite's 9 new + 1 in neither. Retrieved Arm A
+held 145/145 in all three; capability 200 / 200 / 199. The free condition disagrees: seed 0
+original 5, rewrite 15, seed 1 original 11. By the same rule, free alone would fall in the
+not-attributed branch; seed noise reached 2 of the rewrite's 9 new forced caves and 4 of its 10
+new free caves. Forced is the registered measure, so the verdict stands. Seed 1 ran on CUDA 13.0 /
+cu130 (see the environment note); the rewrite run's stack is unrecorded.
+
+## Part 7: rewrite data at seed 1 (pre-registered 2026-10-08, before the run)
+
+Why: the new caves share no items with the 33 changed training rows, so reading them one by one
+can't attribute them. This run is the investigation Part 6's c <= 9 branch calls for. It
+completes a 2x2 (original/rewrite x seed 0/seed 1). It runs on the same stack as seed 1 original,
+so the d-vs-9 comparison is on matched software; the 15 reference still carries the rewrite run's
+unrecorded stack.
+
+Run: train_bridge_inv_rw.jsonl, Qwen2.5-32B-Instruct, 4-bit, e13, m=0.0, keep_eos, seed 1, eval
+settings identical to seed 1 original (eval_set_ab_32b.json, batch 8, stop-after-answer, caps
+200/400, default system prompt). Run name: train_bridge_inv_rw-e13-m0-eos-s1-32b. Same GPU
+(A100-SXM4-80GB) and same torch build (2.11.0+cu130) as seed 1 original; the run stops if either
+differs. Env file saved.
+
+Measure: forced exact caves on 411 (PROJECT-STATE counting rule), called d. Descriptive only: free
+caves, overlaps with the other three runs, retrieved Arm A held, capability.
+
+Reading (within-5 rule against seed 1 original = 9 on the same stack, and seed 0 rewrite = 15):
+- d >= 15: more than 5 above 9, on a matched stack. The rewrite effect shows at two seeds; the 32B
+  rewrite set is not adopted.
+- d <= 9: within 5 of 9 and more than 5 from 15. The seed-0 rewrite result was a high draw, not
+  attributed to the rewrite; the 32B rewrite set is adopted. Which adapter to ship is decided
+  separately, citing the spread across seeds.
+- d = 10-14: within 5 of both. Inconclusive; 32B stays on hold; 14B is unaffected.
+
+Limitation: two seeds per data set is still a small sample of the noise.
