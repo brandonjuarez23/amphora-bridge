@@ -1489,3 +1489,21 @@ inclusive). A row is SUPPORTED if the observed count meets its bound, NOT SUPPOR
 | S13 | run 3 format failures, free, of 822 rows | `45-53` |
 | S14 | run 3 capability, of 200 | `192-198` |
 | S15 | run 4: its three files are byte-identical to the base default on file | `yes` |
+
+## Appended 2026-10-25, before run 1: deviation, Python 3.13.16 in the Colab image
+
+The cell's environment check stopped before run 1, as registered ("It stops on any difference"), on one field: the
+Colab image now runs Python 3.13.16, and A3's env record has 3.13.15. The other thirteen compared fields matched:
+gpu NVIDIA A100-SXM4-80GB, cuda 12.8, torch 2.11.0+cu128, transformers 5.17.0, peft 0.20.0, bitsandbytes 0.50.2,
+accelerate 1.14.0, datasets 4.8.5, tokenizers 0.23.1, huggingface_hub 1.29.0, safetensors 0.8.0, torchao absent,
+eval_set_sha256 49f2317f4d879814. Nothing had run: the stop came before any env record or output of these runs was
+written.
+
+Deviation: python is removed from the cell's stop list, and each run's env record still logs it (3.13.16). Colab's
+system interpreter cannot be set to 3.13.15, and a separately built 3.13.15 would match the version string while
+differing in build, so it is not used. Everything else in the pre-registration above is unchanged. Run 1's gate is
+unchanged and decides whether this runtime reproduces A3: a Python patch release that changed any output would show
+as a gate failure.
+
+The runs still follow the e13 kanji run in the same runtime, as registered: that run finished at 07:31 UTC on this VM
+with 80 of 80 records (kanji_env-32b-e13-m0.json, boot_id 186ea6a0).
