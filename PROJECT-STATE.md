@@ -1507,3 +1507,18 @@ as a gate failure.
 
 The runs still follow the e13 kanji run in the same runtime, as registered: that run finished at 07:31 UTC on this VM
 with 80 of 80 records (kanji_env-32b-e13-m0.json, boot_id 186ea6a0).
+
+## Appended 2026-10-25, before run 1: deviation, runs 1-4 in a new runtime
+
+The registered order ("in the same Colab runtime as the e13 kanji run, after it finishes") could not be kept. The e13
+kanji run finished at 07:31 UTC on the runtime with boot_id 186ea6a0 (kanji_env-32b-e13-m0.json). Before run 1
+started, that runtime was replaced: the runtime in use at the next attempt had started at 08:41 UTC (boot_id
+c46c4571), with an empty model cache and no earlier checkout of this repo. The cell's same-runtime check stopped it
+before any env record or output of these runs was written. The kanji run cannot be repeated under its own
+pre-registration (a rerun is a new prereg with its own tag), so runs 1-4 go ahead in the new runtime, still after the
+kanji run.
+
+The same-runtime condition held the environment fixed between the two runs. That is still checked: before run 1 the
+cell reinstalls the pinned packages and compares the thirteen fields of A3's env record (python excepted, per the
+deviation above), and run 1's byte-identity gate is unchanged. Each run's env record logs this runtime's boot_id and
+the kanji run's.
