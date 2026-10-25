@@ -1,0 +1,28 @@
+{
+ "tag": "sp-base-default",
+ "base_model": "Qwen/Qwen2.5-32B-Instruct",
+ "load_4bit": true,
+ "eval_set": "/content/drive/MyDrive/amphora-runs/32b/eval_set_ab_32b.json",
+ "free_max_new_tokens": 200,
+ "forced_max_new_tokens": 400,
+ "eval_batch": 8,
+ "eval_stop_after_answer": true,
+ "versions": {
+  "peft": "0.20.0",
+  "transformers": "5.17.0",
+  "bitsandbytes": "0.50.2"
+ },
+ "torchao": null,
+ "system_prompt": null,
+ "system_prompt_source": "chat template default",
+ "system_prompt_effective": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
+ "system_prompt_sha256": "66b9ea09bd5b7099cbb4fc820f31b575c0366fa439b08245566692c6784e281e",
+ "git_commit": "71fec4016fed7c0ac2fe40c2a8e0af2435d25a20",
+ "files": [
+  "results-sp-base-default-free.json",
+  "results-sp-base-default-forced.json",
+  "capability-sp-base-default.json"
+ ],
+ "started": "2026-10-25 10:15:56",
+ "finished": "2026-10-25 10:46:06"
+}

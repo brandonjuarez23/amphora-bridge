@@ -1,0 +1,26 @@
+{
+ "free": {
+  "sha256": "09fcba9c9f5bf3bc4e2f4b10fbc9348e1dd51971cd5f9b4db95d07f87ce6c5c7",
+  "reference": "results-32b-13-epochs/results-train_bridge_inv-e13-m0-eos-s0-32b-free.json",
+  "reference_sha256": "09fcba9c9f5bf3bc4e2f4b10fbc9348e1dd51971cd5f9b4db95d07f87ce6c5c7",
+  "identical": true,
+  "differing_rows": []
+ },
+ "forced": {
+  "sha256": "53edf2f5f1a06542d0b0d471dc00eab02746b6829d1841df788dbe670f008d8a",
+  "reference": "results-32b-13-epochs/results-train_bridge_inv-e13-m0-eos-s0-32b-forced.json",
+  "reference_sha256": "53edf2f5f1a06542d0b0d471dc00eab02746b6829d1841df788dbe670f008d8a",
+  "identical": true,
+  "differing_rows": []
+ },
+ "capability": {
+  "sha256": "58b52ccc11647ffc9b466d1479415c9e76bc2e7d359eb8f368c2da5a10ef2957",
+  "reference": "results-32b-13-epochs/capability-train_bridge_inv-e13-m0-eos-s0-32b.json",
+  "reference_sha256": "58b52ccc11647ffc9b466d1479415c9e76bc2e7d359eb8f368c2da5a10ef2957",
+  "identical": true,
+  "differing_rows": []
+ },
+ "adapter_sha256_ok": true,
+ "no_resume": true,
+ "passed": true
+}

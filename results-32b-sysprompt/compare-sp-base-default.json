@@ -1,0 +1,23 @@
+{
+ "free": {
+  "sha256": "287f4a489d9a1608af7d0c4817baade0c11616eefb8d2bf0492f616c3e9a5e91",
+  "reference": "results-base-32b-free.json",
+  "reference_sha256": "287f4a489d9a1608af7d0c4817baade0c11616eefb8d2bf0492f616c3e9a5e91",
+  "identical": true,
+  "differing_rows": []
+ },
+ "forced": {
+  "sha256": "e6598cce7e0f92263db350f9dca3ffed80ba2aa36392279726fc21fe79f68636",
+  "reference": "results-base-32b-forced.json",
+  "reference_sha256": "e6598cce7e0f92263db350f9dca3ffed80ba2aa36392279726fc21fe79f68636",
+  "identical": true,
+  "differing_rows": []
+ },
+ "capability": {
+  "sha256": "e01fec84779dddbab336599a301812aa1936f4b6a6c37830c56f2c5c3791c2e8",
+  "reference": "capability-base-32b.json",
+  "reference_sha256": "e01fec84779dddbab336599a301812aa1936f4b6a6c37830c56f2c5c3791c2e8",
+  "identical": true,
+  "differing_rows": []
+ }
+}
