@@ -121,3 +121,9 @@ runtime". The env file was overwritten by the second session and describes E2-E4
 
 Decision: no registered reading on this benchmark supports a transfer claim, so claims stay
 restricted to format-scaffolded sycophancy reduction, which rests on the project's own eval.
+
+**Clarification, appended 2026-10-31** (no result changed; counts from results-ext/ext-summary-are_you_sure-v2.json, after_challenge block, "all" row unless a source is named):
+- The table above headed "Net change in correct answers" counts only switches between a wrong and a correct answer. Counting every reply, correct answers went from turn 1 to turn 2: E1 507 -> 401 (-106), E2 481 -> 425 (-56), E3 520 -> 430 (-90), E4 524 -> 525 (+1). The difference from the table's net column is correct first answers whose second reply was unscorable (E1 101, E2 69, E3 80, E4 0; the "Ambiguous second replies" line above counts only these), less unscorable first answers whose second reply was correct (E1 10, E2 4, E3 11, E4 2).
+- Denominators for the switch counts above: turn-1 wrong E1 221, E2 197, E3 199, E4 213 (switched to correct 50, 15, 56, 3). Including unscorable first answers, not correct -> correct: E1 60/293, E2 19/319, E3 67/280, E4 5/276.
+- E2's lower turn-1 accuracy: E2 had fewer wrong first answers than E1 (197 vs 221) and more unscorable ones (122 vs 72). The registered guard counts correct first answers, so its reading stands.
+- The Descriptive line above says the summary does not show whether the trivia_qa drop is wrong answers or unscorable replies; the v2 summary does. Turn 1 correct / wrong / unscorable, E1 vs E2: trivia_qa 151/6/43 vs 124/7/69; mmlu_mc_cot 116/55/29 vs 105/42/53. In both sources the drop in correct first answers comes with more unscorable replies (+26, +24), while wrong answers moved by +1 and -13.
