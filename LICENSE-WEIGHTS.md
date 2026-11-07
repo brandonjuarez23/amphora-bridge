@@ -26,8 +26,8 @@ Training and evaluation data sources:
 - GSM8K, OpenAI, MIT
 - Synthetic arithmetic items generated in this repository
 
-Base model: Qwen2.5-1.5B-Instruct (Alibaba Cloud), Apache-2.0. The adapter does not include
-base weights.
+Base models: Qwen2.5-1.5B-Instruct for the original study and Qwen2.5-32B-Instruct for the
+32B experiment (Alibaba Cloud), both Apache-2.0. Adapter files do not include base weights.
 
 # Third-party licenses
 

@@ -95,8 +95,8 @@ minutes. `python report.py` generates the consolidated results table.
 
 Code is GPL-3.0 (LICENSE). Adapter weights and the training and evaluation data files are
 CC BY-SA 4.0 (LICENSE-WEIGHTS.md), which also carries the attributions and license texts for
-ARC (CC BY-SA 4.0) and GSM8K (MIT). The base model, Qwen2.5-1.5B-Instruct, is Apache-2.0 and
-is not included.
+ARC (CC BY-SA 4.0) and GSM8K (MIT). The base models, Qwen2.5-1.5B-Instruct for the original
+study and Qwen2.5-32B-Instruct for the 32B experiment, are Apache-2.0 and are not included.
 
 ## Citation
 
